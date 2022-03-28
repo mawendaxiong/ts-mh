@@ -1,16 +1,15 @@
 require("TSLib")
 init(1)
 
--- tap(600, 400)
 x, y =
     findMultiColorInRegionFuzzy(
-    0x64120f,
-    "18|6|0xa9622c,153|4|0xac2946,207|-2|0x35d3a8,227|3|0x0a5ea5",
+    0xbf1500,
+    "-7|-5|0xb80c00,8|-5|0xba0c00,8|5|0xc40e00,-5|6|0xc30c00",
     90,
-    201,
-    0,
-    631,
-    72,
+    994,
+    306,
+    1061,
+    466,
     {orient = 2}
 )
 

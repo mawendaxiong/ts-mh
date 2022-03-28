@@ -15,37 +15,59 @@ Main = {}
 -- 生成随机任务列表
 function generateRandomTaskList()
     taskOrder = UISetting.taskOrder
-    result = {}
-    for var = 1, #taskOrder do
-        taskNum = string.sub(taskOrder, var, var)
-        if taskNum == "0" or taskNum == "1" then
-            task = {2, 3, 4, 5}
-            index = #task
-            while true do
-                if index == 0 then
-                    break
-                end
-                randomIndex = math.random(1, index)
-                v = task[randomIndex]
-                table.insert(result, v)
 
-                -- temp = task[index]
-                -- task[index] = task[randomIndex]
-                -- task[randomIndex] = temp
-                index = index - 1
+    zeroIndex = string.find(taskOrder, "0")
+    oneIndex = string.find(taskOrder, "1")
+    -- 包含0和1,以0为准
+    if zeroIndex ~= nil and oneIndex ~= nil then
+        taskOrder = string.gsub(taskOrder, "1", "")
+    end
+
+    if oneIndex ~= nil then
+        replace = ""
+        task = {2, 3, 4, 5}
+        index = #task
+        while true do
+            if index == 0 then
+                break
             end
-        else
-            table.insert(result, tonumber(taskNum))
+            randomIndex = math.random(1, index)
+            v = task[randomIndex]
+            replace = replace .. v
+
+            index = index - 1
         end
-        mSleep(2000)
+        taskOrder = string.gsub(taskOrder, "1", replace)
+    end
+
+    if zeroIndex ~= nil then
+        replace = ""
+        task = {2, 3, 4, 5}
+        index = #task
+        while true do
+            if index == 0 then
+                break
+            end
+            randomIndex = math.random(1, index)
+            v = task[randomIndex]
+            replace = replace .. v
+
+            index = index - 1
+        end
+        taskOrder = string.gsub(taskOrder, "0", replace)
     end
 
     -- 插入刮刮乐
-    table.insert(result, 1, 1)
+    taskOrder = "1" .. taskOrder
     -- 插入运镖
     -- table.insert(result, 6)
 
-    taskRecord.taskList = result
+    taskRecord.taskStr = taskOrder
+    for var = 1, #taskRecord.taskStr do
+        vv = string.sub(taskRecord.taskStr, var, var)
+        toast(vv, 1)
+        mSleep(1000)
+    end
 end
 
 function excute()

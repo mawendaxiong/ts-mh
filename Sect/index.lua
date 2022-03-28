@@ -191,7 +191,7 @@ end
 function Sect.findRightTask()
     -- 先关闭右下角的物品快捷使用,以防挡住任务
     while true do
-        ret, tim, x, y = cancelButton()
+        ret, tim, x, y = Common.redCacle2()
         if not ret then
             break
         end

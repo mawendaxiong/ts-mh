@@ -13,7 +13,7 @@ end
 -- 领取任务后,右侧的任务
 local function rightTask()
     offset = "7|4|0xf6ed1c,19|14|0xf8ef1c,34|-1|0xfcf31c,28|9|0xfcf31c,205|44|0xc31b09,196|46|0xd02310"
-    return findColorsUntil(0xfcf31c, offset, 90, 913, 156, 1134, 456, {orient = 2}, 500, 1)
+    return findColorsUntil(0xfcf31c, offset, 90, 913, 144, 1134, 456, {orient = 2}, 500, 1)
 end
 
 -- 宝图道具
@@ -64,6 +64,16 @@ function Treasure.findTask()
     -- 激活右侧任务tab
     if not isColor(931, 122, 0xcde5ac, 100) then
         tap(931, 122)
+        mSleep(1000)
+    end
+
+    -- 先关闭右下角的物品快捷使用,以防挡住任务
+    while true do
+        ret, tim, x, y = Common.redCacle2()
+        if not ret then
+            break
+        end
+        tap(x, y)
         mSleep(1000)
     end
 

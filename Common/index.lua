@@ -26,6 +26,18 @@ local function redCancle(rate, second)
     return findColorsUntil(0xcf0000, offset, 90, 0, 0, 1136, 640, {orient = 2}, rate, second)
 end
 
+-- 红色交叉样式2,例如右下角弹出的使用物品
+local function redCacle2(rate, second)
+    if rate == nil then
+        rate = 1000
+    end
+    if second == nil then
+        second = 1
+    end
+    offset = "-7|-5|0xb80c00,8|-5|0xba0c00,8|5|0xc40e00,-5|6|0xc30c00"
+    return findColorsUntil(0xbf1500, offset, 90, 994, 306, 1061, 466, {orient = 2}, rate, second)
+end
+
 -- 取消文字的弹窗
 function Common.wordCancle(rate, second)
     if rate == nil then

@@ -2,7 +2,7 @@ Common = require("Common.index")
 
 UI = require("UI.index")
 Main = require("Main.index")
-Sect = require("Sect.index")
+Treasure = require("Treasure.index")
 
 function main()
     createGobalTable("mainStatus")
@@ -12,7 +12,7 @@ function main()
     taskRecord.currentTaskIndex = 1
     -- 当前任务正在执行的步骤
     taskRecord.currentStep = -1
-    taskRecord.taskList = {}
+    taskRecord.taskStr = ""
 
     createGobalTable("UISetting")
 
@@ -30,25 +30,33 @@ function main()
         UISetting.currentAccount = UISetting.accountList[var]
         -- 登录
         Main.login()
-        toast("list: " .. #taskRecord.taskList .. " index: " .. taskRecord.currentTaskIndex, 2)
         mSleep(2000)
         -- 执行任务
-        for taskIndex = 1, #taskRecord.taskList do
-            taskNum = taskRecord.taskList[taskIndex]
+        for taskIndex = 1, #taskRecord.taskStr do
+            taskNum = string.sub(taskRecord.taskStr, taskIndex, taskIndex)
 
-            if taskNum == 1 then --刮刮乐
+            if taskNum == nil then
+                dialog("size: " .. #taskRecord.taskStr)
+
+                for i = 1, #taskRecord.taskStr do
+                    foo = string.sub(taskRecord.taskStr, i, i)
+                    dialog("item: " .. foo)
+                end
+            end
+            
+            if taskNum == "1" then --刮刮乐
                 Common.record("执行: 刮刮乐")
                 page = lotteryPage.index()
-            elseif taskNum == 2 then --秘境
+            elseif taskNum == "2" then --秘境
                 Common.record("执行: 秘境")
                 page = unchartedPage.index()
-            elseif taskNum == 3 then --师门
+            elseif taskNum == "3" then --师门
                 Common.record("执行: 师门")
                 page = sectPage.index()
-            elseif taskNum == 4 then --宝图
+            elseif taskNum == "4" then --宝图
                 Common.record("执行: 宝图")
                 page = treasurePage.index()
-            elseif taskNum == 5 then --捉鬼
+            elseif taskNum == "5" then --捉鬼
                 Common.record("执行: 捉鬼")
                 page = ghostPage.joinTeam()
             else --运镖
@@ -72,7 +80,7 @@ function main()
     end
 end
 -- hrptk
--- init(1)
--- fwShowWnd("recordBoard", 0, 394, 155, 456, 0)
--- Sect.excute()
-main()
+init(1)
+fwShowWnd("recordBoard", 0, 394, 155, 456, 0)
+Treasure.findTask()
+-- main()
