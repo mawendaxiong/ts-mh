@@ -27,7 +27,7 @@ local function redCancle(rate, second)
 end
 
 -- 红色交叉样式2,例如右下角弹出的使用物品
-local function redCacle2(rate, second)
+function Common.redCancle2(rate, second)
     if rate == nil then
         rate = 1000
     end
