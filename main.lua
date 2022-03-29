@@ -80,7 +80,7 @@ function main()
     end
 end
 -- hrptk
-init(1)
-fwShowWnd("recordBoard", 0, 394, 155, 456, 0)
-Treasure.findTask()
--- main()
+-- init(1)
+-- fwShowWnd("recordBoard", 0, 394, 155, 456, 0)
+-- Treasure.findTask()
+main()
