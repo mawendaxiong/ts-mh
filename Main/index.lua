@@ -9,12 +9,14 @@ unchartedPage = require("Uncharted.ConstPage")
 sectPage = require("Sect.ConstPage")
 lotteryPage = require("Lottery.ConstPage")
 loginPage = require("Login.ConstPage")
+kejuPage = require("keju.ConstPage")
+sanjiePage = require("sanjie.ConstPage")
 
 Main = {}
 
 local function randomTask()
     replace = ""
-    task = {2, 3, 4, 5}
+    task = {2, 3, 4, 5, 6, 7}
     index = #task
     while true do
         if index == 0 then

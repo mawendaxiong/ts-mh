@@ -31,7 +31,7 @@ function Escort.findTaskOnTaskBoard()
         -- 关闭活动板
         tap(1014, 43)
         mSleep(1000)
-        -- 执行打开背包
+        
         return -2
     end
     -- 执行下一步

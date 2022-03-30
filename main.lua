@@ -35,6 +35,7 @@ end
 
 function main()
     local thread = require("thread")
+    t1, t2 = nil
 
     t1 =
         thread.create(
@@ -69,6 +70,12 @@ function main()
                     elseif taskNum == "5" then --捉鬼
                         Common.record("执行: 捉鬼")
                         page = ghostPage.joinTeam()
+                    elseif taskNum == "6" then -- 三界奇缘
+                        Common.record("执行: 三界")
+                        page = sanjiePage.index()
+                    elseif taskNum == "7" then -- 科举
+                        Common.record("执行: 科举")
+                        page = kejuPage.index()
                     else --运镖
                         Common.record("执行: 运镖")
                         page = escortPage.index()
@@ -90,7 +97,7 @@ function main()
                 -- 一个账号的任务做完后复位
                 taskRecord.currentTaskIndex = 1
             end
-
+            thread.stop(t2)
             finish = true
         end
     )
