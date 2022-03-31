@@ -11,6 +11,7 @@ page = {}
 
 function page.index()
     TaskBoard.new("mijing")
+    createGobalTable("uncharted")
 
     page = {
         ["-1"] = {["now"] = "-1", ["name"] = "闪退补偿", ["class"] = Uncharted, ["method"] = "crashCallack"},

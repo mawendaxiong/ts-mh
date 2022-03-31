@@ -96,7 +96,7 @@ function Uncharted.count()
         Common.closeWindow()
     end
 
-    freq = 0
+    uncharted.freq = 0
 
     isCount = false
     while true do
@@ -105,9 +105,9 @@ function Uncharted.count()
         if ret then
             -- mSleep(500)
             if not isCount then
-                freq = freq + 1
-                Common.record("秘境: " .. freq)
-                if freq == 15 then
+                uncharted.freq = uncharted.freq + 1
+                Common.record("秘境: " .. uncharted.freq)
+                if uncharted.freq == 15 then
                     -- 结束
                     break
                 end

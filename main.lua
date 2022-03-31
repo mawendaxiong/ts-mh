@@ -10,6 +10,7 @@ init(1)
 
 function init()
     createGobalTable("mainStatus")
+    mainStatus.isCrash = -1
 
     createGobalTable("taskRecord")
     -- 当前正在执行的任务
@@ -117,7 +118,8 @@ function main()
                     method = crashNode["method"]
                     -- 闪退前正在执行的步骤
                     taskRecord.currentStep = class[method]()
-
+                    -- 标识闪退,登录不用重新输入密码
+                    mainStatus.isCrash = 1
                     -- 终止执行线程
                     thread.stop(t1)
                     -- 连自己本身一同终止

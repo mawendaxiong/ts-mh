@@ -34,6 +34,12 @@ function loginRole()
     return findColorsUntil(0x8d5d2c, offset, 90, 328, 32, 1032, 616, {orient = 2}, 500, 2)
 end
 
+-- 右上角小红人
+function miniRedManLogo()
+    offset = "-29|15|0xbfe7f8,-26|22|0xc0e8f8,2|29|0xa7442c"
+    return findColorsUntil(0xb3454f, offset, 90, 1041, 10, 1119, 77, {orient = 2}, 500, 1)
+end
+
 -- 重启游戏
 function Login.restartGame()
     state = closeApp("com.netease.my")
@@ -44,10 +50,40 @@ end
 
 -- 等登录页面
 function Login.waitLoginPage()
+    -- 程序闪退了
+    if mainStatus.isCrash == 1 then
+        -- 复位
+        mainStatus.isCrash = -1
+        while true do
+            -- 右上角不是小红人
+            if not miniRedManLogo() then
+                -- 跳过打开游戏时的动画
+                tap(100, 100)
+                mSleep(1000)
+            else
+                break
+            end
+        end
+
+        while true do
+            -- 可以看见右上角小红人
+            if miniRedManLogo() then
+                -- 一直点击登录游戏
+                tap(567, 468)
+                mSleep(1000)
+            else
+                break
+            end
+        end
+        -- 等待游戏首页
+        return 6
+    end
+
     while (true) do
         if userLogo() then
             break
         end
+
         -- 点击右上角的小红人
         tap(1064, 49)
         mSleep(1000)
