@@ -40,6 +40,12 @@ function miniRedManLogo()
     return findColorsUntil(0xb3454f, offset, 90, 1041, 10, 1119, 77, {orient = 2}, 500, 1)
 end
 
+-- 选择账号时的游戏logo
+function gameLogo()
+    offset = "9|8|0xe50113,16|6|0xe50113,32|7|0xe50113,44|17|0xe50113,61|-14|0xe50113"
+    return findColorsUntil(0xe50113, offset, 90, 435, 115, 527, 191, {orient = 2}, 500, 1)
+end
+
 -- 重启游戏
 function Login.restartGame()
     state = closeApp("com.netease.my")
@@ -78,10 +84,14 @@ function Login.waitLoginPage()
         -- 等待游戏首页
         return 6
     end
+    -- 能够看见选择账号的游戏logo
 
     while (true) do
         if userLogo() then
             break
+        elseif gameLogo() then
+            -- 直接执行下一步
+            return 0
         end
 
         -- 点击右上角的小红人
