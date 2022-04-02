@@ -46,10 +46,22 @@ function gameLogo()
     return findColorsUntil(0xe50113, offset, 90, 435, 115, 527, 191, {orient = 2}, 500, 1)
 end
 
+-- 账号已退出和资源更新提醒
+function tip()
+    offset = "-132|-122|0xe9d5ba,201|-94|0xeddfce,200|-2|0xeddfcd,-129|-3|0xeddfcc"
+    return findColorsUntil(0xedc060, offset, 90, 352, 218, 787, 422, {orient = 2}, 500, 1)
+end
+
+-- 更新公告,星期二下午和星期三更新完都可能会出现
+function updateNotice()
+    offset = "347|-532|0xcd0000,340|-539|0xbf0000,261|-533|0xd58943,-406|-534|0xd68a43"
+    return findColorsUntil(0xebb252, offset, 90, 79, 13, 1038, 638, {orient = 2}, 500, 1)
+end
+
 -- 重启游戏
 function Login.restartGame()
     state = closeApp("com.netease.my")
-    mSleep(1000)
+    mSleep(2000)
     state = runApp("com.netease.my")
     return 0
 end
@@ -61,8 +73,11 @@ function Login.waitLoginPage()
         -- 复位
         mainStatus.isCrash = -1
         while true do
-            -- 右上角不是小红人
-            if not miniRedManLogo() then
+            if updateNotice() then --更新公告
+                -- 关闭更新公告
+                tap(648, 691)
+                mSleep(1000)
+            elseif not miniRedManLogo() then -- 右上角不是小红人
                 -- 跳过打开游戏时的动画
                 tap(100, 100)
                 mSleep(1000)
@@ -72,8 +87,11 @@ function Login.waitLoginPage()
         end
 
         while true do
-            -- 可以看见右上角小红人
-            if miniRedManLogo() then
+            if updateNotice() then --更新公告
+                -- 关闭更新公告
+                tap(648, 691)
+                mSleep(1000)
+            elseif miniRedManLogo() then -- 可以看见右上角小红人
                 -- 一直点击登录游戏
                 tap(567, 468)
                 mSleep(1000)
@@ -84,12 +102,11 @@ function Login.waitLoginPage()
         -- 等待游戏首页
         return 6
     end
-    -- 能够看见选择账号的游戏logo
 
     while (true) do
         if userLogo() then
             break
-        elseif gameLogo() then
+        elseif gameLogo() then -- 能够看见选择账号的游戏logo
             -- 直接执行下一步
             return 0
         end
@@ -126,6 +143,7 @@ function Login.inputAccountPasswd()
     if not aggrement() then
         -- 勾上同意
         tap(361, 518)
+        mSleep(1000)
     end
 
     -- 点击使用邮箱登录
@@ -150,6 +168,24 @@ function Login.inputAccountPasswd()
     tap(491, 407)
     mSleep(1000)
 
+    now = getNetTime()
+    while true do
+        -- 3秒钟都没有出现退出登录
+        if now + 5 < getNetTime() then
+            break
+        elseif tip() then
+            -- 关闭退出登录提醒
+            tap(568, 377)
+            mSleep(1000)
+            break
+        elseif updateNotice() then
+            -- 关闭更新公告
+            tap(648, 691)
+            mSleep(1000)
+        end
+        mSleep(1000)
+    end
+
     return 0
 end
 
@@ -161,7 +197,7 @@ function Login.selectServer()
             break
         end
         tap(665, 370)
-        mSleep(1000)
+        mSleep(3000)
     end
 
     -- 点击左上角，输入服务器名字
@@ -180,6 +216,25 @@ function Login.selectServer()
     if ret then
         tap(x, y)
         mSleep(1000)
+    else
+        return -2
+    end
+
+    if tip() then --去了测试服,要更新资源
+        -- 点击确定
+        tap(568, 377)
+        mSleep(1000)
+
+        now = getNetTime()
+        while true do
+            if now + 7 < getNetTime() then
+                break
+            elseif miniRedManLogo() then --登录界面
+                -- 点击登录
+                tap(563, 488)
+            end
+            mSleep(1000)
+        end
     end
     return 0
 end
