@@ -267,28 +267,16 @@ end
 
 -- 限时活动的窗口
 function Common.timeLimitedWindow()
-    -- 点击取消按钮
-    ret, tim, x, y = Common.wordCancle()
-    if ret then
-        tap(x, y)
-        mSleep(1000)
-    end
-
-    -- 跳过动画
-    if isColor(923, 34, 0x000000) then
-        tap(1012, 33)
-        mSleep(1000)
-    end
-
-    mSleep(2000)
-
-    -- 关闭 天奕长安
-    offset = "-12|-10|0xfee2e7,9|-9|0xfee0e5,-246|-21|0x89b29c,-97|85|0x822d13"
-    x, y = findMultiColorInRegionFuzzy(0xfbc6d0, offset, 90, 665, 7, 1048, 217, {orient = 2})
-    if x ~= -1 then
-        tap(990, 58)
-        mSleep(1000)
-    end
+    multiColTap(
+        {
+            {306, 251, 0x242f81},
+            {760, 225, 0x363998},
+            {402, 354, 0x67c3c8},
+            {571, 274, 0xa90e16},
+            {836, 215, 0xc21200}
+        }
+    )
+    mSleep(1000)
 end
 
 return Common

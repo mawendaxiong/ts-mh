@@ -58,8 +58,68 @@ function updateNotice()
     return findColorsUntil(0xebb252, offset, 90, 79, 13, 1038, 638, {orient = 2}, 500, 1)
 end
 
+local function randomTask()
+    replace = ""
+    task = {2, 3, 4, 5, 6, 7}
+    index = #task
+    while true do
+        if index == 0 then
+            break
+        end
+        randomIndex = math.random(1, index)
+        v = task[randomIndex]
+        replace = replace .. v
+
+        index = index - 1
+    end
+    return replace
+end
+
+-- 生成随机任务列表
+function Login.generateTask()
+    -- 不需要登录游戏
+    if mainStatus.needLogin ~= 1 then
+        mainStatus.needLogin = 1
+        return -2
+    end
+
+    taskOrder = UISetting.taskOrder
+
+    zeroIndex = string.find(taskOrder, "0")
+    oneIndex = string.find(taskOrder, "1")
+    -- 包含0和1,以0为准
+    if zeroIndex ~= nil and oneIndex ~= nil then
+        taskOrder = string.gsub(taskOrder, "1", "")
+    end
+
+    if oneIndex ~= nil then
+        str = randomTask()
+        taskOrder = string.gsub(taskOrder, "1", str)
+    end
+
+    if zeroIndex ~= nil then
+        str = randomTask()
+        taskOrder = string.gsub(taskOrder, "0", str)
+    end
+
+    -- 插入刮刮乐
+    taskOrder = "1" .. taskOrder
+    -- 插入登录游戏
+    taskOrder = "0" .. taskOrder
+
+    -- 插入运镖
+    -- table.insert(result, 6)
+
+    taskRecord.taskStr = taskOrder
+end
+
 -- 重启游戏
 function Login.restartGame()
+    -- 不需要登录游戏
+    if mainStatus.needLogin ~= 1 then
+        mainStatus.needLogin = 1
+        return -2
+    end
     state = closeApp("com.netease.my")
     mSleep(2000)
     state = runApp("com.netease.my")
@@ -248,8 +308,8 @@ function Login.closeWindow()
             return -2
         end
 
-        Common.timeLimitedWindow()
-        Common.closeWindow()
+        -- Common.timeLimitedWindow()
+        -- Common.closeWindow()
         mSleep(1000)
     end
 end

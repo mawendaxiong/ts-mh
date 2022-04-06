@@ -1,6 +1,16 @@
 require("TSLib")
 init(1)
 
-offset = "-132|-122|0xe9d5ba,201|-94|0xeddfce,200|-2|0xeddfcd,-129|-3|0xeddfcc"
-r, t, x, y = findColorsUntil(0xedc060, offset, 90, 352, 218, 787, 422, {orient = 2}, 500, 1)
+x, y =
+    findMultiColorInRegionFuzzy(
+    0x48301e,
+    "5|2|0x48301e,18|2|0x48301e,38|8|0x533922,61|4|0xecbd5e,115|15|0xe4c39c,-278|29|0xe2ba8b,-228|-18|0xf2c465",
+    90,
+    341,
+    129,
+    802,
+    511,
+    {orient = 2}
+)
+
 toast(x .. "," .. y)

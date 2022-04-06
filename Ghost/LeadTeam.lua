@@ -1,7 +1,6 @@
 require("TSLib")
 
 Common = require("Common.index")
-
 Ghost = {}
 
 --[[

@@ -1,7 +1,6 @@
 require("TSLib")
 
 Common = require("Common.index")
-
 Sect = {}
 
 -- 检查有没有勾上字段选择

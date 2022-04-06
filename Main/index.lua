@@ -67,7 +67,7 @@ function excute()
         step = taskRecord.currentNode["now"]
 
         Common.record("step: " .. step .. " " .. taskRecord.currentNode["name"])
-        mSleep(2000)
+        mSleep(1500)
         ret = class[method]()
 
         if ret == nil then
@@ -272,6 +272,11 @@ function Main.restartApp()
 end
 
 function Main.login()
+    -- 生成任务列表
+    if taskRecord.currentStep == -1 then
+        generateRandomTaskList()
+    end
+
     page = loginPage.index()
 
     -- 记录当前执行
@@ -279,11 +284,6 @@ function Main.login()
     taskRecord.currentNode = page["1"]
     taskRecord.nextNode = page[taskRecord.currentNode["next"]]
     excute()
-
-    -- 生成任务列表
-    if taskRecord.currentStep == -1 then
-        generateRandomTaskList()
-    end
 end
 
 return Main

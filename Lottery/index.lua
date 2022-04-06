@@ -41,6 +41,7 @@ function Lottery.openScratch()
         tap(867, 568)
         return 0
     end
+
     -- 已经刮奖了,结束
     return -2
 end
