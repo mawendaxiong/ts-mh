@@ -272,6 +272,8 @@ function Main.restartApp()
 end
 
 function Main.login()
+    -- 表示正在登录
+    mainStatus.logining = 1
     -- 生成任务列表
     if taskRecord.currentStep == -1 then
         generateRandomTaskList()
@@ -284,6 +286,8 @@ function Main.login()
     taskRecord.currentNode = page["1"]
     taskRecord.nextNode = page[taskRecord.currentNode["next"]]
     excute()
+    -- 复位
+    mainStatus.logining = -1
 end
 
 return Main

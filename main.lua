@@ -77,65 +77,11 @@ local function yunbiaoTip()
     )
 end
 
-local function randomTask()
-    replace = ""
-    task = {2, 3, 4, 5, 6, 7}
-    index = #task
-    while true do
-        if index == 0 then
-            break
-        end
-        randomIndex = math.random(1, index)
-        v = task[randomIndex]
-        replace = replace .. v
-
-        index = index - 1
-    end
-    return replace
-end
-
--- 生成随机任务列表
-function generateTask()
-    -- 不需要登录游戏
-    if mainStatus.needLogin ~= 1 then
-        mainStatus.needLogin = 1
-        return -2
-    end
-
-    taskOrder = UISetting.taskOrder
-
-    zeroIndex = string.find(taskOrder, "0")
-    oneIndex = string.find(taskOrder, "1")
-    -- 包含0和1,以0为准
-    if zeroIndex ~= nil and oneIndex ~= nil then
-        taskOrder = string.gsub(taskOrder, "1", "")
-    end
-
-    if oneIndex ~= nil then
-        str = randomTask()
-        taskOrder = string.gsub(taskOrder, "1", str)
-    end
-
-    if zeroIndex ~= nil then
-        str = randomTask()
-        taskOrder = string.gsub(taskOrder, "0", str)
-    end
-
-    -- 插入刮刮乐
-    taskOrder = "1" .. taskOrder
-    -- 插入登录游戏
-    taskOrder = "0" .. taskOrder
-
-    -- 插入运镖
-    -- table.insert(result, 6)
-
-    taskRecord.taskStr = taskOrder
-end
-
 function init()
     createGobalTable("mainStatus")
     mainStatus.isCrash = -1
     mainStatus.needLogin = 1
+    mainStatus.logining = -1
 
     createGobalTable("taskRecord")
     -- 当前正在执行的任务
@@ -175,16 +121,7 @@ function main()
 
                     UISetting.currentAccount = UISetting.accountList[accountIndex]
 
-                    -- toast("accountIndex: " .. accountIndex .. " taskStr: " .. #taskRecord.taskStr, 1)
-                    if mainStatus.needLogin == 1 then
-                        -- Main.login()
-                        generateTask()
-                    -- else
-                    -- mainStatus.needLogin = 1
-                    end
-
-                    -- toast(" taskIndex: " .. taskRecord.currentTaskIndex .. " taskStrSize: " .. #taskRecord.taskStr, 2)
-                    -- mSleep(2000)
+                    Main.login()
 
                     -- 执行任务
                     for taskIndex = taskRecord.currentTaskIndex, #taskRecord.taskStr do
@@ -192,18 +129,9 @@ function main()
                         taskRecord.currentTaskIndex = taskIndex
 
                         taskNum = string.sub(taskRecord.taskStr, taskIndex, taskIndex)
-                        toast(
-                            "taskIndex: " .. taskIndex .. " taskNum: " .. taskNum .. " str: " .. taskRecord.taskStr,
-                            2
-                        )
-                        mSleep(2000)
 
-                        if taskNum == "0" then
-                            Common.record("执行: 登录")
-                            page = loginPage.index()
-                        elseif taskNum == "1" then --刮刮乐
-                            -- Common.record("执行: 刮刮乐")
-                            toast("执行: 刮刮乐")
+                        if taskNum == "1" then --刮刮乐
+                            Common.record("执行: 刮刮乐")
                             page = lotteryPage.index()
                         elseif taskNum == "2" then --秘境
                             Common.record("执行: 秘境")
@@ -257,16 +185,17 @@ function main()
                     flag = appIsRunning("com.netease.my")
                     if flag == 0 then
                         toast("闪退")
+                        -- 终止执行线程
+                        thread.stop(t1)
+
                         nowPage = taskRecord.currentPage
                         crashNode = nowPage["-1"]
                         class = crashNode["class"]
                         method = crashNode["method"]
-                        -- 闪退前正在执行的步骤
+                        -- 闪退后继续执行的步骤
                         taskRecord.currentStep = class[method]()
                         -- 标识闪退,登录不用重新输入密码
                         mainStatus.isCrash = 1
-                        -- 终止执行线程
-                        thread.stop(t1)
                         -- 连自己本身一同终止
                         break
                     end

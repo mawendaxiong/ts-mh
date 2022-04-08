@@ -303,6 +303,7 @@ function Treasure.crashCallack()
     elseif nowNode["now"] == "7" then --等待打宝图
         ret, tim, x, y = rightTask()
         -- 找到任务
+        -- todo 可能正在战斗
         if ret then
             tap(x, y)
             return 7
