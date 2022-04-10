@@ -4,6 +4,7 @@ Common = require("Common.index")
 TaskBoard = require("renwuban.index")
 
 Treasure = {}
+
 -- 领取宝图任务
 local function getTask()
     offset = "3|0|0xf3d7b4,16|6|0x553923,27|0|0xf3d7b4,39|-7|0x5c402a,72|4|0x553923,75|2|0xf3d5b1"

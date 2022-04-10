@@ -3,6 +3,7 @@ Common = require("Common.index")
 UI = require("UI.index")
 Main = require("Main.index")
 denglu = require("denglu.index")
+yunbiaoPage = require("yunbiao.ConstPage")
 
 initSuccess = false
 finish = false
@@ -227,6 +228,7 @@ function main()
 end
 
 init()
+
 if initSuccess then
     while not finish do
         main()
