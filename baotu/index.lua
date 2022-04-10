@@ -1,7 +1,7 @@
 require("TSLib")
 
 Common = require("Common.index")
-TaskBoard = require("TaskBoard.index")
+TaskBoard = require("renwuban.index")
 
 Treasure = {}
 -- 领取宝图任务

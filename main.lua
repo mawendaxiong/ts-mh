@@ -2,7 +2,7 @@ Common = require("Common.index")
 
 UI = require("UI.index")
 Main = require("Main.index")
-Login = require("Login.index")
+denglu = require("denglu.index")
 
 initSuccess = false
 finish = false
@@ -12,69 +12,36 @@ init(1)
 
 -- 梦幻迷城弹出框
 local function menghuanmicheng()
-    return findMultiColorInRegionFuzzy(
-        0xe72500,
-        "-143|-4|0xb07a55,-167|3|0xb77f58,-239|0|0xb37247,-287|70|0x02ae00,-240|74|0x02ae00",
-        90,
-        261,
-        19,
-        891,
-        154,
-        {orient = 2}
-    )
+    offset = "-143|-4|0xb07a55,-167|3|0xb77f58,-239|0|0xb37247,-287|70|0x02ae00,-240|74|0x02ae00"
+    return findMultiColorInRegionFuzzy(0xe72500, offset, 90, 261, 19, 891, 154, {orient = 2})
 end
 
 -- 服务器已关闭,周三维护更新
 local function serverShutDown()
-    return findMultiColorInRegionFuzzy(
-        0x48301e,
-        "27|5|0x4f3621,37|-6|0x48301e,54|1|0xedc061,-59|-79|0x8d5d2c,-51|-79|0x8d5d2c,-12|-84|0x8d5d2c,2|-68|0x8d5d2c,63|-80|0x8d5d2c,61|-74|0x8f602f,83|-78|0x8d5d2c,74|-70|0x936536",
-        90,
-        342,
-        217,
-        788,
-        420,
-        {orient = 2}
-    )
+    offset =
+        "27|5|0x4f3621,37|-6|0x48301e,54|1|0xedc061,-59|-79|0x8d5d2c,-51|-79|0x8d5d2c,-12|-84|0x8d5d2c,2|-68|0x8d5d2c,63|-80|0x8d5d2c,61|-74|0x8f602f,83|-78|0x8d5d2c,74|-70|0x936536"
+    return findMultiColorInRegionFuzzy(0x48301e, offset, 90, 342, 217, 788, 420, {orient = 2})
 end
 
+-- 通用提示框
 local function commonTip()
-    return findMultiColorInRegionFuzzy(
-        0xf3c767,
-        "302|-2|0xf3c365,227|17|0x48301e,235|22|0x48301e,259|27|0x4d3520,269|13|0x48301e,336|49|0xe3c095,-31|52|0xe3be92",
-        90,
-        341,
-        129,
-        802,
-        511,
-        {orient = 2}
-    )
+    offset =
+        "302|-2|0xf3c365,227|17|0x48301e,235|22|0x48301e,259|27|0x4d3520,269|13|0x48301e,336|49|0xe3c095,-31|52|0xe3be92"
+    return findMultiColorInRegionFuzzy(0xf3c767, offset, 90, 341, 129, 802, 511, {orient = 2})
 end
 
+-- 秘境的提示框
 local function mijingTip()
-    return findMultiColorInRegionFuzzy(
-        0x8d5d2c,
-        "0|-5|0x8d5d2c,21|2|0x8d5d2c,32|0|0x8d5d2c,36|4|0x8d5d2c,-22|30|0x8d5d2c,-8|22|0x8d5d2c,9|25|0x8d5d2c,16|37|0x8d5d2c",
-        90,
-        366,
-        225,
-        766,
-        416,
-        {orient = 2}
-    )
+    offset =
+        "0|-5|0x8d5d2c,21|2|0x8d5d2c,32|0|0x8d5d2c,36|4|0x8d5d2c,-22|30|0x8d5d2c,-8|22|0x8d5d2c,9|25|0x8d5d2c,16|37|0x8d5d2c"
+    return findMultiColorInRegionFuzzy(0x8d5d2c, offset, 90, 366, 225, 766, 416, {orient = 2})
 end
 
+-- 运镖的提示框
 local function yunbiaoTip()
-    return findMultiColorInRegionFuzzy(
-        0x8d5d2c,
-        "7|0|0x8d5d2c,1|9|0x8d5d2c,22|4|0x8d5d2c,28|8|0x8d5d2c,27|0|0x8d5d2c,28|12|0x8f6030",
-        90,
-        366,
-        225,
-        766,
-        416,
-        {orient = 2}
-    )
+    offset = "7|0|0x8d5d2c,1|9|0x8d5d2c,22|4|0x8d5d2c,28|8|0x8d5d2c,27|0|0x8d5d2c,28|12|0x8f6030"
+
+    return findMultiColorInRegionFuzzy(0x8d5d2c, offset, 90, 366, 225, 766, 416, {orient = 2})
 end
 
 function init()
@@ -130,33 +97,7 @@ function main()
 
                         taskNum = string.sub(taskRecord.taskStr, taskIndex, taskIndex)
 
-                        if taskNum == "1" then --刮刮乐
-                            Common.record("执行: 刮刮乐")
-                            page = lotteryPage.index()
-                        elseif taskNum == "2" then --秘境
-                            Common.record("执行: 秘境")
-                            page = unchartedPage.index()
-                        elseif taskNum == "3" then --师门
-                            Common.record("执行: 师门")
-                            page = sectPage.index()
-                        elseif taskNum == "4" then --宝图
-                            Common.record("执行: 宝图")
-                            page = treasurePage.index()
-                        elseif taskNum == "5" then --捉鬼
-                            Common.record("执行: 捉鬼")
-                            page = ghostPage.joinTeam()
-                        elseif taskNum == "6" then -- 三界奇缘
-                            Common.record("执行: 三界")
-                            page = sanjiePage.index()
-                        elseif taskNum == "7" then -- 科举
-                            Common.record("执行: 科举")
-                            page = kejuPage.index()
-                        else --运镖
-                            Common.record("执行: 运镖")
-                            page = escortPage.index()
-                        end
-
-                        taskRecord.currentPage = page
+                        taskRecord.currentPage = Main.switchTaskPage(taskNum)
 
                         if taskRecord.currentStep == -1 then -- 没有记录的任务步骤,就从1开始
                             taskRecord.currentNode = page["1"]
@@ -272,7 +213,7 @@ function main()
                         tap(648, 691)
                         mSleep(1000)
                     elseif serverPage() then --选择服务器的页面
-                        Login.selectServer() -- 选择服务器,进入游戏
+                        denglu.selectServer() -- 选择服务器,进入游戏
                         break
                     end
                 end

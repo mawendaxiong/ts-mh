@@ -1,7 +1,7 @@
 require("TSLib")
 
 Common = require("Common.index")
-TaskBoard = require("TaskBoard.index")
+TaskBoard = require("renwuban.index")
 
 Escort = {}
 
@@ -31,7 +31,7 @@ function Escort.findTaskOnTaskBoard()
         -- 关闭活动板
         tap(1014, 43)
         mSleep(1000)
-        
+
         return -2
     end
     -- 执行下一步

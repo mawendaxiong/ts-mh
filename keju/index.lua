@@ -1,7 +1,7 @@
 require("TSLib")
 
 Common = require("Common.index")
-TaskBoard = require("TaskBoard.index")
+TaskBoard = require("renwuban.index")
 
 keju = {}
 

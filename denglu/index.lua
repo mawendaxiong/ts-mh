@@ -1,9 +1,10 @@
 require("TSLib")
 
 Common = require("Common.index")
-TaskBoard = require("TaskBoard.index")
+TaskBoard = require("renwuban.index")
 
 Login = {}
+
 -- 用户中心的黑底用户logo
 function userLogo()
     offset = "0|53|0xffffff,-34|433|0xfb4f4f,518|204|0xfb4f4f,-51|203|0xffffff"

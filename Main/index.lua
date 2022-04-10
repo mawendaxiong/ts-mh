@@ -89,103 +89,6 @@ function excute()
 end
 
 --[[
-检查游戏是否闪退
-停止 [执行游戏任务线程]
-停止 [监测画面卡死线程]
-
-]]
-function Main.checkAppCrash()
-    while true do
-        flag = appIsRunning("com.netease.my")
-        if flag == 0 then
-            toast("闪退")
-            mainStatus.isCrash = 1
-            taskRecord.status = -1
-
-            thread.stop(mainThread.excuteThread)
-            thread.stop(mainThread.stuckThread)
-
-            break
-        end
-        mSleep(3000)
-    end
-end
-function crash()
-    flag = appIsRunning("com.netease.my")
-    if flag == 0 then
-        toast("闪退")
-        mainStatus.isCrash = 1
-        taskRecord.status = -1
-        -- 停止执行任务线程
-        thread.stop(mainThread.excuteThread)
-
-        -- 重启app
-        mSleep(1000)
-        state = runApp("com.netease.my")
-        step = 0
-        while true do
-            ret =
-                multiColor(
-                {
-                    {475, 451, 0xebbe4b},
-                    {474, 479, 0xe39323},
-                    {653, 455, 0xebc05a},
-                    {654, 485, 0xe29625},
-                    {1094, 44, 0xc26551}
-                }
-            )
-            if step == 0 and not ret then
-                tap(30, 100)
-                mSleep(2000)
-            elseif ret then
-                tap(565, 453)
-                mSleep(2000)
-                step = 1
-            elseif step == 1 and not ret then
-                break
-            end
-        end
-
-        while true do
-            isMainPage = Common.checkMainPage()
-            if isMainPage then
-                break
-            end
-            Common.timeLimitedWindow()
-            Common.closeWindow()
-        end
-
-        -- 根据之前执行任务的状态判断接下来要执行的步骤
-        nowPage = taskRecord.currentPage
-        crashNode = nowPage["-1"]
-        class = crashNode["class"]
-        method = crashNode["method"]
-
-        step = class[method]()
-
-        taskRecord.currentNode = nowPage["" .. step]
-        taskRecord.nextNode = nowPage[taskRecord.currentNode["next"]]
-
-        mainStatus.restartSuccess = 1
-    end
-end
-
-function cancleWindow()
-    ret, tim, x, y = Common.wordCancle()
-    if ret then
-        tap(x, y)
-        mSleep(1000)
-    end
-end
-
-function support()
-    while true do
-        crash()
-        cancleWindow()
-    end
-end
-
---[[
 画面是否卡住
 间隔1分钟,取四个点的值,如果5分钟都是相同,判断为画面卡住
 然后通过关闭游戏,触发[游戏闪退线程]
@@ -219,58 +122,6 @@ function Main.checkStuck()
     end
 end
 
--- 重启app
-function Main.restartApp()
-    mainStatus.isCrash = -1
-    state = runApp("com.netease.my")
-    step = 0
-    while true do
-        ret =
-            multiColor(
-            {
-                {475, 451, 0xebbe4b},
-                {474, 479, 0xe39323},
-                {653, 455, 0xebc05a},
-                {654, 485, 0xe29625},
-                {1094, 44, 0xc26551}
-            }
-        )
-        if step == 0 and not ret then
-            tap(30, 100)
-            mSleep(2000)
-        elseif ret then
-            tap(565, 453)
-            mSleep(2000)
-            step = 1
-        elseif step == 1 and not ret then
-            break
-        end
-    end
-
-    -- 等待主页面,即社群按钮,5秒
-    while true do
-        isMainPage = Common.checkMainPage()
-        if isMainPage then
-            break
-        end
-        Common.timeLimitedWindow()
-        Common.closeWindow()
-    end
-
-    -- 根据之前执行任务的状态判断接下来要执行的步骤
-    nowPage = taskRecord.currentPage
-    crashNode = nowPage["-1"]
-    class = crashNode["class"]
-    method = crashNode["method"]
-
-    step = class[method]()
-
-    taskRecord.currentNode = nowPage["" .. step]
-    taskRecord.nextNode = nowPage[taskRecord.currentNode["next"]]
-
-    mainStatus.restartSuccess = 1
-end
-
 function Main.login()
     -- 表示正在登录
     mainStatus.logining = 1
@@ -288,6 +139,37 @@ function Main.login()
     excute()
     -- 复位
     mainStatus.logining = -1
+end
+
+function Main.switchTaskPage(taskNum)
+    page = nil
+    if taskNum == "1" then --刮刮乐
+        Common.record("执行: 刮刮乐")
+        page = lotteryPage.index()
+    elseif taskNum == "2" then --秘境
+        Common.record("执行: 秘境")
+        page = unchartedPage.index()
+    elseif taskNum == "3" then --师门
+        Common.record("执行: 师门")
+        page = sectPage.index()
+    elseif taskNum == "4" then --宝图
+        Common.record("执行: 宝图")
+        page = treasurePage.index()
+    elseif taskNum == "5" then --捉鬼
+        Common.record("执行: 捉鬼")
+        page = ghostPage.joinTeam()
+    elseif taskNum == "6" then -- 三界奇缘
+        Common.record("执行: 三界")
+        page = sanjiePage.index()
+    elseif taskNum == "7" then -- 科举
+        Common.record("执行: 科举")
+        page = kejuPage.index()
+    else --运镖
+        Common.record("执行: 运镖")
+        page = escortPage.index()
+    end
+
+    return page
 end
 
 return Main
