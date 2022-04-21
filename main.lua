@@ -3,12 +3,15 @@ Common = require("Common.index")
 UI = require("UI.index")
 Main = require("Main.index")
 denglu = require("denglu.index")
-yunbiaoPage = require("yunbiao.ConstPage")
+lianxiaohao = require("lianxiaohao.index")
+zhuzhan = require("zhuzhan.ConstPage")
+jineng = require("jineng.ConstPage")
 
 initSuccess = false
 finish = false
 waitUpdate = false
 
+dev = false
 init(1)
 
 -- 梦幻迷城弹出框
@@ -58,16 +61,18 @@ function init()
     taskRecord.currentStep = -1
     taskRecord.taskStr = ""
 
-    createGobalTable("UISetting")
-    -- 当前正在执行任务的账号
-    UISetting.currentAccountIndex = 1
+    if not dev then
+        createGobalTable("UISetting")
+        -- 当前正在执行任务的账号
+        UISetting.currentAccountIndex = 1
 
-    uiret, uiValues = UI.show()
+        uiret, uiValues = UI.show()
 
-    if uiret == 0 then
-        return
+        if uiret == 0 then
+            return
+        end
+        UI.analysis(uiValues)
     end
-    UI.analysis(uiValues)
 
     fwShowWnd("recordBoard", 0, 394, 155, 456, 0)
     initSuccess = true
@@ -101,12 +106,12 @@ function main()
                         taskRecord.currentPage = Main.switchTaskPage(taskNum)
 
                         if taskRecord.currentStep == -1 then -- 没有记录的任务步骤,就从1开始
-                            taskRecord.currentNode = page["1"]
+                            taskRecord.currentNode = taskRecord.currentPage["1"]
                         else --有记录的任务步骤,就从记录的步骤开始
-                            taskRecord.currentNode = page["" .. taskRecord.currentStep]
+                            taskRecord.currentNode = taskRecord.currentPage["" .. taskRecord.currentStep]
                             taskRecord.currentStep = -1
                         end
-                        taskRecord.nextNode = page[taskRecord.currentNode["next"]]
+                        taskRecord.nextNode = taskRecord.currentPage[taskRecord.currentNode["next"]]
 
                         -- 执行任务
                         excute()
@@ -226,11 +231,11 @@ function main()
 
     thread.waitAllThreadExit()
 end
-
+dev = true
 init()
-
-if initSuccess then
-    while not finish do
-        main()
-    end
-end
+lianxiaohao.execute()
+-- if initSuccess then
+--     while not finish do
+--         main()
+--     end
+-- end

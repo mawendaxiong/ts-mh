@@ -231,7 +231,7 @@ function Sect.excute()
                     mSleep(1000)
                 else --有对话,没有选项
                     -- 清除对话
-                    tap(400, 600)
+                    tap(500, 400)
                     mSleep(1000)
                 end
             elseif useProp() then --右下角使用道具

@@ -59,8 +59,21 @@ function Common.checkMainPage(rate, second)
         second = 1
     end
 
-    offset = "11|0|0xdecc57,17|9|0xb0631c,4|17|0xdb9132,8|23|0xebe4c0"
-    return findColorsUntil(0xa20d12, offset, 90, 2, 4, 68, 179, {orient = 2}, rate, second)
+    -- offset = "11|0|0xdecc57,17|9|0xb0631c,4|17|0xdb9132,8|23|0xebe4c0"
+    -- return findColorsUntil(0xa20d12, offset, 90, 2, 4, 68, 179, {orient = 2}, rate, second)
+
+    return findColorsUntil(
+        0xa3e17b,
+        "-5|9|0x87c24d,2|18|0x5a9a19,-9|22|0xff897d,11|33|0x893807",
+        90,
+        4,
+        93,
+        72,
+        318,
+        {orient = 2},
+        rate,
+        second
+    )
 end
 
 -- 关闭弹窗
@@ -151,7 +164,7 @@ function Common.b2a(step)
     end
 
     -- 可以看见活动的logo,就返回下一步
-    if huodongLogo() then
+    if Common.checkMainPage() then
         return 0
     end
 
