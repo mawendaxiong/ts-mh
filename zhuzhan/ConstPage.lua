@@ -20,7 +20,7 @@ function page.index()
             ["method"] = "open",
             ["next"] = "3"
         },
-        ["3"] = {["now"] = "3", ["name"] = "调整助战", ["class"] = zz, ["method"] = "adjust", ["next"] = "4"}
+        ["3"] = {["now"] = "3", ["name"] = "调整助战", ["class"] = zz, ["method"] = "adjust", ["next"] = "1"}
     }
     return page
 end

@@ -40,15 +40,21 @@ function jineng.open()
 end
 
 -- 升级技能
-function jineng.upgrade()
+function jineng.sj()
+    toast('aaa',3)
     -- 点击人物技能
     tap(1017, 163)
+    mSleep(1500)
 
     -- 随机次数点击一键升级
     r = math.random(2, 4)
     for var = 1, r do
         tap(881, 569)
+        mSleep(1000)
     end
+
+    -- 关闭技能对话框
+    tap(980, 43)
 
     return -2
 end

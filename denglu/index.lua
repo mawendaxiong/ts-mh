@@ -85,6 +85,20 @@ function Login.waitLoginPage()
         -- 复位
         mainStatus.isCrash = -1
 
+        -- while true do
+        --     if updateNotice() then --更新公告
+        --         -- 关闭更新公告
+        --         tap(648, 691)
+        --         mSleep(1000)
+        --     elseif not miniRedManLogo() then -- 右上角不是小红人
+        --         -- 跳过打开游戏时的动画
+        --         tap(100, 100)
+        --         mSleep(1000)
+        --     else
+        --         break
+        --     end
+        -- end
+
         while true do
             if updateNotice() then --更新公告
                 -- 关闭更新公告
@@ -94,16 +108,6 @@ function Login.waitLoginPage()
                 -- 跳过打开游戏时的动画
                 tap(100, 100)
                 mSleep(1000)
-            else
-                break
-            end
-        end
-
-        while true do
-            if updateNotice() then --更新公告
-                -- 关闭更新公告
-                tap(648, 691)
-                mSleep(1000)
             elseif miniRedManLogo() then -- 可以看见右上角小红人
                 -- 一直点击登录游戏
                 tap(567, 468)
@@ -112,8 +116,8 @@ function Login.waitLoginPage()
                 break
             end
         end
-        -- 等待游戏首页
-        return 6
+        -- 结束登录
+        return -2
     end
 
     while (true) do
@@ -122,6 +126,10 @@ function Login.waitLoginPage()
         elseif gameLogo() then -- 能够看见选择账号的游戏logo
             -- 直接执行下一步
             return 0
+        elseif updateNotice() then --更新公告
+            -- 关闭更新公告
+            tap(648, 691)
+            mSleep(1000)
         end
 
         -- 点击右上角的小红人
@@ -183,8 +191,8 @@ function Login.inputAccountPasswd()
 
     now = getNetTime()
     while true do
-        -- 3秒钟都没有出现退出登录
-        if now + 5 < getNetTime() then
+        -- 10秒钟都没有出现退出登录
+        if now + 10 < getNetTime() then
             break
         elseif tip() then
             -- 关闭退出登录提醒
@@ -222,6 +230,11 @@ function Login.selectServer()
     -- 选择第一个服务器
     tap(501, 163)
     mSleep(1000)
+
+    -- 如果是练小号,打开了指定服务器即可
+    if UISetting.lianxiaohao == 1 then
+        return -2
+    end
 
     -- 默认选择第一个角色
     ret, tim, x, y = loginRole()

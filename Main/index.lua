@@ -11,6 +11,7 @@ lotteryPage = require("guaguale.ConstPage")
 loginPage = require("denglu.ConstPage")
 kejuPage = require("keju.ConstPage")
 sanjiePage = require("sanjie.ConstPage")
+lianxiaohaoPage = require("lianxiaohao.ConstPage")
 
 Main = {}
 
@@ -19,9 +20,7 @@ local function randomTask()
     task = {2, 3, 4, 5, 6, 7}
     index = #task
     while true do
-        if index == 0 then
-            break
-        end
+        if index == 0 then break end
         randomIndex = math.random(1, index)
         v = task[randomIndex]
         replace = replace .. v
@@ -35,27 +34,45 @@ end
 function generateRandomTaskList()
     taskOrder = UISetting.taskOrder
 
-    zeroIndex = string.find(taskOrder, "0")
-    oneIndex = string.find(taskOrder, "1")
-    -- 包含0和1,以0为准
-    if zeroIndex ~= nil and oneIndex ~= nil then
-        taskOrder = string.gsub(taskOrder, "1", "")
-    end
+    -- 练小号只执行登录和练小号功能
+    if UISetting.lianxiaohao == 1 then
+        if UISetting.lianxiaohaoType == 1 then -- 建号
+            taskOrder = "x"
+        elseif UISetting.lianxiaohaoType == 2 then -- 不建号
+            taskOrder = "y"
+        end
 
-    if oneIndex ~= nil then
-        str = randomTask()
-        taskOrder = string.gsub(taskOrder, "1", str)
-    end
+    else
+        if taskOrder == "schedule" then -- 每天5点定时执行科举三界
+            taskOrder = "67"
+        else -- 普通日常任务
+            zeroIndex = string.find(taskOrder, "0")
+            oneIndex = string.find(taskOrder, "1")
 
-    if zeroIndex ~= nil then
-        str = randomTask()
-        taskOrder = string.gsub(taskOrder, "0", str)
-    end
+            -- 包含0和1,以0为准
+            if zeroIndex ~= nil and oneIndex ~= nil then
+                taskOrder = string.gsub(taskOrder, "1", "")
+            end
 
-    -- 插入刮刮乐
-    taskOrder = "1" .. taskOrder
-    -- 插入运镖
-    -- table.insert(result, 6)
+            if oneIndex ~= nil then
+                str = randomTask()
+                taskOrder = string.gsub(taskOrder, "1", str)
+            end
+
+            if zeroIndex ~= nil then
+                str = randomTask()
+                taskOrder = string.gsub(taskOrder, "0", str)
+            end
+
+            if zeroIndex ~= nil and oneIndex ~= nil then
+                -- 插入运镖
+                table.insert(result, 18)
+            end
+            -- 插入刮刮乐
+            taskOrder = "z" .. taskOrder
+        end
+
+    end
 
     taskRecord.taskStr = taskOrder
 end
@@ -74,15 +91,17 @@ function excute()
             toast("[" .. method .. "]执行失败")
             mSleep(1000)
             break
-        elseif ret == 0 then --直接执行next
+        elseif ret == 0 then -- 直接执行next
             taskRecord.currentNode = taskRecord.nextNode
-            taskRecord.nextNode = taskRecord.currentPage[taskRecord.currentNode["next"]]
+            taskRecord.nextNode =
+                taskRecord.currentPage[taskRecord.currentNode["next"]]
             mSleep(2000)
         elseif ret == -2 then -- 一系类任务执行完毕
             break
-        else --执行指定跳转的步骤
+        else -- 执行指定跳转的步骤
             taskRecord.currentNode = taskRecord.currentPage["" .. ret]
-            taskRecord.nextNode = taskRecord.currentPage[taskRecord.currentNode["next"]]
+            taskRecord.nextNode =
+                taskRecord.currentPage[taskRecord.currentNode["next"]]
             mSleep(2000)
         end
     end
@@ -126,9 +145,7 @@ function Main.login()
     -- 表示正在登录
     mainStatus.logining = 1
     -- 生成任务列表
-    if taskRecord.currentStep == -1 then
-        generateRandomTaskList()
-    end
+    if taskRecord.currentStep == -1 then generateRandomTaskList() end
 
     page = loginPage.index()
 
@@ -143,30 +160,39 @@ end
 
 function Main.switchTaskPage(taskNum)
     page = nil
-    if taskNum == "1" then --刮刮乐
-        Common.record("执行: 刮刮乐")
-        page = lotteryPage.index()
-    elseif taskNum == "2" then --秘境
-        Common.record("执行: 秘境")
-        page = unchartedPage.index()
-    elseif taskNum == "3" then --师门
+    if taskNum == "1" then -- 师门
         Common.record("执行: 师门")
         page = sectPage.index()
-    elseif taskNum == "4" then --宝图
+    elseif taskNum == "2" then -- 秘境
+        Common.record("执行: 秘境")
+        page = unchartedPage.index()
+    elseif taskNum == "3" then -- 宝图
         Common.record("执行: 宝图")
         page = treasurePage.index()
-    elseif taskNum == "5" then --捉鬼
-        Common.record("执行: 捉鬼")
+    elseif taskNum == "4" then -- 混队捉鬼
+        Common.record("执行: 混队捉鬼")
         page = ghostPage.joinTeam()
-    elseif taskNum == "6" then -- 三界奇缘
-        Common.record("执行: 三界")
-        page = sanjiePage.index()
-    elseif taskNum == "7" then -- 科举
-        Common.record("执行: 科举")
-        page = kejuPage.index()
-    else --运镖
+    elseif taskNum == "5" then -- 带队捉鬼
+        Common.record("执行: 带队捉鬼")
+        page = ghostPage.leadTeam()
+    elseif taskNum == "6" then -- 运镖
         Common.record("执行: 运镖")
         page = escortPage.index()
+    elseif taskNum == "7" then -- 三界奇缘
+        Common.record("执行: 三界")
+        page = sanjiePage.index()
+    elseif taskNum == "8" then -- 科举
+        Common.record("执行: 科举")
+        page = kejuPage.index()
+    elseif taskNum == "x" then -- 建号练小号
+        Common.record("执行: 练小号")
+        page = lianxiaohaoPage.index()
+    elseif taskNum == "y" then -- 不建号练小号
+        Common.record("执行: 练小号")
+        page = lianxiaohaoPage.simple()
+    elseif taskNum == "z" then -- 刮刮乐
+        Common.record("执行: 刮刮乐")
+        page = lotteryPage.index()
     end
 
     return page
@@ -184,18 +210,18 @@ function Main.excuteLocal(page, step)
         Common.record("step: " .. step .. " " .. node["name"])
         mSleep(1500)
         ret = class[method]()
-
+        toast("ret: " .. ret)
         if ret == nil then
             toast("[" .. method .. "]执行失败")
             mSleep(1000)
             break
-        elseif ret == 0 then --直接执行next
+        elseif ret == 0 then -- 直接执行next
             node = nextNode
             nextNode = page[node["next"]]
             mSleep(2000)
         elseif ret == -2 then -- 一系类任务执行完毕
             break
-        else --执行指定跳转的步骤
+        else -- 执行指定跳转的步骤
             node = page["" .. ret]
             nextNode = page[node["next"]]
             mSleep(2000)

@@ -259,12 +259,15 @@ function Ghost.checkRoundOver()
 
     -- 主页面倒计时
     local mainPageTime = 60
+    local isCount = false
 
     while true do
         isBattle = Common.checkBattle()
 
         -- 不在战斗
         if not isBattle then
+            isCount = false
+
             -- 在主页
             if Common.checkMainPage() then
                 mainPageTime = mainPageTime - 1
@@ -286,13 +289,27 @@ function Ghost.checkRoundOver()
                 end
             end
         else
+            if not isCount then
+
             globalGhost["ghostNum"] = globalGhost["ghostNum"] + 1
             Common.record("鬼: " .. globalGhost["ghostNum"])
+            isCount = true
 
+            end
             mainPageTime = 60
         end
 
         mSleep(1000)
+    end
+
+    -- 检查等级,练小号用
+    if globalGhost.checkLevel == 1 then
+        text = ocrText(1025, 47, 1046, 66, 0)
+        level = tonumber(text)
+        -- 大于37结束捉鬼
+        if level >= 37 then
+            return -2
+        end
     end
 
     -- 执行下一步
@@ -303,7 +320,7 @@ end
 function Ghost.checkGhostNum()
     collectgarbage("collect")
     num = globalGhost["ghostNum"]
-    if num < 10000 then
+    if num < UISetting.g1 then
         -- collectgarbage("collect")
         return 1
     end

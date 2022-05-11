@@ -6,20 +6,23 @@ Ghost = {}
 -- 观战
 local function watchBattle()
     offset = "0|7|0xd8a557,10|1|0xd8a85b,22|10|0xd8a659,19|16|0xd7a355"
-    return findColorsUntil(0xd8a95c, offset, 90, 1074, 558, 1130, 609, {orient = 2}, 500, 1)
+    return findColorsUntil(0xd8a95c, offset, 90, 1074, 558, 1130, 609,
+                           {orient = 2}, 500, 1)
 end
 
 -- 打开队伍情况下的战斗
 local function battleWithTeamWindow()
     offset = "21|9|0x4e2916,42|-2|0x572f1a,11|28|0x481a0d,-107|6|0xeda847"
 
-    return findColorsUntil(0x60432b, offset, 90, 813, 538, 1126, 625, {orient = 2}, 500, 1)
+    return findColorsUntil(0x60432b, offset, 90, 813, 538, 1126, 625,
+                           {orient = 2}, 500, 1)
 end
 
 -- 检查战斗的是不是捉鬼
 local function checkGhostBattle()
     offset = "-6|-16|0xf8dea6,8|-8|0xe4ae74,6|-5|0xf1cea1,1|-7|0xf6e4c9"
-    return findColorsUntil(0xe7a274, offset, 90, 351, 0, 405, 62, {orient = 2}, 1000, 1)
+    return findColorsUntil(0xe7a274, offset, 90, 351, 0, 405, 62, {orient = 2},
+                           1000, 1)
 end
 
 -- 战斗中退出队伍
@@ -73,19 +76,14 @@ function Ghost.simpleGroup()
     mSleep(1000)
 
     -- 拉到最上面,捉鬼任务在第二个
-    Common.move(
-        nil,
-        function()
-            moveTo(290, 183, 290, 407, 200, 50)
-        end,
-        function()
-            local p1 = getColor(713, 222)
-            local p2 = getColor(726, 220)
-            local p3 = getColor(711, 212)
-            local p4 = getColor(723, 224)
-            return p1, p2, p3, p4
-        end
-    )
+    Common.move(nil, function() moveTo(290, 183, 290, 407, 200, 50) end,
+                function()
+        local p1 = getColor(713, 222)
+        local p2 = getColor(726, 220)
+        local p3 = getColor(711, 212)
+        local p4 = getColor(723, 224)
+        return p1, p2, p3, p4
+    end)
 
     -- 点击左侧捉鬼任务
     tap(298, 183)
@@ -105,21 +103,22 @@ end
 function Ghost.waitTeam()
     now = os.time()
     while true do
-        -- 是否有弹出的窗口
-        ret = isColor(980, 39, 0xcd0000, 100)
-        if not ret then
-            Common.closeWindow()
-        end
 
-        ret = isColor(812, 106, 0x875832, 100)
+        -- 正在观战
+        ret, tim, x, y = watchBattle()
+        if ret then return 0 end
 
-        -- 加入队伍成功
-        if ret then
-            return 0
-        end
+        -- 带组队界面的战斗界面
+        ret = battleWithTeamWindow()
+        if ret then return 0 end
+
+        -- 正在战斗,加入队伍成功
+        isBattle = Common.checkBattle()
+        if isBattle then return 0 end
 
         -- 5分钟都没匹配到队伍
         if now + 300 < os.time() then
+            toast('5分钟匹配不到队伍')
             break
         end
     end
@@ -160,6 +159,7 @@ function Ghost.checkStatus()
         ret, tim, x, y = Common.quitTeam()
         -- 被踢了
         if not ret then
+            toast('被踢了')
             -- 取消自动匹配状态,先自己创建队伍,再退出
             tap(144, 578)
             mSleep(500)
@@ -198,15 +198,14 @@ end
 
 -- 检查战斗状态
 function Ghost.checkBattleStatus()
-    if globalGhost["ghostNum"] == nil then
-        globalGhost["ghostNum"] = 0
-    end
+    if globalGhost["ghostNum"] == nil then globalGhost["ghostNum"] = 0 end
 
     -- 主页面倒计时
     local mainPageTime = 60
 
     -- 捉鬼完成
     local isDone = false
+    local isCount = false
 
     while true do
         keepScreen(true)
@@ -216,6 +215,7 @@ function Ghost.checkBattleStatus()
         -- 不在战斗
         if not isBattle then
             keepScreen(false)
+            isCount = false
             -- 在主页
             if Common.checkMainPage() then
                 -- 终止,可能是捉完鬼,也可能是捉的不是鬼而退出
@@ -227,9 +227,7 @@ function Ghost.checkBattleStatus()
                 mainPageTime = mainPageTime - 1
                 Common.record("主页面: " .. mainPageTime)
 
-                if mainPageTime <= 1 then
-                    break
-                end
+                if mainPageTime <= 1 then break end
             else
                 -- 关闭弹窗
                 Common.closeWindow()
@@ -239,20 +237,26 @@ function Ghost.checkBattleStatus()
             if not isDone and not checkGhostBattle() then
                 keepScreen(false)
                 isDone = true
+                toast('不是在捉鬼!!')
                 -- 战斗中退出队伍
                 battleQuitTeam()
+                break
             end
 
-            -- 捉鬼次数加1
-            globalGhost["ghostNum"] = globalGhost["ghostNum"] + 1
-            Common.record("鬼: " .. globalGhost["ghostNum"])
+            if not isCount then
+                -- 捉鬼次数加1
+                globalGhost["ghostNum"] = globalGhost["ghostNum"] + 1
+                Common.record("鬼: " .. globalGhost["ghostNum"])
+                isCount = true
+            end
 
             keepScreen(false)
             -- 等于捉完这一只就够了
-            if not isDone and globalGhost["ghostNum"] + 1 == 20 then
+            if not isDone and globalGhost["ghostNum"] + 1 == UISetting.g2 then
                 isDone = true
                 -- 战斗中退出队伍
                 battleQuitTeam()
+                break
             end
 
             mainPageTime = 60
@@ -269,7 +273,7 @@ end
 function Ghost.checkGhostNum()
     collectgarbage("collect")
 
-    if globalGhost["ghostNum"] < 20 then
+    if globalGhost["ghostNum"] < UISetting.g2 then
         Common.commonOpenGroup()
         ret, tim, x, y = Common.quitTeam()
         if ret then
@@ -304,7 +308,7 @@ end
 function Ghost.crashCallack()
     nowNode = taskRecord.currentNode
     toast("num: " .. nowNode["now"])
-    if nowNode["now"] == "1" then --回长安
+    if nowNode["now"] == "1" then -- 回长安
         return 2
     elseif nowNode["now"] == "2" then -- 打开队伍
         return 2

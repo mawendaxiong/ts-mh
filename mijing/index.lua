@@ -117,7 +117,7 @@ function Uncharted.count()
             isCount = false
 
             keepScreen(true)
-            if isColor(894, 354, 0xf3d6b3, 100) then --需要点进入战斗
+            if isColor(894, 354, 0xf3d6b3, 90) then --需要点进入战斗
                 keepScreen(false)
                 -- 点击进入战斗
                 tap(894, 354)
@@ -127,8 +127,9 @@ function Uncharted.count()
                 -- 消除失败提示
                 tap(555, 555)
                 mSleep(1000)
-                -- 回长安
-                Common.b2a()
+
+                -- 离开秘境
+                tap(1075, 310)
                 -- 结束
                 return -2
             else

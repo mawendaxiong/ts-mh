@@ -47,7 +47,7 @@ end
 -- 师门任务 -> 选择执行那种类型的师门
 local function chooseTask()
     offset = "0|22|0xf4d7b0,113|24|0xf3d6ae,110|2|0xf8e3c4"
-    return findColorsUntil(0xf8e6c5, offset, 90, 347, 358, 989, 431, {orient = 2}, 500, 1)
+    return findColorsUntil(0xf8e6c5, offset, 90,804,6,1107,610, {orient = 2}, 500, 1)
 end
 
 local function rightTask()
@@ -119,6 +119,50 @@ local function taskTab()
     return findColorsUntil(0xd2e6ae, offset, 90, 902, 86, 1029, 161, {orient = 2}, 500, 1)
 end
 
+-- 购买宠物
+local function buyPet()
+    return findColorsUntil(
+        0xedbb59,
+        "0|26|0xe49843,-467|-14|0xfcfefd,-459|25|0xc8d1d1,99|-518|0xce0000",
+        90,
+        353,
+        5,
+        1035,
+        620,
+        {orient = 2},
+        500,
+        1
+    )
+end
+
+-- 福利-领装备
+local function lingzhuangbei()
+    return findColorsUntil(
+        0x6c310a,
+        "32|-3|0x6c310a,55|-2|0x6c310a,85|6|0x6c310a,74|5|0xe9ab54,-17|5|0xe8a953",
+        90,
+        169,
+        93,
+        353,
+        585,
+        {orient = 2},
+        500,
+        1
+    )
+end
+
+-- 检查是不是在选择任务的界面
+local function checkChoosePage()
+    offset = "6|6|0xef3d47,48|-362|0xffe7b8,59|-365|0xc5311b,7|-18|0xff5362"
+    return findColorsUntil(0xa84407, offset, 90, 876, 81, 1015, 538, {orient = 2}, 500, 1)
+end
+
+-- 推荐师傅
+local function shifutuijian()
+    offset = "32|-11|0x91c6ff,14|94|0xeeffe5,-14|64|0x301312,-47|95|0xa31d11,-91|83|0x76b93c"
+    return findColorsUntil(0x62e2bd, offset, 90, 172, 405, 424, 575, {orient = 2}, 500, 2)
+end
+
 -- 任务板查找任务
 function Sect.findTaskOnTaskBoard()
     ret = TaskBoard.findTask()
@@ -132,6 +176,10 @@ end
 
 -- 选择任务
 function Sect.chooseTask()
+    -- 如果不是选择任务的界面,直接进行下一步,因为可能是其他任务来直接调用
+    if not checkChoosePage() then
+        return 0
+    end
     -- 勾上了自动选择
     if autoChoose() then
         -- 去完成
@@ -175,9 +223,9 @@ function Sect.waitMaster()
     end
 
     -- 先点击 师门任务
-    ret, tim, x, y = chooseTask1()
-    tap(x, y)
-    mSleep(2500)
+    -- ret, tim, x, y = chooseTask1()
+    -- tap(x, y)
+    -- mSleep(2500)
 
     -- 师门任务类型
     ret, tim, x, y = chooseTask()
@@ -272,6 +320,31 @@ function Sect.excute()
             -- 购买
             tap(892, 584)
             mSleep(1000)
+        elseif buyPet() then -- 购买宠物
+            -- 购买
+            tap(917, 573)
+            mSleep(1000)
+        elseif lingzhuangbei() then -- 领取福利
+            while (true) do
+                if isColor(874, 276, 0xedbf60) then
+                    -- 领取装备
+                    tap(874, 278)
+                    mSleep(8000)
+                else
+                    break
+                end
+            end
+
+            -- 关闭福利
+            tap(969, 65)
+            mSleep(5000)
+
+            -- 升级技能
+            local jinengPage = require("jineng.ConstPage")
+            Main.excuteLocal(jinengPage.index(), 1)
+        elseif shifutuijian() then -- 推荐师傅
+                -- 关闭师傅推荐
+                tap(901, 135)
         elseif finish() then
             Common.record("师门结束")
 

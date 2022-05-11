@@ -3,7 +3,7 @@
 ]]
 require("TSLib")
 
-denglu = require("denglu.index")
+lxh = require("lianxiaohao.index")
 -- TaskBoard = require("TaskBoard.index")
 Common = require("Common.index")
 
@@ -11,23 +11,25 @@ page = {}
 
 function page.index()
     page = {
-        ["-1"] = {["now"] = "-1", ["name"] = "闪退补偿", ["class"] = denglu, ["method"] = "crashCallack"},
-        ["1"] = {["now"] = "1", ["name"] = "创建角色", ["class"] = denglu, ["method"] = "restartGame", ["next"] = "2"},
-        ["2"] = {
-            ["now"] = "2",
-            ["name"] = "跳过动画",
-            ["class"] = denglu,
-            ["method"] = "waitLoginPage",
-            ["next"] = "3"
-        },
-        ["3"] = {["now"] = "3", ["name"] = "选择角色", ["class"] = denglu, ["method"] = "accountType", ["next"] = "4"},
-        ["4"] = {["now"] = "4", ["name"] = "起名", ["class"] = denglu, ["method"] = "inputAccountPasswd", ["next"] = "5"},
-        ["5"] = {["now"] = "5", ["name"] = "等待战斗结束", ["class"] = denglu, ["method"] = "selectServer", ["next"] = "6"},
-        ["5"] = {["now"] = "5", ["name"] = "新手调查", ["class"] = denglu, ["method"] = "selectServer", ["next"] = "6"},
-        ["6"] = {["now"] = "6", ["name"] = "执行", ["class"] = denglu, ["method"] = "closeWindow", ["next"] = "1"}
+        ["-1"] = {["now"] = "-1", ["name"] = "闪退补偿", ["class"] = lxh, ["method"] = "crashCallack"},
+        ["1"] = {["now"] = "1", ["name"] = "创建角色", ["class"] = lxh, ["method"] = "createRole", ["next"] = "2"},
+        ["2"] = {["now"] = "2", ["name"] = "跳动画", ["class"] = lxh, ["method"] = "skipCartoon", ["next"] = "3"},
+        ["3"] = {["now"] = "3", ["name"] = "选择角色", ["class"] = lxh, ["method"] = "xuanjuese", ["next"] = "4"},
+        ["4"] = {["now"] = "4", ["name"] = "起名", ["class"] = lxh, ["method"] = "name", ["next"] = "5"},
+        ["5"] = {["now"] = "5", ["name"] = "执行", ["class"] = lxh, ["method"] = "execute", ["next"] = "1"}
     }
     return page
 end
+
+-- 不建号直接练小号
+function page.simple()
+    page = {
+        ["-1"] = {["now"] = "-1", ["name"] = "闪退补偿", ["class"] = lxh, ["method"] = "crashCallack"},
+        ["1"] = {["now"] = "1", ["name"] = "执行", ["class"] = lxh, ["method"] = "execute", ["next"] = "1"}
+    }
+    return page
+end
+
 return page
 --[[
 1.0级的时候点击领取装备,不是直接弹出福利窗口领取,后续升级胡会自动打开
@@ -41,4 +43,6 @@ return page
 5.助战引导,不会自动打开助战界面
 
 6.点了去做师门任务,会去打开师傅来信,首次的师门任务需用通过完成师门来信来解锁
+
+7.低等级一上线会有推荐师傅的弹窗
 ]]
