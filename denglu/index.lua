@@ -85,20 +85,6 @@ function Login.waitLoginPage()
         -- 复位
         mainStatus.isCrash = -1
 
-        -- while true do
-        --     if updateNotice() then --更新公告
-        --         -- 关闭更新公告
-        --         tap(648, 691)
-        --         mSleep(1000)
-        --     elseif not miniRedManLogo() then -- 右上角不是小红人
-        --         -- 跳过打开游戏时的动画
-        --         tap(100, 100)
-        --         mSleep(1000)
-        --     else
-        --         break
-        --     end
-        -- end
-
         while true do
             if updateNotice() then --更新公告
                 -- 关闭更新公告
@@ -107,6 +93,16 @@ function Login.waitLoginPage()
             elseif not miniRedManLogo() then -- 右上角不是小红人
                 -- 跳过打开游戏时的动画
                 tap(100, 100)
+                mSleep(1000)
+            else
+                break
+            end
+        end
+
+        while true do
+            if updateNotice() then --更新公告
+                -- 关闭更新公告
+                tap(648, 691)
                 mSleep(1000)
             elseif miniRedManLogo() then -- 可以看见右上角小红人
                 -- 一直点击登录游戏
