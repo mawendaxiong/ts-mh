@@ -46,27 +46,27 @@ function generateRandomTaskList()
         if taskOrder == "schedule" then -- 每天5点定时执行科举三界
             taskOrder = "67"
         else -- 普通日常任务
-            zeroIndex = string.find(taskOrder, "0")
-            oneIndex = string.find(taskOrder, "1")
+            zeroIndex = string.find(taskOrder, "a")
+            oneIndex = string.find(taskOrder, "b")
 
             -- 包含0和1,以0为准
             if zeroIndex ~= nil and oneIndex ~= nil then
-                taskOrder = string.gsub(taskOrder, "1", "")
+                taskOrder = string.gsub(taskOrder, "b", "")
             end
 
             if oneIndex ~= nil then
                 str = randomTask()
-                taskOrder = string.gsub(taskOrder, "1", str)
+                taskOrder = string.gsub(taskOrder, "b", str)
             end
 
             if zeroIndex ~= nil then
                 str = randomTask()
-                taskOrder = string.gsub(taskOrder, "0", str)
+                taskOrder = string.gsub(taskOrder, "a", str)
             end
 
             if zeroIndex ~= nil and oneIndex ~= nil then
                 -- 插入运镖
-                table.insert(result, 18)
+                table.insert(result, "6")
             end
             -- 插入刮刮乐
             taskOrder = "z" .. taskOrder
@@ -84,6 +84,10 @@ function excute()
         step = taskRecord.currentNode["now"]
 
         Common.record("step: " .. step .. " " .. taskRecord.currentNode["name"])
+        -- 打印日志
+        wLog("mh-debug",
+             "[DATE] step: " .. step .. " " .. taskRecord.currentNode["name"]);
+
         mSleep(1500)
         ret = class[method]()
 
@@ -156,45 +160,55 @@ function Main.login()
     excute()
     -- 复位
     mainStatus.logining = -1
+
+    wLog("mh-debug", "[DATE] 当前执行: 登录");
+
+
 end
 
 function Main.switchTaskPage(taskNum)
     page = nil
+    taskName = ''
+    wLog("mh-debug", "------------分割线------------");
+    wLog("mh-debug", "------------分割线------------");
+
     if taskNum == "1" then -- 师门
-        Common.record("执行: 师门")
+        taskName = "执行: 师门"
         page = sectPage.index()
     elseif taskNum == "2" then -- 秘境
-        Common.record("执行: 秘境")
+        taskName = "执行: 秘境"
         page = unchartedPage.index()
     elseif taskNum == "3" then -- 宝图
-        Common.record("执行: 宝图")
+        taskName = "执行: 宝图"
         page = treasurePage.index()
     elseif taskNum == "4" then -- 混队捉鬼
-        Common.record("执行: 混队捉鬼")
+        taskName = "执行: 混队捉鬼"
         page = ghostPage.joinTeam()
     elseif taskNum == "5" then -- 带队捉鬼
-        Common.record("执行: 带队捉鬼")
+        taskName = "执行: 带队捉鬼"
         page = ghostPage.leadTeam()
     elseif taskNum == "6" then -- 运镖
-        Common.record("执行: 运镖")
+        taskName = "执行: 运镖"
         page = escortPage.index()
     elseif taskNum == "7" then -- 三界奇缘
-        Common.record("执行: 三界")
+        taskName = "执行: 三界"
         page = sanjiePage.index()
     elseif taskNum == "8" then -- 科举
-        Common.record("执行: 科举")
+        taskName = "执行: 科举"
         page = kejuPage.index()
     elseif taskNum == "x" then -- 建号练小号
-        Common.record("执行: 练小号")
+        taskName = "执行: 练小号"
         page = lianxiaohaoPage.index()
     elseif taskNum == "y" then -- 不建号练小号
-        Common.record("执行: 练小号")
+        taskName = "执行: 练小号"
         page = lianxiaohaoPage.simple()
     elseif taskNum == "z" then -- 刮刮乐
-        Common.record("执行: 刮刮乐")
+        taskName = "执行: 刮刮乐"
         page = lotteryPage.index()
     end
-
+    Common.record(taskName)
+    -- 打印日志
+    wLog("mh-debug", "[DATE] 当前" .. taskName);
     return page
 end
 

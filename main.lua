@@ -297,12 +297,19 @@ function main()
 end
 -- dev = true
 init()
-
+initLog("mh-debug", 0);
 -- Main.excuteLocal(jinengPage.index(), 1)
 -- local jinengPage = require("jineng.index")
 -- jinengPage.shengji()
 
 if initSuccess then
+    wLog("mh-debug", "");
+    wLog("mh-debug", "");
+    wLog("mh-debug", "");
+
+    wLog("mh-debug", "------------分割线------------");
+    wLog("mh-debug", "[DATE] script start");
+
     while not finish do main() end
 
     -- 0点重启脚本

@@ -1,7 +1,5 @@
 require("TSLib")
 
-func = require("func.index")
-
 Common = require("Common.index")
 TaskBoard = require("renwuban.index")
 
