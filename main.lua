@@ -235,6 +235,17 @@ function main()
                         break
                     end
 
+                    -- 0点重启脚本
+                    if UISetting.restart == "0" then
+                        while true do
+                            now = os.date("%H")
+                            if now == "0" then -- 到零点了
+                                break
+                            end
+                        end
+                        lua_restart()
+                    end
+
                     -- 游戏关服更新
                     x, y = serverShutDown()
                     if x ~= -1 then

@@ -155,12 +155,12 @@ function Ghost.checkStatus()
         mSleep(2000)
     end
     while true do
-        -- 退出队伍
+        -- 识别队伍界面左下角是不是退出队伍,是退出队伍的话说明没有被踢
         ret, tim, x, y = Common.quitTeam()
         -- 被踢了
         if not ret then
             toast('被踢了')
-            -- 取消自动匹配状态,先自己创建队伍,再退出
+            -- 先自己创建队伍,再退出,为了取消自动匹配状态,
             tap(144, 578)
             mSleep(500)
             tap(144, 578)
@@ -179,19 +179,18 @@ function Ghost.checkStatus()
             return 0
         end
 
-        -- 不是观战状态
-        if not isWatchBattle then
-            waitTime = waitTime - 1
-            -- 超时退出队伍
-            if waitTime == 0 then
-                -- 退出队伍
-                tap(276, 573)
-                mSleep(1000)
-                fwCloseView("recordBoard", "record")
-                -- 回到[便捷组队]
-                return 3
-            end
-            Common.record("倒计时: " .. waitTime)
+        waitTime = waitTime - 1
+        Common.record("倒计时: " .. waitTime)
+
+        -- 超时退出队伍
+        if waitTime == 0 then
+            if not Common.quitTeam() then Common.closeWindow() end
+            -- 退出队伍
+            tap(276, 573)
+            mSleep(1000)
+            fwCloseView("recordBoard", "record")
+            -- 回到[便捷组队]
+            return 3
         end
     end
 end
@@ -233,33 +232,34 @@ function Ghost.checkBattleStatus()
                 Common.closeWindow()
             end
         else
-            -- 打的不是鬼
-            if not isDone and not checkGhostBattle() then
+            if not isDone then
+                -- 打的不是鬼
+                if not checkGhostBattle() then
+                    keepScreen(false)
+                    isDone = true
+                    toast('不是在捉鬼!!')
+                    -- 战斗中退出队伍
+                    battleQuitTeam()
+                end
+
+                if not isCount then
+                    -- 捉鬼次数加1
+                    globalGhost["ghostNum"] = globalGhost["ghostNum"] + 1
+                    Common.record("鬼: " .. globalGhost["ghostNum"])
+                    isCount = true
+                end
+
                 keepScreen(false)
-                isDone = true
-                toast('不是在捉鬼!!')
-                -- 战斗中退出队伍
-                battleQuitTeam()
-                break
+                -- 等于捉完这一只就够了
+                if globalGhost["ghostNum"] == UISetting.g2 then
+                    isDone = true
+                    -- 战斗中退出队伍
+                    battleQuitTeam()
+                end
+
+                mainPageTime = 60
             end
 
-            if not isCount then
-                -- 捉鬼次数加1
-                globalGhost["ghostNum"] = globalGhost["ghostNum"] + 1
-                Common.record("鬼: " .. globalGhost["ghostNum"])
-                isCount = true
-            end
-
-            keepScreen(false)
-            -- 等于捉完这一只就够了
-            if not isDone and globalGhost["ghostNum"] + 1 == UISetting.g2 then
-                isDone = true
-                -- 战斗中退出队伍
-                battleQuitTeam()
-                break
-            end
-
-            mainPageTime = 60
         end
 
         mSleep(1000)
