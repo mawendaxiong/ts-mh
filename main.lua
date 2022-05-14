@@ -158,6 +158,8 @@ function main()
                     flag = appIsRunning("com.netease.my")
                     if flag == 0 then
                         toast("闪退")
+                        wLog("mh-debug", "[DATE] 闪退");
+
                         -- 终止执行线程
                         thread.stop(t1)
 
@@ -167,6 +169,10 @@ function main()
                         method = crashNode["method"]
                         -- 闪退后继续执行的步骤
                         taskRecord.currentStep = class[method]()
+                        wLog("mh-debug",
+                             "[DATE] 闪退后继续执行的步骤:" ..
+                                 taskRecord.currentStep);
+
                         -- 标识闪退,登录不用重新输入密码
                         mainStatus.isCrash = 1
                         -- 连自己本身一同终止
@@ -182,7 +188,7 @@ function main()
                         keepScreen(false)
 
                         if x1 == -1 and x2 == -1 then -- 不是运镖和秘境的提示
-                            Common.record("关闭弹窗")
+                            Common.record("秘境关闭弹窗")
                             -- 终止执行线程
                             thread.stop(t1)
 
@@ -308,10 +314,12 @@ function main()
 end
 -- dev = true
 init()
-initLog("mh-debug", 0);
+now = os.date("%Y-%m-%d %X")
+initLog("mh-debug-" .. now, 0);
 -- Main.excuteLocal(jinengPage.index(), 1)
 -- local jinengPage = require("jineng.index")
 -- jinengPage.shengji()
+-- Main.excuteLocal(unchartedPage.index(), 1)
 
 if initSuccess then
     wLog("mh-debug", "");

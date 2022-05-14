@@ -7,31 +7,38 @@ Uncharted = {}
 
 -- 新的一周提示
 local function newWeekSection()
-    offset = "48|10|0xf7d66e,153|10|0xf7d673,190|7|0xffd16d"
-    return findColorsUntil(0xf3bf53, offset, 90, 414, 4, 704, 45, {orient = 2}, 500, 1)
+    offset = '47|2|0x6e2b00,93|0|0x6e2b00,209|133|0xfdefe9,205|155|0xf95c7c'
+    return findColorsUntil(0x6e2b00, offset, 90, 675, 94, 990, 412,
+                           {orient = 2}, 500, 1)
 end
 
 local function openButton()
-    offset = "8|0|0x553923,28|1|0x553923,48|1|0xf2d6af,59|6|0x553923,72|5|0x553923,87|-10|0x563a24"
-    return findColorsUntil(0x553923, offset, 90, 813, 82, 1135, 491, {orient = 2}, 500, 1)
+    offset =
+        "8|0|0x553923,28|1|0x553923,48|1|0xf2d6af,59|6|0x553923,72|5|0x553923,87|-10|0x563a24"
+    return findColorsUntil(0x553923, offset, 90, 813, 82, 1135, 491,
+                           {orient = 2}, 500, 1)
 end
 
 -- 右边 [秘境降妖]
 local function task()
-    offset = "21|4|0xffff00,38|15|0xf9f901,57|3|0xffff00,76|8|0xffff00,71|17|0xffff00"
-    return findColorsUntil(0xffff00, offset, 90, 898, 197, 1134, 284, {orient = 2}, 500, 1)
+    offset =
+        "21|4|0xffff00,38|15|0xf9f901,57|3|0xffff00,76|8|0xffff00,71|17|0xffff00"
+    return findColorsUntil(0xffff00, offset, 90, 898, 197, 1134, 284,
+                           {orient = 2}, 500, 1)
 end
 
 -- 右侧 [地图]按钮
 local function unchartedMap()
     offset = "0|16|0xeccf7b,25|3|0xf9edba,32|18|0xeacb74,44|16|0xeccf7b"
-    return findColorsUntil(0xfbf3c7, offset, 90, 897, 246, 1132, 329, {orient = 2}, 500, 1)
+    return findColorsUntil(0xfbf3c7, offset, 90, 897, 246, 1132, 329,
+                           {orient = 2}, 500, 1)
 end
 
 -- 失败
 local function fail()
     offset = "22|18|0xc2e0f4,144|41|0xa1c1db,-89|19|0x404040,245|-6|0x9a2833"
-    return findColorsUntil(0xd4e8f7, offset, 90, 307, 111, 805, 291, {orient = 2}, 500, 1)
+    return findColorsUntil(0xd4e8f7, offset, 90, 307, 111, 805, 291,
+                           {orient = 2}, 500, 1)
 end
 
 -- 等云乐游
@@ -39,7 +46,7 @@ function Uncharted.waitNPC()
     ret, tim, x, y = Common.userDialog(1000, 10)
     -- 没有出现云乐游的对话框
     if not ret then
-    -- todo 没出现要怎么做
+        -- todo 没出现要怎么做
     end
 
     -- 点击进入
@@ -55,25 +62,21 @@ function Uncharted.waitNPC()
         tap(695, 388)
         mSleep(1000)
     end
-
+    toast('end...', 2)
+    mSleep(2000)
     return 0
 end
 
 -- 进入秘境
 function Uncharted.getInto()
-    Common.move(
-        nil,
-        function()
-            moveTo(410, 377, 913, 377, 50, 1000)
-        end,
-        function()
-            local p1 = getColor(377, 347)
-            local p2 = getColor(586, 483)
-            local p3 = getColor(885, 326)
-            local p4 = getColor(914, 504)
-            return p1, p2, p3, p4
-        end
-    )
+    Common.move(nil, function() moveTo(410, 146, 913, 146, 50, 1000) end,
+                function()
+        local p1 = getColor(377, 347)
+        local p2 = getColor(586, 483)
+        local p3 = getColor(885, 326)
+        local p4 = getColor(914, 504)
+        return p1, p2, p3, p4
+    end)
 
     -- 点击猛如虎,69秘境
     tap(295, 308)
@@ -117,7 +120,7 @@ function Uncharted.count()
             isCount = false
 
             keepScreen(true)
-            if isColor(894, 354, 0xf3d6b3, 90) then --需要点进入战斗
+            if isColor(894, 354, 0xf3d6b3, 90) then -- 需要点进入战斗
                 keepScreen(false)
                 -- 点击进入战斗
                 tap(894, 354)
@@ -141,7 +144,7 @@ function Uncharted.count()
     end
 
     while true do
-        if fail() then --战斗失败,先清除战斗失败提示
+        if fail() then -- 战斗失败,先清除战斗失败提示
             tap(555, 555)
             mSleep(1000)
         elseif not isColor(453, 19, 0xf35e6b) then -- 一直点离开,直到可以看到挂机的按钮
@@ -168,9 +171,7 @@ function Uncharted.crashCallack()
         return 2
     elseif nowNode["now"] == "5" then -- 进入秘境
         -- 在秘境里面
-        if unchartedMap() then
-            return 6
-        end
+        if unchartedMap() then return 6 end
         return 2
     elseif nowNode["now"] == "6" then -- 计算次数
         return 6
