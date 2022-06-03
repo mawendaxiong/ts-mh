@@ -110,6 +110,9 @@ function main()
                     if not dev then Main.login() end
 
                     toast(taskRecord.taskStr)
+                    wLog(log.name, "[DATE] 本次执行任务顺序:" ..
+                             taskRecord.taskStr);
+
                     -- 执行任务
                     for taskIndex = taskRecord.currentTaskIndex, #taskRecord.taskStr do
                         -- 记录当前正在执行的任务,游戏闪退是保存状态
@@ -158,7 +161,7 @@ function main()
                     flag = appIsRunning("com.netease.my")
                     if flag == 0 then
                         toast("闪退")
-                        wLog("mh-debug", "[DATE] 闪退");
+                        wLog(log.name, "[DATE] 闪退");
 
                         -- 终止执行线程
                         thread.stop(t1)
@@ -169,7 +172,7 @@ function main()
                         method = crashNode["method"]
                         -- 闪退后继续执行的步骤
                         taskRecord.currentStep = class[method]()
-                        wLog("mh-debug",
+                        wLog(log.name,
                              "[DATE] 闪退后继续执行的步骤:" ..
                                  taskRecord.currentStep);
 
@@ -274,6 +277,7 @@ function main()
                     if tonumber(now) >= 17 then -- 到5点了
                         break
                     end
+                    mSleep(1000 * 10)
                 end
                 toast("到5点!!!")
                 -- 复位执行账号
@@ -315,19 +319,22 @@ end
 -- dev = true
 init()
 now = os.date("%Y-%m-%d %X")
-initLog("mh-debug-" .. now, 0);
+createGobalTable("log")
+log.name = "mh-debug-" .. now
+initLog(log.name, 0);
+
 -- Main.excuteLocal(jinengPage.index(), 1)
 -- local jinengPage = require("jineng.index")
 -- jinengPage.shengji()
 -- Main.excuteLocal(unchartedPage.index(), 1)
 
 if initSuccess then
-    wLog("mh-debug", "");
-    wLog("mh-debug", "");
-    wLog("mh-debug", "");
+    wLog(log.name, "");
+    wLog(log.name, "");
+    wLog(log.name, "");
 
-    wLog("mh-debug", "------------分割线------------");
-    wLog("mh-debug", "[DATE] script start");
+    wLog(log.name, "------------分割线------------");
+    wLog(log.name, "[DATE] script start");
 
     while not finish do main() end
 
@@ -338,6 +345,7 @@ if initSuccess then
             if now == "0" then -- 到零点了
                 break
             end
+            mSleep(1000 * 10)
         end
         lua_restart()
     end

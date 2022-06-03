@@ -2,17 +2,6 @@ require("TSLib")
 
 Common = require("Common.index")
 
-ghostPage = require("zhuogui.ConstPage")
-treasurePage = require("baotu.ConstPage")
-escortPage = require("yunbiao.ConstPage")
-unchartedPage = require("mijing.ConstPage")
-sectPage = require("shimen.ConstPage")
-lotteryPage = require("guaguale.ConstPage")
-loginPage = require("denglu.ConstPage")
-kejuPage = require("keju.ConstPage")
-sanjiePage = require("sanjie.ConstPage")
-lianxiaohaoPage = require("lianxiaohao.ConstPage")
-
 Main = {}
 
 local function randomTask()
@@ -36,15 +25,15 @@ function generateRandomTaskList()
 
     -- 练小号只执行登录和练小号功能
     if UISetting.lianxiaohao == 1 then
-        if UISetting.lianxiaohaoType == 1 then -- 建号
+        if UISetting.lianxiaohaoType == 0 then -- 建号
             taskOrder = "x"
-        elseif UISetting.lianxiaohaoType == 2 then -- 不建号
+        elseif UISetting.lianxiaohaoType == 1 then -- 不建号
             taskOrder = "y"
         end
 
     else
         if taskOrder == "schedule" then -- 每天5点定时执行科举三界
-            taskOrder = "67"
+            taskOrder = "78"
         else -- 普通日常任务
             zeroIndex = string.find(taskOrder, "a")
             oneIndex = string.find(taskOrder, "b")
@@ -75,6 +64,7 @@ function generateRandomTaskList()
     end
 
     taskRecord.taskStr = taskOrder
+    toast('task: ' .. taskRecord.taskStr)
 end
 
 function excute()
@@ -85,7 +75,7 @@ function excute()
 
         Common.record("step: " .. step .. " " .. taskRecord.currentNode["name"])
         -- 打印日志
-        wLog("mh-debug",
+        wLog(log.name,
              "[DATE] step: " .. step .. " " .. taskRecord.currentNode["name"]);
 
         mSleep(1500)
@@ -150,6 +140,7 @@ function Main.login()
     mainStatus.logining = 1
     -- 生成任务列表
     if taskRecord.currentStep == -1 then generateRandomTaskList() end
+    loginPage = require("denglu.ConstPage")
 
     page = loginPage.index()
 
@@ -161,54 +152,64 @@ function Main.login()
     -- 复位
     mainStatus.logining = -1
 
-    wLog("mh-debug", "[DATE] 当前执行: 登录");
-
+    wLog(log.name, "[DATE] 当前执行: 登录");
 
 end
 
 function Main.switchTaskPage(taskNum)
     page = nil
     taskName = ''
-    wLog("mh-debug", "------------分割线------------");
-    wLog("mh-debug", "------------分割线------------");
+    wLog(log.name, "------------分割线------------");
+    wLog(log.name, "------------分割线------------");
 
     if taskNum == "1" then -- 师门
         taskName = "执行: 师门"
+        local sectPage = require("shimen.ConstPage")
         page = sectPage.index()
     elseif taskNum == "2" then -- 秘境
         taskName = "执行: 秘境"
+        local unchartedPage = require("mijing.ConstPage")
         page = unchartedPage.index()
     elseif taskNum == "3" then -- 宝图
         taskName = "执行: 宝图"
+        local treasurePage = require("baotu.ConstPage")
         page = treasurePage.index()
     elseif taskNum == "4" then -- 混队捉鬼
         taskName = "执行: 混队捉鬼"
+        local ghostPage = require("zhuogui.ConstPage")
         page = ghostPage.joinTeam()
     elseif taskNum == "5" then -- 带队捉鬼
         taskName = "执行: 带队捉鬼"
+        local ghostPage = require("zhuogui.ConstPage")
         page = ghostPage.leadTeam()
     elseif taskNum == "6" then -- 运镖
         taskName = "执行: 运镖"
+        local escortPage = require("yunbiao.ConstPage")
         page = escortPage.index()
     elseif taskNum == "7" then -- 三界奇缘
         taskName = "执行: 三界"
+        local sanjiePage = require("sanjie.ConstPage")
         page = sanjiePage.index()
     elseif taskNum == "8" then -- 科举
         taskName = "执行: 科举"
+        local kejuPage = require("keju.ConstPage")
         page = kejuPage.index()
     elseif taskNum == "x" then -- 建号练小号
         taskName = "执行: 练小号"
+        local lianxiaohaoPage = require("lianxiaohao.ConstPage")
         page = lianxiaohaoPage.index()
     elseif taskNum == "y" then -- 不建号练小号
         taskName = "执行: 练小号"
+        local lianxiaohaoPage = require("lianxiaohao.ConstPage")
         page = lianxiaohaoPage.simple()
     elseif taskNum == "z" then -- 刮刮乐
         taskName = "执行: 刮刮乐"
+        local lotteryPage = require("guaguale.ConstPage")
         page = lotteryPage.index()
     end
     Common.record(taskName)
     -- 打印日志
-    wLog("mh-debug", "[DATE] 当前" .. taskName);
+    wLog(log.name, "[DATE] 当前" .. taskName);
     return page
 end
 

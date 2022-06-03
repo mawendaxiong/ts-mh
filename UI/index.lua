@@ -405,8 +405,15 @@ function UI.analysis(uiValues)
     -- 练小号
     if uiValues.lianxiaohao == '0' then
         UISetting.lianxiaohao = 1
-        UISetting.lianxiaohaoType = uiValues.lianxiaohaoType
-        UISetting.lianxiaohaoLevel = uiValues.lianxiaohaoLevel
+
+        UISetting.lianxiaohaoType = tonumber(uiValues.lianxiaohaoType)
+        if "" == uiValues.lianxiaohaoLevel then
+            UISetting.lianxiaohaoLevel = 37
+        else
+            UISetting.lianxiaohaoLevel = uiValues.lianxiaohaoLevel
+
+        end
+
         analysisLianxiaohao(uiValues.lianxiaohaoText)
     end
 

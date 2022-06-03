@@ -101,6 +101,14 @@ local function cancelButton()
                            {orient = 2}, 500, 1)
 end
 
+-- 工坊
+local function workshop()
+    offset = '489|7|0xe2392a,414|8|0xffdc66,123|19|0xf4bf50,246|-8|0xa6612d'
+
+    return findColorsUntil(0xe53c2c, offset, 90, 117, 4, 1048, 71, {orient = 2},
+                           500, 1)
+end
+
 -- 移动右侧任务栏并查找师门任务
 local function moveAndFindRightTask()
     return Common.move(function()
@@ -291,6 +299,7 @@ function Sect.excute()
             tap(937, 518)
             mSleep(1000)
         elseif buyPet() then -- 购买宠物
+            Common.record("买宠物")
             -- 购买
             tap(917, 573)
             mSleep(1000)
@@ -309,6 +318,16 @@ function Sect.excute()
             -- 购买
             tap(892, 584)
             mSleep(1000)
+        elseif workshop() then
+            Common.record("工坊购买")
+
+            -- 点击第一个商品
+            tap(526, 166)
+            mSleep(200)
+            -- 购买
+            tap(892, 584)
+            mSleep(1000)
+
         elseif lingzhuangbei() then -- 领取福利
             while (true) do
                 if isColor(874, 276, 0xedbf60) then
