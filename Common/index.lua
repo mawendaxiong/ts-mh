@@ -1,4 +1,5 @@
 require("TSLib")
+local timer = require("Common.timer")
 
 Common = {}
 
@@ -75,7 +76,8 @@ function Common.closeWindow()
     mSleep(1000)
 end
 
-function Common.move(breakFunction, moveFunction, pointFunction, resetFunction)
+function Common.move(breakFunction, moveFunction, pointFunction, resetFunction,
+                     pageFunction)
     point1 = 0xffffff
     point2 = 0xffffff
     point3 = 0xffffff
@@ -90,6 +92,10 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction)
                 result = 0
                 break
             end
+        end
+        
+        if nil ~= pageFunction and not pageFunction() then
+            coroutine.yield('Common.move 移动中出现异常', 'c2')
         end
 
         moveFunction()
@@ -131,16 +137,17 @@ end
 function Common.b2a(step)
     if step == nil then step = 1 end
 
+    timer.start(5)
     while true do
-        keepScreen(true)
         ret = Common.checkMainPage()
         if ret then
             keepScreen(false)
             break
         end
+        -- 定时器到点了,返回页面异常
+        if timer.check() then return "c2" end
         Common.closeWindow()
         mSleep(1000)
-        keepScreen(false)
     end
 
     -- 可以看见活动的logo,就返回下一步

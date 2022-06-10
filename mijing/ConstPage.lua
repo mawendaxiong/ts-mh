@@ -11,7 +11,6 @@ page = {}
 
 function page.index()
     renwuban.new("mijing")
-    createGobalTable("uncharted")
 
     page = {
         ["-1"] = {["now"] = "-1", ["name"] = "闪退补偿", ["class"] = mijing, ["method"] = "crashCallack"},

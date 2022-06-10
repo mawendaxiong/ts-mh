@@ -3,6 +3,10 @@ require("TSLib")
 Common = require("Common.index")
 TaskBoard = require("renwuban.index")
 Main = require("Main.index")
+local container = require("Main.state")
+local mainStatus = container.mainStatus
+local taskRecord = container.taskRecord
+local UISetting = container.UISetting
 
 lxh = {}
 -- 敬请期待

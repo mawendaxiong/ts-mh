@@ -1,6 +1,11 @@
 require("TSLib")
 
 Common = require("Common.index")
+local container = require("Main.state")
+local mainStatus = container.mainStatus
+local taskRecord = container.taskRecord
+local UISetting = container.UISetting
+
 Ghost = {}
 
 --[[

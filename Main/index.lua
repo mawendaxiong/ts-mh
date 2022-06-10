@@ -1,6 +1,10 @@
 require("TSLib")
 
 Common = require("Common.index")
+local container = require("Main.state")
+local mainStatus = container.mainStatus
+local taskRecord = container.taskRecord
+local UISetting = container.UISetting
 
 Main = {}
 
@@ -64,7 +68,6 @@ function generateRandomTaskList()
     end
 
     taskRecord.taskStr = taskOrder
-    toast('task: ' .. taskRecord.taskStr)
 end
 
 function excute()
@@ -79,12 +82,21 @@ function excute()
              "[DATE] step: " .. step .. " " .. taskRecord.currentNode["name"]);
 
         mSleep(1500)
-        ret = class[method]()
+        ret, after = class[method]()
 
-        if ret == nil then
-            toast("[" .. method .. "]执行失败")
-            mSleep(1000)
-            break
+        if ret == 'c2' then
+            -- 协程暂停
+            afterMsg = '无'
+            if nil ~= after then
+                afterNode = taskRecord.currentPage['' .. after]
+                afterMsg = afterNode['name']
+
+                taskRecord.currentNode = afterNode
+                taskRecord.nextNode =
+                    taskRecord.currentPage[taskRecord.currentNode["next"]]
+            end
+            coroutine.yield(taskRecord.taskName .. "|" .. method, "c2", afterMsg)
+
         elseif ret == 0 then -- 直接执行next
             taskRecord.currentNode = taskRecord.nextNode
             taskRecord.nextNode =
@@ -207,6 +219,7 @@ function Main.switchTaskPage(taskNum)
         local lotteryPage = require("guaguale.ConstPage")
         page = lotteryPage.index()
     end
+    taskRecord.taskName = taskName
     Common.record(taskName)
     -- 打印日志
     wLog(log.name, "[DATE] 当前" .. taskName);
@@ -225,7 +238,7 @@ function Main.excuteLocal(page, step)
         Common.record("step: " .. step .. " " .. node["name"])
         mSleep(1500)
         ret = class[method]()
-        toast("ret: " .. ret)
+
         if ret == nil then
             toast("[" .. method .. "]执行失败")
             mSleep(1000)

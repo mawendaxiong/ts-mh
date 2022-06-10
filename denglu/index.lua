@@ -2,6 +2,10 @@ require("TSLib")
 
 Common = require("Common.index")
 TaskBoard = require("renwuban.index")
+local container = require("Main.state")
+local mainStatus = container.mainStatus
+local taskRecord = container.taskRecord
+local UISetting = container.UISetting
 
 Login = {}
 
@@ -96,8 +100,6 @@ end
 function Login.waitLoginPage()
     -- 程序闪退了
     if mainStatus.isCrash == 1 then
-        -- 复位
-        mainStatus.isCrash = -1
 
         while true do
             if updateNotice() then -- 更新公告
@@ -126,8 +128,8 @@ function Login.waitLoginPage()
                 break
             end
         end
-        -- 结束登录
-        return -2
+        -- 关闭弹窗
+        return 6
     end
 
     while (true) do
@@ -226,7 +228,7 @@ function Login.selectServer()
         tap(665, 370)
         mSleep(3000)
     end
-    
+
     -- 点击左上角，输入服务器名字
     tap(254, 86)
     mSleep(1000)

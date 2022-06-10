@@ -3,7 +3,10 @@ Common = require("Common.index")
 UI = require("UI.index")
 Main = require("Main.index")
 denglu = require("denglu.index")
--- zhuzhan = require("zhuzhan.ConstPage")
+local container = require("Main.state")
+local mainStatus = container.mainStatus
+local taskRecord = container.taskRecord
+local UISetting = container.UISetting
 
 initSuccess = false
 finish = false
@@ -64,12 +67,13 @@ local function shifutuijian()
 end
 
 function init()
-    createGobalTable("mainStatus")
+    -- createGobalTable("mainStatus")
+
     mainStatus.isCrash = -1
     mainStatus.needLogin = 1
     mainStatus.logining = -1
 
-    createGobalTable("taskRecord")
+    -- createGobalTable("taskRecord")
     -- 当前正在执行的任务
     taskRecord.currentTaskIndex = 1
     -- 当前任务正在执行的步骤
@@ -77,7 +81,7 @@ function init()
     taskRecord.taskStr = ""
 
     if not dev then
-        createGobalTable("UISetting")
+        -- createGobalTable("UISetting")
         -- 当前正在执行任务的账号
         UISetting.currentAccountIndex = 1
 
@@ -91,242 +95,180 @@ function init()
     initSuccess = true
 end
 
-function main()
-    local thread = require("thread")
-    t1, t2, t3, t4 = nil
-    if not waitUpdate then
-        if not wait5pm then
-            t1 = thread.create(function()
-                -- todo 关闭窗口的时候,任务被清空了
-                -- todo 选择服务器前会弹出更新公告
+local function execute()
 
-                for accountIndex = UISetting.currentAccountIndex, #UISetting.accountList do
-                    -- 记录账号,游戏闪退时可以恢复
-                    UISetting.currentAccountIndex = accountIndex
+    for accountIndex = UISetting.currentAccountIndex, #UISetting.accountList do
+        -- 记录账号,游戏闪退时可以恢复
+        UISetting.currentAccountIndex = accountIndex
 
-                    UISetting.currentAccount =
-                        UISetting.accountList[accountIndex]
+        UISetting.currentAccount = UISetting.accountList[accountIndex]
 
-                    if not dev then Main.login() end
+        if not dev then Main.login() end
 
-                    toast(taskRecord.taskStr)
-                    wLog(log.name, "[DATE] 本次执行任务顺序:" ..
-                             taskRecord.taskStr);
+        if mainStatus.isCrash == 1 then
+            toast('crash!!!', 2)
+            mSleep(2000)
 
-                    -- 执行任务
-                    for taskIndex = taskRecord.currentTaskIndex, #taskRecord.taskStr do
-                        -- 记录当前正在执行的任务,游戏闪退是保存状态
-                        taskRecord.currentTaskIndex = taskIndex
+            -- 复位
+            mainStatus.isCrash = -1
 
-                        taskNum = string.sub(taskRecord.taskStr, taskIndex,
-                                             taskIndex)
+            -- 闪退后,根据重新登录的页面,再决定执行哪个步骤
+            local crashPage = taskRecord.crashPage
+            crashNode = crashPage["-1"]
+            class = crashNode["class"]
+            method = crashNode["method"]
 
-                        taskRecord.currentPage = Main.switchTaskPage(taskNum)
-
-                        if taskRecord.currentStep == -1 then -- 没有记录的任务步骤,就从1开始
-                            taskRecord.currentNode = taskRecord.currentPage["1"]
-                        else -- 有记录的任务步骤,就从记录的步骤开始
-                            taskRecord.currentNode =
-                                taskRecord.currentPage["" ..
-                                    taskRecord.currentStep]
-                            taskRecord.currentStep = -1
-                        end
-                        taskRecord.nextNode =
-                            taskRecord.currentPage[taskRecord.currentNode["next"]]
-
-                        -- 执行任务
-                        excute()
-                    end
-                    -- 一个账号的任务做完后复位
-                    taskRecord.currentTaskIndex = 1
-                end
-
-                -- 停止辅助线程
-                thread.stop(t2)
-
-                -- 需要5点执行科举和三界
-                if UISetting.schedule == "0" then
-                    -- 先关闭游戏
-                    state = closeApp("com.netease.my")
-                    wait5pm = true
-                    return
-                end
-
-                finish = true
-            end)
-
-            t2 = thread.create(function()
-                while (true) do
-                    mSleep(5000)
-                    flag = appIsRunning("com.netease.my")
-                    if flag == 0 then
-                        toast("闪退")
-                        wLog(log.name, "[DATE] 闪退");
-
-                        -- 终止执行线程
-                        thread.stop(t1)
-
-                        nowPage = taskRecord.currentPage
-                        crashNode = nowPage["-1"]
-                        class = crashNode["class"]
-                        method = crashNode["method"]
-                        -- 闪退后继续执行的步骤
-                        taskRecord.currentStep = class[method]()
-                        wLog(log.name,
-                             "[DATE] 闪退后继续执行的步骤:" ..
-                                 taskRecord.currentStep);
-
-                        -- 标识闪退,登录不用重新输入密码
-                        mainStatus.isCrash = 1
-                        -- 连自己本身一同终止
-                        break
-                    end
-                    -- 弹出的确认 取消 框框,类似于运镖的确认
-                    keepScreen(true)
-                    x, y = commonTip()
-
-                    if x ~= -1 then -- 弹出 确认 取消 的对话框
-                        x1, y1 = mijingTip() -- 秘境
-                        x2, y2 = yunbiaoTip() -- 运镖
-                        keepScreen(false)
-
-                        if x1 == -1 and x2 == -1 then -- 不是运镖和秘境的提示
-                            Common.record("秘境关闭弹窗")
-                            -- 终止执行线程
-                            thread.stop(t1)
-
-                            -- 关闭掉弹窗
-                            tap(x, y)
-                            mSleep(1000)
-                            -- 记录当前正在执行的任务
-                            taskRecord.currentStep =
-                                taskRecord.currentNode["now"]
-                            -- 表示不用登录
-                            mainStatus.needLogin = -1
-
-                            break
-                        end
-                    end
-                    keepScreen(false)
-
-                    -- 推荐师傅
-                    r, t, x, y = shifutuijian()
-                    if r then
-                        Common.record("关闭师傅推荐")
-                        -- 关闭师傅推荐
-                        tap(901, 135)
-                        mSleep(1000)
-
-                        -- 终止执行线程
-                        thread.stop(t1)
-
-                        -- 记录当前正在执行的任务
-                        taskRecord.currentStep = taskRecord.currentNode["now"]
-                        -- 表示不用登录
-                        mainStatus.needLogin = -1
-
-                        break
-                    end
-
-                    -- 检测梦幻迷城弹窗
-                    x, y = menghuanmicheng()
-                    if x ~= -1 then
-                        -- 终止执行线程
-                        thread.stop(t1)
-                        Common.record("关闭迷城")
-                        -- 关闭梦幻迷城的弹出框
-                        tap(x, y)
-                        mSleep(1000)
-                        -- 记录当前正在执行的任务
-                        taskRecord.currentStep = taskRecord.currentNode["now"]
-                        -- 表示不用登录
-                        mainStatus.needLogin = -1
-                        break
-                    end
-
-                    -- 0点重启脚本
-                    if UISetting.restart == "0" then
-                        while true do
-                            now = os.date("%H")
-                            if now == "0" then -- 到零点了
-                                break
-                            end
-                        end
-                        lua_restart()
-                    end
-
-                    -- 游戏关服更新
-                    x, y = serverShutDown()
-                    if x ~= -1 then
-                        -- 终止执行线程
-                        thread.stop(t1)
-                        -- 确定
-                        tap(x, y)
-                        -- 表示等待更新
-                        waitUpdate = true
-                        break
-                    end
-                end
-            end)
-        else -- 等待5点执行科举和三界
-            t4 = thread.create(function()
-                Common.record("5点科举三界")
-                while true do
-                    -- 获取24小时进制的当前小时
-                    now = os.date("%H")
-                    if tonumber(now) >= 17 then -- 到5点了
-                        break
-                    end
-                    mSleep(1000 * 10)
-                end
-                toast("到5点!!!")
-                -- 复位执行账号
-                UISetting.currentAccountIndex = 1
-                -- 复位执行任务下标
-                taskRecord.currentTaskIndex = 1
-                -- 将要执行的任务设为科举和三界
-                UISetting.taskOrder = "schedule"
-
-                -- 复位,防止死循环
-                wait5pm = false
-                UISetting.schedule = -1
-            end)
+            -- 闪退后继续执行的步骤
+            taskRecord.currentStep = class[method]()
+            wLog(log.name, "[DATE] 闪退后继续执行的步骤:" ..
+                     taskRecord.currentStep);
         end
-    else -- 等游戏更新
-        t3 = thread.create(function()
-            while true do
-                mSleep(5000)
 
-                if miniRedManLogo() then -- 在进入游戏界面
-                    -- 点击选择服务器
-                    tap(639, 382)
-                elseif updateNotice() then -- 出现更新公告
-                    -- 关闭更新公告
-                    tap(648, 691)
-                    mSleep(1000)
-                elseif serverPage() then -- 选择服务器的页面
-                    denglu.selectServer() -- 选择服务器,进入游戏
-                    break
-                end
+        wLog(log.name, "[DATE] 本次执行任务顺序:" .. taskRecord.taskStr);
+
+        -- 执行任务
+        for taskIndex = taskRecord.currentTaskIndex, #taskRecord.taskStr do
+            -- 记录当前正在执行的任务,游戏闪退是保存状态
+            taskRecord.currentTaskIndex = taskIndex
+
+            taskNum = string.sub(taskRecord.taskStr, taskIndex, taskIndex)
+
+            taskRecord.currentPage = Main.switchTaskPage(taskNum)
+
+            if taskRecord.currentStep == -1 then -- 没有记录的任务步骤,就从1开始
+                taskRecord.currentNode = taskRecord.currentPage["1"]
+            else -- 有记录的任务步骤,就从记录的步骤开始
+                taskRecord.currentNode =
+                    taskRecord.currentPage["" .. taskRecord.currentStep]
+                taskRecord.currentStep = -1
             end
+            taskRecord.nextNode =
+                taskRecord.currentPage[taskRecord.currentNode["next"]]
 
-            waitUpdate = false
-        end)
+            -- 执行任务
+            excute()
+        end
+        -- 一个账号的任务做完后复位
+        taskRecord.currentTaskIndex = 1
     end
 
-    thread.waitAllThreadExit()
 end
+local c1 = coroutine.create(execute)
+
+local function daemon()
+    flag = appIsRunning("com.netease.my")
+    if flag == 0 then -- 程序闪退
+        toast("闪退", 2)
+        mSleep(2000)
+        wLog(log.name, "[DATE] 闪退")
+
+        -- 标识闪退,登录不用重新输入密码
+        mainStatus.isCrash = 1
+
+        -- 复位协程,走闪退的逻辑
+        c1 = coroutine.create(execute)
+
+        taskRecord.crashPage = taskRecord.currentPage
+        taskRecord.crashNode = taskRecord.currentNode
+
+        -- 结束辅助协程
+        return
+    end
+    -- 弹出的确认 取消 框框,类似于运镖的确认
+    x, y = commonTip()
+
+    if x ~= -1 then -- 弹出 确认 取消 的对话框
+        x1, y1 = mijingTip() -- 秘境
+        x2, y2 = yunbiaoTip() -- 运镖
+
+        if x1 == -1 and x2 == -1 then -- 不是运镖和秘境的提示
+            Common.record("秘境关闭弹窗")
+
+            -- 关闭掉弹窗
+            tap(x, y)
+            mSleep(1000)
+            -- 记录当前正在执行的任务
+            taskRecord.currentStep = taskRecord.currentNode["now"]
+            -- 表示不用登录
+            mainStatus.needLogin = -1
+
+            return
+        end
+    end
+
+    -- 推荐师傅
+    r, t, x, y = shifutuijian()
+    if r then
+        Common.record("关闭师傅推荐")
+        -- 关闭师傅推荐
+        tap(901, 135)
+        mSleep(1000)
+
+        -- 记录当前正在执行的任务
+        taskRecord.currentStep = taskRecord.currentNode["now"]
+        -- 表示不用登录
+        mainStatus.needLogin = -1
+
+        return
+    end
+
+    -- 检测梦幻迷城弹窗
+    x, y = menghuanmicheng()
+    if x ~= -1 then
+        Common.record("关闭迷城")
+        -- 关闭梦幻迷城的弹出框
+        tap(x, y)
+        mSleep(1000)
+        -- 记录当前正在执行的任务
+        taskRecord.currentStep = taskRecord.currentNode["now"]
+        -- 表示不用登录
+        mainStatus.needLogin = -1
+        return
+    end
+
+    -- 0点重启脚本
+    if UISetting.restart == "0" then
+        while true do
+            now = os.dates("%H")
+            if now == "0" then -- 到零点了
+                break
+            end
+        end
+        lua_restart()
+    end
+
+    -- 游戏关服更新
+    x, y = serverShutDown()
+    if x ~= -1 then
+        -- 确定
+        tap(x, y)
+        -- 表示等待更新
+        waitUpdate = true
+        return
+    end
+end
+
+local function masterMain()
+    while coroutine.status(c1) ~= "dead" do
+        toast('round...', 2)
+        mSleep(2000)
+        local status, tips, ret, after = coroutine.resume(c1)
+        if nil == after then after = '无' end
+        wLog(log.name, "daemon :" .. tips .. "后续执行 :" .. after);
+        mSleep(1000)
+        if ret == 'c2' then
+            local c2 = coroutine.create(daemon)
+            coroutine.resume(c2)
+        end
+    end
+end
+
 -- dev = true
 init()
 now = os.date("%Y-%m-%d %X")
 createGobalTable("log")
 log.name = "mh-debug-" .. now
 initLog(log.name, 0);
-
--- Main.excuteLocal(jinengPage.index(), 1)
--- local jinengPage = require("jineng.index")
--- jinengPage.shengji()
--- Main.excuteLocal(unchartedPage.index(), 1)
 
 if initSuccess then
     wLog(log.name, "");
@@ -336,17 +278,5 @@ if initSuccess then
     wLog(log.name, "------------分割线------------");
     wLog(log.name, "[DATE] script start");
 
-    while not finish do main() end
-
-    -- 0点重启脚本
-    if UISetting.restart == "0" then
-        while true do
-            now = os.date("%H")
-            if now == "0" then -- 到零点了
-                break
-            end
-            mSleep(1000 * 10)
-        end
-        lua_restart()
-    end
+    masterMain()
 end

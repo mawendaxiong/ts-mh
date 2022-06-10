@@ -1,6 +1,11 @@
 require("TSLib")
 
 local ts = require("ts")
+local container = require("Main.state")
+local mainStatus = container.mainStatus
+local taskRecord = container.taskRecord
+local UISetting = container.UISetting
+
 local cjson = ts.json
 UI = {}
 
