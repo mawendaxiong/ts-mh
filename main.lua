@@ -80,16 +80,14 @@ function init()
     taskRecord.currentStep = -1
     taskRecord.taskStr = ""
 
-    if not dev then
-        -- createGobalTable("UISetting")
-        -- 当前正在执行任务的账号
-        UISetting.currentAccountIndex = 1
+    -- createGobalTable("UISetting")
+    -- 当前正在执行任务的账号
+    UISetting.currentAccountIndex = 1
 
-        uiret, uiValues = UI.show()
+    uiret, uiValues = UI.show()
 
-        if uiret == 0 then return end
-        UI.analysis(uiValues)
-    end
+    if uiret == 0 then return end
+    UI.analysis(uiValues)
 
     fwShowWnd("recordBoard", 0, 394, 155, 456, 0)
     initSuccess = true
@@ -103,7 +101,7 @@ local function execute()
 
         UISetting.currentAccount = UISetting.accountList[accountIndex]
 
-        if not dev then Main.login() end
+        if not dev then Main.login() else generateRandomTaskList(true) end
 
         if mainStatus.isCrash == 1 then
             toast('crash!!!', 2)
@@ -263,7 +261,7 @@ local function masterMain()
     end
 end
 
--- dev = true
+dev = true
 init()
 now = os.date("%Y-%m-%d %X")
 createGobalTable("log")

@@ -24,7 +24,8 @@ local function randomTask()
 end
 
 -- 生成随机任务列表
-function generateRandomTaskList()
+function generateRandomTaskList(dev)
+    if dev == nil then dev = false end
     taskOrder = UISetting.taskOrder
 
     -- 练小号只执行登录和练小号功能
@@ -61,8 +62,12 @@ function generateRandomTaskList()
                 -- 插入运镖
                 table.insert(result, "6")
             end
-            -- 插入刮刮乐
-            taskOrder = "z" .. taskOrder
+            -- 开发模式下不加入刮刮乐
+            if not dev then
+                -- 插入刮刮乐
+                taskOrder = "z" .. taskOrder
+            end
+
         end
 
     end

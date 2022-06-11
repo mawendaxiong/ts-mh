@@ -181,16 +181,18 @@ end
 -- 选择任务
 function Sect.chooseTask()
     -- 如果不是选择任务的界面,直接进行下一步,因为可能是其他任务来直接调用
-    if not checkChoosePage() then return 0 end
+    if not checkChoosePage() then
+        coroutine.yield('师门任务前置检查', 'c2')
+        if not checkChoosePage() then return 0 end -- 再次确认没有选择任务界面
+    end
     -- 勾上了自动选择
     if autoChoose() then
-        -- 去完成
-        ret, tim, x, y = startTask()
-        -- 刚开始领任务
-        if ret then
+
+        ret, tim, x, y = startTask() -- [去完成]字样的按钮
+        if ret then -- 今天首次领取任务
             tap(x, y)
             return 0
-        elseif continueTask() then -- 继续任务
+        elseif continueTask() then -- [继续任务]字样的按钮
             -- 关闭选怎师门类型的窗口
             tap(991, 130)
             -- 从右侧找 师门任务
@@ -218,10 +220,11 @@ end
 
 -- 等到师傅那里
 function Sect.waitMaster()
-    ret, tim, x, y = Common.userDialog(1000, 10)
-    -- 没有出现门派师傅的对话框
-    if not ret then
-        -- todo 没出现怎么办
+
+    if not Common.userDialog(1000, 10) then -- 没有出现门派师傅的对话框
+        coroutine.yield('没门派师傅对话框', 'c2')
+        if Common.userDialog() then return 2 end -- 再次确认,没有就执行打开任务板
+
     end
 
     -- 先点击 师门任务
@@ -231,6 +234,12 @@ function Sect.waitMaster()
 
     -- 师门任务类型
     ret, tim, x, y = chooseTask()
+    if not ret then
+        coroutine.yield('门派师傅没有选项', 'c2')
+
+        ret, tim, x, y = chooseTask()
+        if not ret then return 2 end -- 再次确认,没有就执行打开任务板
+    end
     tap(x, y)
     mSleep(1000)
 
@@ -238,6 +247,12 @@ function Sect.waitMaster()
 end
 
 function Sect.findRightTask()
+    -- 激活右侧任务tab
+    if not isColor(931, 122, 0xcde5ac, 100) then
+        tap(931, 122)
+        mSleep(1000)
+    end
+
     -- 先关闭右下角的物品快捷使用,以防挡住任务
     while true do
         ret, tim, x, y = Common.redCancle2()
@@ -246,10 +261,12 @@ function Sect.findRightTask()
         mSleep(1000)
     end
 
-    ret = moveAndFindRightTask()
-
     -- 成功领取任务
-    if ret == 0 then return 0 end
+    if moveAndFindRightTask() == 0 then return 0 end
+
+    coroutine.yield('确认查找师门任务有没有被弹窗挡住', 'c2')
+    if moveAndFindRightTask() == 0 then return 0 end -- 二次确认
+
     -- 结束
     return -2
 end
@@ -263,10 +280,10 @@ end
 ]]
 function Sect.excute()
     while (true) do
+        mSleep(1000)
         fwCloseView("recordBoard", "record")
 
         if Common.checkMainPage() then -- 在首页
-            -- keepScreen(false)
             if Common.userDialog() then -- 有对话框
                 Common.record("对话")
 
@@ -287,6 +304,7 @@ function Sect.excute()
                 tap(967, 511)
                 mSleep(2000)
             elseif taskTab() then -- 点击右边师门任务
+                mSleep(3000)
                 -- 点击师门任务
                 ret, tim, x, y = rightTask()
                 if ret then
@@ -354,13 +372,21 @@ function Sect.excute()
         elseif shifutuijian() then -- 推荐师傅
             -- 关闭师傅推荐
             tap(901, 135)
-        elseif finish() then
+        elseif finish() then -- 结束
             Common.record("师门结束")
+
+            while useProp() do -- 把门派任务获得的道具使用光
+                -- 点击使用道具
+                tap(967, 511)
+                mSleep(2000)
+                mSleep(1000)
+            end
 
             tap(992, 130)
             -- 结束师门任务
             return -2
         else -- 等对话
+            coroutine.yield('师门任务常规检查', 'c2')
             Common.record("等待")
             -- 跳过
             tap(464, 545)

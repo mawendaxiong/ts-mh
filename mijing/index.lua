@@ -46,6 +46,7 @@ local function fail()
                            {orient = 2}, 500, 1)
 end
 
+-- 选择秘境关卡的页面
 local function mijingPage()
     offset =
         '-482|34|0xa67f61,-496|-53|0xf2c35b,-441|-29|0xfef4bb,-340|-51|0xf5c157'
@@ -53,9 +54,10 @@ local function mijingPage()
                            {orient = 2}, 500, 1)
 end
 
+-- 进入了秘境的页面
 local function mijingInnerPage()
-    offset = '-426|-11|0xfbb718,-417|-7|0xf16c00,23|-17|0xd08126'
-    return findColorsUntil(0xfb2220, offset, 90, 204, 4, 757, 96, {orient = 2},
+    offset = '19|-1|0xcb7823,-8|11|0xff2322,17|19|0x822a0d,-648|160|0x7ebb41'
+    return findColorsUntil(0xf6e3d4, offset, 90, 1, 1, 768, 240, {orient = 2},
                            500, 1)
 end
 
@@ -117,9 +119,9 @@ end
 
 -- 计算次数
 function Uncharted.count()
-    ret, tim, x, y = task()
-    if ret then
-        tap(x, y)
+    -- 在秘境里面
+    if mijingInnerPage() then
+        tap(1020, 233)
         mSleep(1000)
     else
         coroutine.yield('秘境被弹窗挡住了', 'c2')
@@ -129,9 +131,7 @@ function Uncharted.count()
     pauseTime = 30
     isCount = false
     while true do
-        ret = Common.checkBattle(200, 1)
-        -- 正在战斗
-        if ret then
+        if Common.checkBattle(200, 1) then -- 正在战斗
             if not isCount then
                 unchartedState.freq = unchartedState.freq + 1
                 Common.record("秘境: " .. unchartedState.freq)
@@ -167,9 +167,10 @@ function Uncharted.count()
                 return -2
             elseif pauseTime == 0 then
                 coroutine.yield('秘境常规检查', 'c2')
-                ret, tim, x, y = task()
-                if ret then
-                    tap(x, y)
+                if mijingInnerPage() then -- 秘境里的页面
+                    tap(1020, 233)
+                    mSleep(1000)
+                    tap(1020, 233) -- 多点一次,防止有对话框,只是取消了对话框
                     mSleep(1000)
                 end
                 pauseTime = 30
