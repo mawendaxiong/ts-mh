@@ -4,7 +4,7 @@ Common = require("Common.index")
 
 TaskBoard = {}
 
-local function checkTaskBoard()
+function TaskBoard.checkTaskBoard()
     offset =
         '-805|-18|0x9d591f,-873|477|0x6a0500,-787|489|0xf8d6a3,-794|549|0xf7d5a1'
     return findColorsUntil(0xce0000, offset, 90, 66, 9, 1067, 619, {orient = 2},
@@ -80,7 +80,7 @@ end
 
 function TaskBoard.findTask()
     local taskObject = TaskBoard.taskContainer[TaskBoard.task]
-    if not checkTaskBoard() then coroutine.yield('任务板|查找任务','c2') end
+    if not TaskBoard.checkTaskBoard() then coroutine.yield('任务板|查找任务','c2') end
     keepScreen(true)
     local x, y = findMultiColorInRegionFuzzy(taskObject.all.color,
                                              taskObject.all.posandcolors, 90,

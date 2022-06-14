@@ -1,6 +1,8 @@
 require("TSLib")
 
 Common = require("Common.index")
+TaskBoard = require("renwuban.index")
+timer = require("Common.timer")
 local container = require("Main.state")
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
@@ -30,6 +32,30 @@ local function checkGhostBattle()
                            1000, 1)
 end
 
+-- 便捷组队,日常任务[展开]的按钮
+local function easyGroupPageDailyTaskOpen()
+    offset =
+        '-6|5|0xba6825,6|5|0xbb6826,-97|1|0x6c310a,-72|2|0x6c310a,-49|1|0x6c310a,-28|4|0x6c310a'
+    return findColorsUntil(0xa45d23, offset, 90, 127, 73, 350, 449,
+                           {orient = 2}, 500, 1)
+end
+
+-- 便捷组队,日常任务[合上]的按钮
+local function easyGroupPageDailyTaskClose()
+    offset =
+        '-4|-4|0xa25b1f,5|-4|0xa55d22,-104|-9|0x6c310a,-89|7|0x6e340d,-104|7|0x723912,-89|-9|0x6c310a'
+    return findColorsUntil(0xb36625, offset, 90, 127, 73, 350, 449,
+                           {orient = 2}, 500, 1)
+end
+
+-- 便捷组队,捉鬼任务的按钮
+local function easyGroupPageGhostTask()
+    offset =
+        '36|-2|0x6c310a,21|-5|0x6c310a,102|-70|0xa45d23,97|-66|0xb46524,107|-66|0xb46524,29|5|0x6c310a'
+    return findColorsUntil(0x6c310a, offset, 90, 127, 73, 350, 449,
+                           {orient = 2}, 500, 1)
+end
+
 -- 战斗中退出队伍
 local function battleQuitTeam()
     -- 打开左上角菜单
@@ -46,158 +72,52 @@ local function battleQuitTeam()
     mSleep(1000)
 end
 
--- 打开队伍
-function Ghost.openTeam()
-    while true do
-        keepScreen(true)
-        ret = Common.checkMainPage()
-        if ret then
-            keepScreen(false)
-            break
-        end
-        Common.closeWindow()
-        mSleep(1000)
-        keepScreen(false)
-    end
-
-    -- 打开队伍
-    Common.commonOpenGroup()
-
-    -- 退出队伍
-    ret, tim, x, y = Common.quitTeam(1000, 5)
-    if ret then
-        tap(x, y)
-        mSleep(1000)
-        return 0
-    end
-    -- 不一定有队伍
-    return 0
-end
-
--- 便捷组队
-function Ghost.simpleGroup()
-    -- 打开右下角便捷组队
-    tap(960, 580)
-    mSleep(1000)
-
-    -- 拉到最上面,捉鬼任务在第二个
-    Common.move(nil, function() moveTo(290, 183, 290, 407, 200, 50) end,
-                function()
-        local p1 = getColor(713, 222)
-        local p2 = getColor(726, 220)
-        local p3 = getColor(711, 212)
-        local p4 = getColor(723, 224)
-        return p1, p2, p3, p4
-    end)
-
-    -- 点击左侧捉鬼任务
-    tap(298, 183)
-    mSleep(1000)
-
-    -- 自动匹配
-    tap(620, 574)
-    mSleep(500)
-
-    -- 关闭
-    tap(1014, 42)
-    mSleep(500)
-    return 0
-end
-
 -- 等待加入队伍
 function Ghost.waitTeam()
-    now = os.time()
+    tap(684, 584) -- 点击自动匹配
+    timer.start(300)
     while true do
+        Common.record("混队倒计时: " .. timer.detail())
 
-        -- 正在观战
-        ret, tim, x, y = watchBattle()
-        if ret then return 0 end
-
-        -- 带组队界面的战斗界面
-        ret = battleWithTeamWindow()
-        if ret then return 0 end
-
-        -- 正在战斗,加入队伍成功
-        isBattle = Common.checkBattle()
-        if isBattle then return 0 end
-
-        -- 5分钟都没匹配到队伍
-        if now + 300 < os.time() then
-            toast('5分钟匹配不到队伍')
+        if Common.checkBattle() then -- 正在战斗,加入队伍成功
+            return 0
+        elseif timer.check() then -- 时间到了
+            if Common.easyGroupPage() then
+                tap(684, 584) -- 取消自动匹配
+            end
             break
+        elseif TaskBoard.checkTaskBoard() then -- 任务板界面
+            tap(1014, 43) -- 关闭任务板
+        elseif Common.teamPage() then -- 组队的页面
+            tap(981, 39) -- 关闭组队页面
+        elseif watchBattle() then -- 正在观战
+            if not checkGhostBattle() then -- 观战的不是鬼,说明带队的人不是在捉鬼
+                battleQuitTeam() -- 战斗中退出队伍
+            end
+            tap(1109, 585) -- 退出观战
+
+        elseif Common.easyGroupPage() then -- 便捷组队页面不做处理
+        else
+            coroutine.yield('混队捉鬼,等队伍页面异常', 'c2')
         end
     end
+
+    if not Common.easyGroupPage() then -- 便捷组队页面
+        coroutine.yield(
+            '混队捉鬼没进到队伍,准备退出队伍,但是页面异常了',
+            'c2')
+    end
+    -- 关闭便捷组队页面
+    tap(1015, 44)
 
     -- 无限等待捉鬼
     if UISetting.ghost.waitTeamTime == nil then
-        -- 取消自动匹配状态,先自己创建队伍,再退出
-        tap(144, 578)
-        mSleep(500)
-        tap(144, 578)
-        mSleep(500)
-
-        -- 执行打开便捷组队
+        -- 重新在任务板查找任务
         return 3
     end
 
     -- 结束捉鬼了
     return -2
-end
-
--- 检查状态
-function Ghost.checkStatus()
-    keepScreen(true)
-    -- 正在观战
-    ret, tim, x, y = watchBattle()
-    keepScreen(false)
-
-    waitTime = 120
-    if ret then
-        -- todo 这里做了观战没有等待时间,可能会出现别人在捉最后一只鬼,然后就不会动了
-        isWatchBattle = true
-        -- 退出观战
-        tap(x, y)
-        mSleep(2000)
-    end
-    while true do
-        -- 识别队伍界面左下角是不是退出队伍,是退出队伍的话说明没有被踢
-        ret, tim, x, y = Common.quitTeam()
-        -- 被踢了
-        if not ret then
-            toast('被踢了')
-            -- 先自己创建队伍,再退出,为了取消自动匹配状态,
-            tap(144, 578)
-            mSleep(500)
-            tap(144, 578)
-            mSleep(500)
-            -- 回到 [便捷组队]
-            return 3
-        end
-
-        -- 进入战斗成功
-        ret = battleWithTeamWindow()
-        if ret then
-            -- 关闭队伍
-            tap(981, 38)
-            mSleep(1000)
-            -- 执行下一步
-            return 0
-        end
-
-        waitTime = waitTime - 1
-        Common.record("倒计时: " .. waitTime)
-
-        -- 超时退出队伍
-        if waitTime == 0 then
-            if not Common.quitTeam() then Common.closeWindow() end
-            -- 退出队伍
-            tap(276, 573)
-            mSleep(1000)
-            fwCloseView("recordBoard", "record")
-            -- 回到[便捷组队]
-            return 3
-        end
-    end
 end
 
 -- 检查战斗状态
@@ -212,13 +132,11 @@ function Ghost.checkBattleStatus()
     local isCount = false
 
     while true do
-        keepScreen(true)
 
         isBattle = Common.checkBattle()
 
         -- 不在战斗
         if not isBattle then
-            keepScreen(false)
             isCount = false
             -- 在主页
             if Common.checkMainPage() then
@@ -240,7 +158,6 @@ function Ghost.checkBattleStatus()
             if not isDone then
                 -- 打的不是鬼
                 if not checkGhostBattle() then
-                    keepScreen(false)
                     isDone = true
                     toast('不是在捉鬼!!')
                     -- 战斗中退出队伍
@@ -254,7 +171,6 @@ function Ghost.checkBattleStatus()
                     isCount = true
                 end
 
-                keepScreen(false)
                 -- 等于捉完这一只就够了
                 if globalGhost["ghostNum"] == UISetting.g2 then
                     isDone = true
@@ -288,11 +204,20 @@ function Ghost.checkGhostNum()
         end
 
         -- 返回 [便捷组队]
-        return 3
+        return 2
     end
 
     toast("结束捉鬼")
     return -2
+end
+
+function Ghost.findTaskOnTaskBoard()
+    if TaskBoard.findTask() == -1 then
+        coroutine.yield('混队捉鬼的任务板被弹窗挡住了', 'c2')
+        if TaskBoard.findTask() == -1 then end -- todo 还是没捉鬼任务怎么处理
+    end
+    -- 执行下一步
+    return 0
 end
 
 local function crashAfter()

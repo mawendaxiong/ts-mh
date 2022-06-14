@@ -93,7 +93,7 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction,
                 break
             end
         end
-        
+
         if nil ~= pageFunction and not pageFunction() then
             coroutine.yield('Common.move 移动中出现异常', 'c2')
         end
@@ -276,6 +276,22 @@ function Common.timeLimitedWindow()
         {571, 274, 0xa90e16}, {836, 215, 0xc21200}
     })
     mSleep(1000)
+end
+
+-- 组队的页面
+function Common.teamPage()
+    offset =
+        '-464|-7|0x764a2c,-450|-7|0x764a2c,-410|-3|0x764a2c,-395|5|0x815a3f,-396|-15|0x835b3f,-764|77|0xecb75b'
+    return findColorsUntil(0xcd0000, offset, 90, 93, 17, 1015, 136,
+                           {orient = 2}, 500, 1)
+end
+
+-- 便捷组队页面
+function Common.easyGroupPage()
+    offset =
+        '-494|-9|0x764a2c,-425|-9|0x764a2c,-404|-17|0x764a2c,-418|-15|0x764a2c,-903|11|0xb4692d,-917|4|0xf8debd'
+    return findColorsUntil(0xce0000, offset, 90, 72, 6, 1055, 105, {orient = 2},
+                           500, 1)
 end
 
 return Common

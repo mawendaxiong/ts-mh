@@ -15,4 +15,6 @@ function timer.check()
     return false
 end
 
+function timer.detail() return timer.schedule - (os.time() - timer.startTime) end
+
 return timer

@@ -101,7 +101,11 @@ local function execute()
 
         UISetting.currentAccount = UISetting.accountList[accountIndex]
 
-        if not dev then Main.login() else generateRandomTaskList(true) end
+        if not dev then
+            Main.login()
+        else
+            generateRandomTaskList(dev)
+        end
 
         if mainStatus.isCrash == 1 then
             toast('crash!!!', 2)
