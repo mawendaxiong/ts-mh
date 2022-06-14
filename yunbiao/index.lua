@@ -53,12 +53,14 @@ function Escort.findTaskOnTaskBoard()
 end
 
 -- 等待郑镖头
-function Escort.waitLeaderZheng()
+function Escort.waitLeader()
 
-    if not Common.userDialog() then -- 没出现郑镖头对话框
+    if not Common.userDialog(1000, 10) then -- 没出现郑镖头对话框
+
         coroutine.yield('郑镖头对话框可能被弹窗挡住了', 'c2')
         if not Common.userDialog() then return 2 end -- 二次确认,还是没有就从打开任务板开始
     end
+
     -- 执行下一步
     return 0
 end
@@ -73,6 +75,7 @@ function Escort.excute()
             mSleep(1000)
             if enough50() then -- 活跃值不足50
                 Common.record("活跃不足50,执行下一个任务")
+                mSleep(2000)
                 return -2 -- 活跃不足50,直接结束
             end
 
@@ -85,7 +88,7 @@ function Escort.excute()
                 Common.record("运镖: " .. freq)
             end
         elseif not yunbiaozhong() then -- 运镖中
-            coroutine.yield('运镖中可能弹出了弹窗','c2')
+            coroutine.yield('运镖中可能弹出了弹窗', 'c2')
             -- 没有运镖且不在主页
             if not Common.checkMainPage() then Common.closeWindow() end
         elseif freq == 3 and Common.checkMainPage() then -- 运镖三次了

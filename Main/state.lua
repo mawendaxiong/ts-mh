@@ -28,8 +28,12 @@ UISetting.restart = nil
 
 UISetting.g1 = 20
 UISetting.g2 = 20
+
 -- 秘境次数统计
 uncharted.freq = 0
+-- 运镖次数统计
+escort.freq = 0
+
 return {
     ["taskRecord"] = taskRecord,
     ["UISetting"] = UISetting,
