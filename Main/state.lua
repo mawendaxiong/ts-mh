@@ -2,6 +2,7 @@ taskRecord = {}
 UISetting = {}
 mainStatus = {}
 uncharted = {}
+escort = {}
 
 mainStatus.isCrash = -1
 mainStatus.needLogin = 1

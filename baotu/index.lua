@@ -1,6 +1,7 @@
 require("TSLib")
 
 Common = require("Common.index")
+timer = require("Common.timer")
 TaskBoard = require("renwuban.index")
 local container = require("Main.state")
 local mainStatus = container.mainStatus
@@ -49,14 +50,10 @@ end
 
 -- 领取任务
 function Treasure.getTask()
-    -- 出现店小二的对话框
-    ret, tim, x, y = Common.userDialog(1000, 10)
-    -- 如果没有出现,检查有没有弹窗并
-    if not ret then
-        coroutine.yield('没店小二对话框', 'c2')
-        if not Common.userDialog() then -- 还是没有对话框
-            return 2 -- 打开活动板,重新去店小二领取任务
-        end
+    while true do
+        if Common.userDialog() then break end
+        coroutine.yield('领取宝图任务异常', 'c2')
+        msleep(1000)
     end
 
     ret, tim, x, y = getTask()
@@ -77,11 +74,23 @@ function Treasure.getTask()
     -- 清除和店小二的对话框
     tap(600, 400)
     mSleep(1000)
+
+    while true do
+        if Common.checkMainPage() then break end -- [确保在首页]
+        coroutine.yield('宝图领取任务异常', 'c2')
+        mSleep(1000)
+    end
     return 0
 end
 
 -- 右侧查询任务
 function Treasure.findTask()
+    while true do
+        if Common.checkMainPage() then break end
+        coroutine.yield('宝图查询页面异常', 'c2')
+        mSleep(1000)
+    end
+
     -- 激活右侧任务tab
     if not isColor(931, 122, 0xcde5ac, 100) then
         tap(931, 122)
@@ -100,8 +109,13 @@ function Treasure.findTask()
     -- 找到任务
     if ret then
         tap(x, y)
-        -- 执行
-        return 0
+
+        while true do
+            if Common.checkMainPage() then break end -- [确保在首页]
+            coroutine.yield('宝图查询页面异常', 'c2')
+            mSleep(1000)
+        end
+        return 0 -- 执行
     end
 
     -- 重置右侧任务栏
@@ -121,16 +135,28 @@ function Treasure.findTask()
         local p3 = getColor(711, 212)
         local p4 = getColor(723, 224)
         return p1, p2, p3, p4
-    end, function() Common.resetRightTaskBoard() end)
-    -- 找到了宝图任务
-    if ret == 0 then
-        -- 执行下一步,等待打宝图
-        return 0
-    elseif Common.checkMainPage() then
-        -- 打开背包找宝图
-        return 8
+    end, function() Common.resetRightTaskBoard() end,
+                      function() return Common.checkMainPage() end -- 确保查找右侧任务栏都在首页
+    )
+
+    if ret == 0 then -- 找到了宝图任务
+        while true do
+            if Common.checkMainPage() or Common.checkBattle() then
+                break
+            end -- [确保在首页or战斗]
+            coroutine.yield('宝图查询页面异常', 'c2')
+            mSleep(1000)
+        end
+
+        return 0 -- 执行下一步,等待打宝图
+    elseif Common.checkMainPage() then -- 没有宝图任务,就打开背包挖宝
+        return 7 -- 打开背包找宝图
     else
-        return 'c2'
+        while true do
+            if Common.checkMainPage() then return 7 end -- [确保在首页] 然后打开背包
+            coroutine.yield('宝图查询页面异常', 'c2')
+            mSleep(1000)
+        end
     end
 
 end
@@ -138,17 +164,14 @@ end
 -- 等待打完宝图
 function Treasure.waitBattle()
     waitingTime = 30
-    while (true) do
-        isBattle = Common.checkBattle()
+    while true do
 
-        -- 正在战斗
-        if isBattle then
+        if Common.checkBattle() then -- 正在战斗
             waitingTime = 30
             fwCloseView("recordBoard", "record")
         else
-            -- 是否在首页
-            isMainPage = Common.checkMainPage()
-            if not isMainPage then
+
+            if not Common.checkMainPage() then -- 不在首页
                 coroutine.yield('打宝图,页面异常', 'c2')
             else
                 waitingTime = waitingTime - 1
@@ -159,12 +182,24 @@ function Treasure.waitBattle()
             end
         end
     end
+
+    while true do
+        if Common.checkMainPage() then break end -- [确保在首页]
+        coroutine.yield('宝图查询页面异常', 'c2')
+        mSleep(1000)
+    end
+
     -- 执行下一步,打开背包
     return 0
 end
 
 -- 打开背包
 function Treasure.openBag()
+    while true do
+        if Common.checkMainPage() then break end -- [确保在首页]
+        coroutine.yield('宝图查询页面异常', 'c2')
+        mSleep(1000)
+    end
 
     -- 打开背包
     while true do
@@ -176,21 +211,21 @@ function Treasure.openBag()
             -- 打开背包
             tap(1101, 523)
         end
-        --     coroutine.yield('c2')
-        -- else
-        --     ret, tim, x, y = bag()
-        --     if ret then break end
 
-        -- end
         mSleep(1000)
-
     end
 
-    -- 执行下一步,找宝图
+    -- 因为在背包页面才会break,所以不用判断.执行下一步,找宝图
     return 0
 end
 
 function Treasure.findMap()
+    while true do
+        if bag() then break end -- [确保在背包]
+        coroutine.yield('宝图在背包查找页面异常', 'c2')
+        mSleep(1000)
+    end
+
     ret, tim, x, y = treasureMap()
     if ret then
         -- 点击宝图
@@ -215,36 +250,52 @@ function Treasure.findMap()
             return true
         end
         return false
-    end, function() moveTo(729, 458, 729, 217, 2, 50) end, function()
+    end, function() moveTo(729, 358, 729, 217, 2, 50) end, function()
         local p1 = getColor(606, 180)
         local p2 = getColor(686, 265)
         local p3 = getColor(769, 337)
         local p4 = getColor(841, 416)
         return p1, p2, p3, p4
-    end)
+    end, nil, function() return bag() end)
 
     if ret == 0 then
-        -- 执行下一步
-        return 0
+
+        while true do
+            if Common.checkMainPage() then
+                return 0 -- 执行下一步
+            end -- [确保在主页]
+            coroutine.yield('宝图在背包查找页面异常', 'c2')
+            mSleep(1000)
+        end
+
     elseif bag() then -- 确保是背包界面,并且没有宝图,直接结束
+        Common.closeWindow() -- 关闭背包
         return -2
     else
-        -- 重新执行[查找宝图]
-        return 'c2'
+        while true do
+            if bag() then
+                Common.closeWindow() -- 关闭背包
+                return -2
+            end
+            coroutine.yield('找宝图异常', 'c2')
+            mSleep(1000)
+        end
     end
 
 end
 
 -- 挖宝
 function Treasure.excute()
+    while true do
+        if Common.checkMainPage() then break end
+        coroutine.yield('挖宝页面使用宝图异常', 'c2')
+        msleep(1000)
+    end
+    
     waitingTime = 40
     while true do
-        ret = Common.checkMainPage()
-        -- 在主页
-        if ret then
-            -- 复位
-            otherTime = 100
 
+        if Common.checkMainPage() then -- 在主页
             -- 右下角的使用宝图
             ret, tim, x, y = useTreasureMap()
             -- 没有使用宝图
@@ -259,34 +310,50 @@ function Treasure.excute()
             end
         end
 
-        if waitingTime <= 0 then
-            coroutine.yield('挖宝结束检查', 'c2')
+        if waitingTime <= 0 then break end
+        mSleep(1000)
+    end
 
-            if not useTreasureMap() then -- 没有使用宝图,说明背包的宝图挖完了
-                break
-            else
-                waitingTime = 40
-            end
-        end
+    while true do
+        if Common.checkMainPage() then break end -- [确保在首页]
+        coroutine.yield('宝图在背包查找页面异常', 'c2')
         mSleep(1000)
     end
 
     -- 结束挖宝
-    toast("结束挖宝")
+    toast("结束挖宝", 2)
+    mSleep(2000)
+
     return -2
 end
 
 function Treasure.findTaskOnTaskBoard()
-    ret = TaskBoard.findTask()
-    -- 没有找到任务,那就是已经打完了
 
-    if ret == -1 then
-        -- 关闭活动板
-        tap(1014, 43)
-        mSleep(1000)
-        -- 执行打开背包
-        return 8
+    while true do
+        if TaskBoard.checkTaskBoard() then break end
+        coroutine.yield('任务板查找任务异常', 'c2')
+        msleep(1000)
     end
+
+    if TaskBoard.findTask() == -1 then -- 没有找到任务,那就是已经打完了
+
+        tap(1014, 43) -- 关闭活动板
+        mSleep(1000)
+
+        while true do
+            if Common.checkMainPage() then break end -- [确保在主页面]            
+            coroutine.yield('挖宝打开背包前页面异常', 'c2')
+            mSleep(1000)
+        end
+        return 7 -- 执行打开背包
+    end
+
+    while true do
+        if Common.userDialog() then break end -- 到了店小二
+        coroutine.yield('等待去店小二', 'c2')
+        mSleep(1000)
+    end
+
     -- 执行下一步
     return 0
 end

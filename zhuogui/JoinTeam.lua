@@ -74,6 +74,12 @@ end
 
 -- 等待加入队伍
 function Ghost.waitTeam()
+    while true do
+        if Common.easyGroupPage() then break end
+        coroutine.yield('混队捉鬼等待加入队伍异常', 'c2')
+        msleep(1000)
+    end
+
     tap(684, 584) -- 点击自动匹配
     timer.start(300)
     while true do
@@ -102,11 +108,12 @@ function Ghost.waitTeam()
         end
     end
 
-    if not Common.easyGroupPage() then -- 便捷组队页面
-        coroutine.yield(
-            '混队捉鬼没进到队伍,准备退出队伍,但是页面异常了',
-            'c2')
+    while true do
+        if Common.easyGroupPage() then break end -- 便捷组队页面
+        coroutine.yield('混队捉鬼组队超时无法关闭页面', 'c2')
+        msleep(1000)
     end
+
     -- 关闭便捷组队页面
     tap(1015, 44)
 
@@ -116,12 +123,24 @@ function Ghost.waitTeam()
         return 3
     end
 
+    while true do
+        if Common.checkMainPage() then break end
+        coroutine.yield('混队捉鬼组队失败', 'c2')
+        msleep(1000)
+    end
+    
     -- 结束捉鬼了
     return -2
 end
 
 -- 检查战斗状态
 function Ghost.checkBattleStatus()
+    while true do
+        if Common.checkBattle() then break end
+        coroutine.yield('混队捉鬼检查状态异常', 'c2')
+        msleep(1000)
+    end
+
     if globalGhost["ghostNum"] == nil then globalGhost["ghostNum"] = 0 end
 
     -- 主页面倒计时
@@ -192,8 +211,6 @@ end
 
 -- 统计捉鬼次数
 function Ghost.checkGhostNum()
-    collectgarbage("collect")
-
     if globalGhost["ghostNum"] < UISetting.g2 then
         Common.commonOpenGroup()
         ret, tim, x, y = Common.quitTeam()
@@ -212,10 +229,18 @@ function Ghost.checkGhostNum()
 end
 
 function Ghost.findTaskOnTaskBoard()
-    if TaskBoard.findTask() == -1 then
-        coroutine.yield('混队捉鬼的任务板被弹窗挡住了', 'c2')
-        if TaskBoard.findTask() == -1 then end -- todo 还是没捉鬼任务怎么处理
+    while true do
+        if TaskBoard.checkTaskBoard() then break end
+        coroutine.yield('混队捉鬼查找任务异常', 'c2')
+        msleep(1000)
     end
+
+    while true do
+        if TaskBoard.findTask() == 0 then break end
+        coroutine.yield('混队捉鬼的任务板被弹窗挡住了', 'c2')
+        msleep(1000)
+    end
+
     -- 执行下一步
     return 0
 end

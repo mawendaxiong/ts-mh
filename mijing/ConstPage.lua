@@ -19,7 +19,7 @@ function page.index()
         ["3"] = {
             ["now"] = "3",
             ["name"] = "查找任务并打开",
-            ["class"] = renwuban,
+            ["class"] = mijing,
             ["method"] = "findTask",
             ["next"] = "4"
         },

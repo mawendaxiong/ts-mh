@@ -60,13 +60,20 @@ TaskBoard.taskContainer = {
 function TaskBoard.new(targetTask) TaskBoard.task = targetTask end
 
 function TaskBoard.open()
+    while true do
+        if Common.checkMainPage() then break end
+        coroutine.yield('打开任务板时被挡住了', 'c2')
+        mSleep(1000)
+    end
+
     ret = multiColTap({
         {36, 115, 0xe5d45b}, {315, 28, 0xd79a50}, {327, 31, 0xdab291},
         {313, 41, 0x91471d}
     })
-    if not ret then return 'c2' end
-    -- 打开日常活动
-    tap(200, 119)
+    -- [确保任务板页面]
+    if not TaskBoard.checkTaskBoard() then return 'c2' end
+
+    tap(200, 119) -- 打开日常活动
     return 0
 end
 
@@ -78,20 +85,26 @@ local function resetTaskBoard()
     end
 end
 
-function TaskBoard.findTask()
+function TaskBoard.findTask(step)
+    -- todo 暂时默认为2
+    if nil == step then step = 2 end
     local taskObject = TaskBoard.taskContainer[TaskBoard.task]
-    if not TaskBoard.checkTaskBoard() then coroutine.yield('任务板|查找任务','c2') end
-    keepScreen(true)
+    if not TaskBoard.checkTaskBoard() then
+        coroutine.yield('任务板|查找任务', 'c2')
+    end
     local x, y = findMultiColorInRegionFuzzy(taskObject.all.color,
                                              taskObject.all.posandcolors, 90,
                                              291, 81, 1015, 440)
-    keepScreen(false)
 
     if x ~= -1 then
         tap(x, y)
         mSleep(1000)
         -- 执行下一步
         return 0
+    end
+
+    if not TaskBoard.checkTaskBoard() then -- 这种情况一般是人为关掉了
+        return 'c2', step
     end
 
     resetTaskBoard()
@@ -112,7 +125,8 @@ function TaskBoard.findTask()
         local p3 = getColor(702, 118)
         local p4 = getColor(339, 117)
         return p1, p2, p3, p4
-    end, function() resetTaskBoard() end)
+    end, function() resetTaskBoard() end,
+                      function() return TaskBoard.checkTaskBoard() end)
 
     return ret
 end

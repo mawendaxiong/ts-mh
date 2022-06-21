@@ -51,8 +51,9 @@ function Common.checkMainPage(rate, second)
     if rate == nil then rate = 1000 end
     if second == nil then second = 1 end
 
-    -- offset = "11|0|0xdecc57,17|9|0xb0631c,4|17|0xdb9132,8|23|0xebe4c0"
-    -- return findColorsUntil(0xa20d12, offset, 90, 2, 4, 68, 179, {orient = 2}, rate, second)
+    if Common.userDialog() then -- 有用户对话框
+        tap(600, 400) -- 关闭对话框
+    end
 
     return findColorsUntil(0xa3e17b,
                            "-5|9|0x87c24d,2|18|0x5a9a19,-9|22|0xff897d,11|33|0x893807",
@@ -139,27 +140,20 @@ function Common.b2a(step)
 
     timer.start(5)
     while true do
-        ret = Common.checkMainPage()
-        if ret then
-            keepScreen(false)
-            break
-        end
-        -- 定时器到点了,返回页面异常
+        if Common.checkMainPage() then break end
+        -- 定时器到点了,重新执行当前节点
         if timer.check() then return "c2" end
-        Common.closeWindow()
         mSleep(1000)
     end
 
-    -- 可以看见活动的logo,就返回下一步
+    -- 可以看见活动的logo,就返回下一步,[确保主页面]
     if Common.checkMainPage() then return 0 end
 
     -- 打开地图
     tap(35, 35)
     mSleep(1000)
 
-    keepScreen(true)
     ret, tim, x, y = changanLocation()
-    keepScreen(false)
     if ret then
         tap(x, y)
         mSleep(1000)
@@ -169,6 +163,8 @@ function Common.b2a(step)
     -- 没在地图找到长安
     tap(1000, 60)
     mSleep(1000)
+
+    if not Common.checkMainPage() then return 'c2' end -- 不是在首页,重新执行这个节点,[确保主页面]
     return step
 end
 
