@@ -7,7 +7,24 @@ Lottery = {}
 
 -- 检查刮刮乐有没有被开过
 local function checkScratch()
-    return findColorsUntil(0xa4a4a4, "74|43|0xa3a3a3", 90, 755, 423, 951, 513, {orient = 2}, 500, 1)
+    offset =
+        '-130|-84|0x6d6d6d,-83|-82|0x6d6d6d,-30|-80|0x6d6d6d,-94|-73|0x6d6d6d'
+    return findColorsUntil(0xe02a22, offset, 90, 754, 423, 950, 590,
+                           {orient = 2}, 500, 1)
+end
+
+-- 福利页面
+local function fuliPage()
+    offset =
+        '-415|-4|0x6f3610,-403|0|0x733b16,-367|-12|0x6c310a,-352|-9|0x6f3610,-367|-2|0x6c310a'
+    return findColorsUntil(0xce0000, offset, 90, 511, 33, 1000, 107,
+                           {orient = 2}, 500, 1)
+end
+
+local function guagualePage()
+    offset = '-116|245|0x875832,-692|47|0xfff9cb,-726|57|0xffeb72'
+    return findColorsUntil(0xcf0000, offset, 90, 239, 12, 1057, 324,
+                           {orient = 2}, 500, 1)
 end
 
 -- 检查是否刮完
@@ -19,29 +36,52 @@ local function checkScratchFinish()
 end
 -- 打开福利
 function Lottery.openWelfareBox()
-    while (true) do
-        if Common.checkMainPage() then
-            break
-        end
-        Common.closeWindow()
+    while true do
+        if Common.checkMainPage() then break end
+        coroutine.yield('打开福利异常', 'c2')
         mSleep(1000)
     end
+
     -- 打开福利
     tap(37, 123)
     mSleep(1000)
+
+    while true do
+        if fuliPage() then break end
+        coroutine.yield('福利页面异常', 'c2')
+        msleep(1000)
+    end
 
     return 0
 end
 
 -- 打开刮刮乐
 function Lottery.openScratch()
-    ret, tim, x, y = checkScratch()
-    if ret then
-        -- 打开刮刮乐
-        tap(867, 568)
+    while true do
+        if fuliPage() then break end
+        coroutine.yield('福利页面异常', 'c2')
+        msleep(1000)
+    end
+
+    if checkScratch() then
+
+        tap(867, 568) -- 打开刮刮乐
+
+        while true do
+            if guagualePage() then break end
+            coroutine.yield('刮刮乐页面异常', 'c2')
+            msleep(1000)
+        end
         return 0
     end
 
+    tap(961, 71) -- 关闭福利
+
+    while true do
+        if Common.checkMainPage() then break end
+        coroutine.yield('福利页面异常', 'c2')
+        msleep(1000)
+    end
     -- 已经刮奖了,结束
     return -2
 end
@@ -50,11 +90,14 @@ end
 function Lottery.Scratch()
     start = 332
     while true do
-        moveTo(571, start, 920, start, 2, 50)
-        if checkScratchFinish() then
-            break
+        if not guagualePage() then
+            coroutine.yield('刮奖页面异常', 'c2')
+        else
+            moveTo(571, start, 920, start, 2, 50)
+            if checkScratchFinish() then break end
+            start = start + 24
         end
-        start = start + 24
+
         mSleep(1000)
     end
 
@@ -63,10 +106,8 @@ end
 
 -- 关闭窗口
 function Lottery.close()
-    while (true) do
-        if Common.checkMainPage() then
-            break
-        end
+    while true do
+        if Common.checkMainPage() then break end
         Common.closeWindow()
         mSleep(1000)
     end
@@ -74,8 +115,6 @@ function Lottery.close()
     return -2
 end
 
-function Lottery.crashCallack()
-    return 1
-end
+function Lottery.crashCallack() return 1 end
 
 return Lottery

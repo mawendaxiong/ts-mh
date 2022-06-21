@@ -211,7 +211,7 @@ function Ghost.checkGhostNum()
         coroutine.yield('统计捉鬼次数页面异常', 'c2')
         msleep(1000)
     end
-    
+
     if globalGhost["ghostNum"] < UISetting.g2 then
         Common.commonOpenGroup()
         ret, tim, x, y = Common.quitTeam()
@@ -223,6 +223,12 @@ function Ghost.checkGhostNum()
 
         -- 返回 [便捷组队]
         return 2
+    end
+
+    while true do
+        if Common.checkMainPage() then break end
+        coroutine.yield('统计捉鬼次数页面异常', 'c2')
+        msleep(1000)
     end
 
     toast("结束捉鬼")
