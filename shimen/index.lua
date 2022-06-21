@@ -195,9 +195,10 @@ function Sect.findTaskOnTaskBoard()
 
     while true do
         if checkChoosePage() then -- [确保是师门选择任务的页面]
-            if not checkChoosePage() then return 'c2' end -- 消除了一波弹窗,还不是师门任务的选择任务页面
+            break
         end
         coroutine.yield('师门任务查找任务异常', 'c2')
+        mSleep(1000)
     end
 
     return 0
@@ -377,13 +378,19 @@ function Sect.excute()
         if Common.checkMainPage() then -- 在首页
             if Common.userDialog() then -- 有对话框
                 Common.record("对话")
-
+                mSleep(1000)
                 -- 点击第一个选项
                 ret, tim, x, y = dialogSelection()
+                toast(x .. ',' .. y, 1)
+                mSleep(1000)
                 if ret then -- 有选项的对话框
+                    -- toast('11111',1)
+                    -- mSleep(1000)
                     tap(x, y)
                     mSleep(1000)
                 else -- 有对话,没有选项
+                    -- toast('22222',1)
+                    -- mSleep(1000)
                     -- 清除对话
                     tap(500, 400)
                     mSleep(1000)

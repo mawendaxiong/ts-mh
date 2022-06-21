@@ -159,14 +159,31 @@ end
 local c1 = coroutine.create(execute)
 
 local function daemon()
-    if exception.lastTime == 0 then
-        exception.lastTime = os.time()
-    elseif (os.time() - exception.lastTime) <= 5 then -- 异常次数加一
-        exception.freq = exception.freq + 1
-        exception.lastTime = os.time()
+    if exception.n1 == nil then
+        toast("异常1: " .. exception.freq, 1)
+        mSleep(1000)
+        exception.n1 = getColor(221, 255)
+        exception.n2 = getColor(992, 230)
+        exception.n3 = getColor(991, 464)
+        exception.n4 = getColor(239, 434)
     else
-        exception.freq = 0
+
+        n1 = getColor(221, 255)
+        n2 = getColor(992, 230)
+        n3 = getColor(991, 464)
+        n4 = getColor(239, 434)
+        if n1 == exception.n1 and n2 == exception.n2 and n3 == exception.n3 and
+            n4 == exception.n4 then
+            exception.freq = exception.freq + 1
+            toast("异常2: " .. exception.freq, 1)
+            mSleep(1000)
+        else
+            toast("异常3: " .. exception.freq, 1)
+            mSleep(1000)
+            exception.freq = 0
+        end
     end
+
     flag = appIsRunning("com.netease.my")
     if flag == 0 or exception.freq >= 30 then -- 程序闪退
         toast("闪退", 2)
@@ -262,8 +279,6 @@ end
 
 local function masterMain()
     while coroutine.status(c1) ~= "dead" do
-        toast('round...', 2)
-        mSleep(2000)
         local status, tips, ret, after = coroutine.resume(c1)
         if nil == after then after = '无' end
         wLog(log.name, "daemon :" .. tips .. "后续执行 :" .. after);
@@ -275,7 +290,7 @@ local function masterMain()
     end
 end
 
--- dev = true
+dev = true
 init()
 now = os.date("%Y-%m-%d %X")
 createGobalTable("log")

@@ -70,10 +70,15 @@ function TaskBoard.open()
         {36, 115, 0xe5d45b}, {315, 28, 0xd79a50}, {327, 31, 0xdab291},
         {313, 41, 0x91471d}
     })
-    -- [确保任务板页面]
-    if not TaskBoard.checkTaskBoard() then return 'c2' end
 
     tap(200, 119) -- 打开日常活动
+
+    while true do
+        if TaskBoard.checkTaskBoard() then break end -- [确保任务板页面]
+        coroutine.yield('打开任务板后页面异常', 'c2')
+        mSleep(1000)
+    end
+
     return 0
 end
 

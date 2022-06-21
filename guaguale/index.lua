@@ -16,8 +16,8 @@ end
 -- 福利页面
 local function fuliPage()
     offset =
-        '-415|-4|0x6f3610,-403|0|0x733b16,-367|-12|0x6c310a,-352|-9|0x6f3610,-367|-2|0x6c310a'
-    return findColorsUntil(0xce0000, offset, 90, 511, 33, 1000, 107,
+        '-359|-10|0x6c310a,-365|-10|0x6c310a,-375|-2|0x6c310a,-418|-18|0x6c310a,-417|-7|0x6c310a'
+    return findColorsUntil(0xcf0000, offset, 90, 126, 8, 1022, 101,
                            {orient = 2}, 500, 1)
 end
 

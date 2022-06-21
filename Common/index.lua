@@ -51,9 +51,9 @@ function Common.checkMainPage(rate, second)
     if rate == nil then rate = 1000 end
     if second == nil then second = 1 end
 
-    if Common.userDialog() then -- 有用户对话框
-        tap(600, 400) -- 关闭对话框
-    end
+    -- if Common.userDialog() then -- 有用户对话框
+    --     tap(600, 400) -- 关闭对话框
+    -- end
 
     return findColorsUntil(0xa3e17b,
                            "-5|9|0x87c24d,2|18|0x5a9a19,-9|22|0xff897d,11|33|0x893807",

@@ -38,9 +38,12 @@ uncharted.freq = 0
 escort.freq = 0
 
 -- 上一次异常时间
-exception.lastTime = 0
--- 异常次数
 exception.freq = 0
+-- 异常次数
+exception.n1 = nil
+exception.n2 = nil
+exception.n3 = nil
+exception.n4 = nil
 
 -- 捉鬼
 -- 捉鬼次数
