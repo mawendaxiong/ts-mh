@@ -3,6 +3,7 @@ UISetting = {}
 mainStatus = {}
 uncharted = {}
 escort = {}
+exception = {}
 
 mainStatus.isCrash = -1
 mainStatus.needLogin = 1
@@ -35,9 +36,15 @@ uncharted.freq = 0
 -- 运镖次数统计
 escort.freq = 0
 
+-- 上一次异常时间
+exception.lastTime = 0
+-- 异常次数
+exception.freq = 0
+
 return {
     ["taskRecord"] = taskRecord,
     ["UISetting"] = UISetting,
     ["mainStatus"] = mainStatus,
-    ["uncharted"] = uncharted
+    ["uncharted"] = uncharted,
+    ["exception"] = exception,
 }

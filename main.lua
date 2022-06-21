@@ -7,6 +7,7 @@ local container = require("Main.state")
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
+local exception = container.exception
 
 initSuccess = false
 finish = false
@@ -158,8 +159,15 @@ end
 local c1 = coroutine.create(execute)
 
 local function daemon()
+    if exception.lastTime == 0 then
+        exception.lastTime = os.time()
+    elseif (os.time() - exception.lastTime) <= 5 then -- 异常次数加一
+        exception.freq = exception.freq + 1
+    else
+        exception.freq = 0
+    end
     flag = appIsRunning("com.netease.my")
-    if flag == 0 then -- 程序闪退
+    if flag == 0 or exception.freq >= 30 then -- 程序闪退
         toast("闪退", 2)
         mSleep(2000)
         wLog(log.name, "[DATE] 闪退")
@@ -173,6 +181,7 @@ local function daemon()
         taskRecord.crashPage = taskRecord.currentPage
         taskRecord.crashNode = taskRecord.currentNode
 
+        exception.freq = 0 -- 异常次数清零
         -- 结束辅助协程
         return
     end
