@@ -275,7 +275,7 @@ local function masterMain()
     end
 end
 
-dev = true
+-- dev = true
 init()
 now = os.date("%Y-%m-%d %X")
 createGobalTable("log")

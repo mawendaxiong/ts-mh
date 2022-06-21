@@ -78,7 +78,7 @@ function Ghost.waitTeam()
     while true do
         if Common.easyGroupPage() then break end
         coroutine.yield('混队捉鬼等待加入队伍异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     tap(684, 584) -- 点击自动匹配
@@ -112,7 +112,7 @@ function Ghost.waitTeam()
     while true do
         if Common.easyGroupPage() then break end -- 便捷组队页面
         coroutine.yield('混队捉鬼组队超时无法关闭页面', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     -- 关闭便捷组队页面
@@ -127,7 +127,7 @@ function Ghost.waitTeam()
     while true do
         if Common.checkMainPage() then break end
         coroutine.yield('混队捉鬼组队失败', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     -- 结束捉鬼了
@@ -139,7 +139,7 @@ function Ghost.checkBattleStatus()
     while true do
         if Common.checkBattle() then break end
         coroutine.yield('混队捉鬼检查状态异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     -- 主页面倒计时
@@ -209,7 +209,7 @@ function Ghost.checkGhostNum()
     while true do
         if Common.checkMainPage() then break end
         coroutine.yield('统计捉鬼次数页面异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     if globalGhost["ghostNum"] < UISetting.g2 then
@@ -228,7 +228,7 @@ function Ghost.checkGhostNum()
     while true do
         if Common.checkMainPage() then break end
         coroutine.yield('统计捉鬼次数页面异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     toast("结束捉鬼")
@@ -239,13 +239,13 @@ function Ghost.findTaskOnTaskBoard()
     while true do
         if TaskBoard.checkTaskBoard() then break end
         coroutine.yield('混队捉鬼查找任务异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     while true do
         if TaskBoard.findTask() == 0 then break end
         coroutine.yield('混队捉鬼的任务板被弹窗挡住了', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     -- 执行下一步

@@ -65,7 +65,7 @@ function Uncharted.findTask()
     while true do
         if TaskBoard.checkTaskBoard() then break end
         coroutine.yield('查找秘境任务异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     if TaskBoard.findTask() == -1 then -- 没有找到任务,那就是已经打完了
@@ -96,7 +96,7 @@ function Uncharted.waitNPC()
     while true do
         if Common.userDialog() then break end
         coroutine.yield('等云游乐异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
     -- 如果没有出现,检查有没有弹窗并
     if not Common.userDialog() then
@@ -148,7 +148,7 @@ function Uncharted.getInto()
     while true do
         if mijingPage() then break end
         coroutine.yield('秘境选择关卡页面异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     Common.move(nil, function() moveTo(410, 146, 913, 146, 50, 1000) end,

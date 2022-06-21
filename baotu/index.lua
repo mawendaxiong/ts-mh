@@ -53,7 +53,7 @@ function Treasure.getTask()
     while true do
         if Common.userDialog() then break end
         coroutine.yield('领取宝图任务异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     ret, tim, x, y = getTask()
@@ -289,7 +289,7 @@ function Treasure.excute()
     while true do
         if Common.checkMainPage() then break end
         coroutine.yield('挖宝页面使用宝图异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
     
     waitingTime = 40
@@ -332,7 +332,7 @@ function Treasure.findTaskOnTaskBoard()
     while true do
         if TaskBoard.checkTaskBoard() then break end
         coroutine.yield('任务板查找任务异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     if TaskBoard.findTask() == -1 then -- 没有找到任务,那就是已经打完了

@@ -49,7 +49,7 @@ function Lottery.openWelfareBox()
     while true do
         if fuliPage() then break end
         coroutine.yield('福利页面异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     return 0
@@ -60,7 +60,7 @@ function Lottery.openScratch()
     while true do
         if fuliPage() then break end
         coroutine.yield('福利页面异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     if checkScratch() then
@@ -70,7 +70,7 @@ function Lottery.openScratch()
         while true do
             if guagualePage() then break end
             coroutine.yield('刮刮乐页面异常', 'c2')
-            msleep(1000)
+            mSleep(1000)
         end
         return 0
     end
@@ -80,7 +80,7 @@ function Lottery.openScratch()
     while true do
         if Common.checkMainPage() then break end
         coroutine.yield('福利页面异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
     -- 已经刮奖了,结束
     return -2

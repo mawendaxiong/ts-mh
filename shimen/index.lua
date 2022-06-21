@@ -175,7 +175,7 @@ function Sect.findTaskOnTaskBoard()
     while true do
         if TaskBoard.checkTaskBoard() then break end
         coroutine.yield('任务板查找任务异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
 
     -- 找不到师门任务,直接结束
@@ -208,7 +208,7 @@ function Sect.chooseTask()
     while true do
         if checkChoosePage() then break end
         coroutine.yield('师门任务选择任务页面异常', 'c2')
-        msleep(1000)
+        mSleep(1000)
     end
     -- 如果不是选择任务的界面,直接进行下一步,因为可能是[新手的师门任务]
     if not checkChoosePage() then
