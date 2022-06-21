@@ -163,6 +163,7 @@ local function daemon()
         exception.lastTime = os.time()
     elseif (os.time() - exception.lastTime) <= 5 then -- 异常次数加一
         exception.freq = exception.freq + 1
+        exception.lastTime = os.time()
     else
         exception.freq = 0
     end
