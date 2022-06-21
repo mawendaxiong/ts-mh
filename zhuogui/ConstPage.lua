@@ -9,7 +9,6 @@ daidui = require("zhuogui.LeadTeam")
 -- 混队捉鬼
 hundui = require("zhuogui.JoinTeam")
 
-createGobalTable("globalGhost")
 
 page = {}
 

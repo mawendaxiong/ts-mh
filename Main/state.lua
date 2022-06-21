@@ -4,6 +4,7 @@ mainStatus = {}
 uncharted = {}
 escort = {}
 exception = {}
+globalGhost = {}
 
 mainStatus.isCrash = -1
 mainStatus.needLogin = 1
@@ -41,10 +42,17 @@ exception.lastTime = 0
 -- 异常次数
 exception.freq = 0
 
+-- 捉鬼
+-- 捉鬼次数
+globalGhost.ghostNum = 0
+-- 练小号时的检查等级
+globalGhost.checkLevel = nil
+
 return {
     ["taskRecord"] = taskRecord,
     ["UISetting"] = UISetting,
     ["mainStatus"] = mainStatus,
     ["uncharted"] = uncharted,
     ["exception"] = exception,
+    ["globalGhost"] = globalGhost,
 }

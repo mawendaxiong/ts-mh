@@ -7,6 +7,7 @@ local container = require("Main.state")
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
+local globalGhost = container.globalGhost
 
 Ghost = {}
 
@@ -128,7 +129,7 @@ function Ghost.waitTeam()
         coroutine.yield('混队捉鬼组队失败', 'c2')
         msleep(1000)
     end
-    
+
     -- 结束捉鬼了
     return -2
 end
@@ -141,8 +142,6 @@ function Ghost.checkBattleStatus()
         msleep(1000)
     end
 
-    if globalGhost["ghostNum"] == nil then globalGhost["ghostNum"] = 0 end
-
     -- 主页面倒计时
     local mainPageTime = 60
 
@@ -151,11 +150,7 @@ function Ghost.checkBattleStatus()
     local isCount = false
 
     while true do
-
-        isBattle = Common.checkBattle()
-
-        -- 不在战斗
-        if not isBattle then
+        if not Common.checkBattle() then -- 不在战斗
             isCount = false
             -- 在主页
             if Common.checkMainPage() then
@@ -171,7 +166,7 @@ function Ghost.checkBattleStatus()
                 if mainPageTime <= 1 then break end
             else
                 -- 关闭弹窗
-                Common.closeWindow()
+                coroutine.yield('混队捉鬼战斗中页面异常', 'c2')
             end
         else
             if not isDone then
@@ -211,6 +206,12 @@ end
 
 -- 统计捉鬼次数
 function Ghost.checkGhostNum()
+    while true do
+        if Common.checkMainPage() then break end
+        coroutine.yield('统计捉鬼次数页面异常', 'c2')
+        msleep(1000)
+    end
+    
     if globalGhost["ghostNum"] < UISetting.g2 then
         Common.commonOpenGroup()
         ret, tim, x, y = Common.quitTeam()
