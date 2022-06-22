@@ -169,18 +169,21 @@ local function daemon()
         n4 = getColor(239, 434)
         if n1 == exception.n1 and n2 == exception.n2 and n3 == exception.n3 and
             n4 == exception.n4 then
-            exception.freq = exception.freq + 1
+            exception.freq = exception.freq - 1
+            toast("重启游戏: " .. exception.freq, 1)
+            mSleep(1000)
+            if exception.freq <= 0 then closeApp("com.netease.my") end -- 页面卡太久了,关闭游戏
         else
             exception.n1 = n1
             exception.n2 = n2
             exception.n3 = n3
             exception.n4 = n4
-            exception.freq = 0
+            exception.freq = 20
         end
     end
 
     flag = appIsRunning("com.netease.my")
-    if flag == 0 or exception.freq >= 30 then -- 程序闪退
+    if flag == 0 or exception.freq <= 0 then -- 程序闪退
         toast("闪退", 2)
         mSleep(2000)
         wLog(log.name, "[DATE] 闪退")
@@ -194,7 +197,7 @@ local function daemon()
         taskRecord.crashPage = taskRecord.currentPage
         taskRecord.crashNode = taskRecord.currentNode
 
-        exception.freq = 0 -- 异常次数清零
+        exception.freq = 20 -- 异常次数清零
         -- 结束辅助协程
         return
     end
@@ -214,7 +217,7 @@ local function daemon()
             -- 记录当前正在执行的任务
             taskRecord.currentStep = taskRecord.currentNode["now"]
             -- 表示不用登录
-            mainStatus.needLogin = -1
+            -- mainStatus.needLogin = -1
 
             return
         end
@@ -231,7 +234,7 @@ local function daemon()
         -- 记录当前正在执行的任务
         taskRecord.currentStep = taskRecord.currentNode["now"]
         -- 表示不用登录
-        mainStatus.needLogin = -1
+        -- mainStatus.needLogin = -1
 
         return
     end
@@ -246,7 +249,7 @@ local function daemon()
         -- 记录当前正在执行的任务
         taskRecord.currentStep = taskRecord.currentNode["now"]
         -- 表示不用登录
-        mainStatus.needLogin = -1
+        -- mainStatus.needLogin = -1
         return
     end
 

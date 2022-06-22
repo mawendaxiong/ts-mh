@@ -50,8 +50,8 @@ end
 local function mijingPage()
     offset =
         '-482|34|0xa67f61,-496|-53|0xf2c35b,-441|-29|0xfef4bb,-340|-51|0xf5c157'
-    return findColorsUntil(0xb91f28, offset, 90, 307, 111, 805, 291,
-                           {orient = 2}, 500, 1)
+    return findColorsUntil(0xb91f28, offset, 90, 63, 3, 1092, 164, {orient = 2},
+                           500, 1)
 end
 
 -- 进入了秘境的页面
@@ -78,10 +78,9 @@ function Uncharted.findTask()
         return -2 -- 结束
     end
 
-    timer.start(20) -- 20秒钟内走到逍遥游
     while true do
         if Common.userDialog() then break end -- 到达逍遥游
-        if timer.check() then return 'c2', 1 end -- 20秒后重新执行
+        coroutine.yield('去逍遥游路上', 'c2')
         mSleep(1000)
     end
 
@@ -95,16 +94,6 @@ function Uncharted.waitNPC()
         if Common.userDialog() then break end
         coroutine.yield('等云游乐异常', 'c2')
         mSleep(1000)
-    end
-    -- 如果没有出现,检查有没有弹窗并
-    if not Common.userDialog() then
-        coroutine.yield('没有出现云游乐', 'c2')
-        if not Common.userDialog() then -- 二次确认,还是没有对话框
-
-            Common.blockCheckMainPage('找不到云游乐')
-
-            return 2 -- 打开活动板,重新去店小二领取任务
-        end
     end
 
     while true do
@@ -131,7 +120,7 @@ function Uncharted.waitNPC()
     while true do
         if mijingPage() then break end -- [保证页面是秘境选择关卡的页面]
         coroutine.yield('显示秘境关卡页面异常', 'c2')
-        mSleep(2000)
+        mSleep(1000)
     end
 
     return 0
@@ -240,10 +229,10 @@ function Uncharted.count()
         if Common.checkBattle() then -- 战斗中不做任何处理
         elseif Common.checkMainPage() then
             if not isColor(453, 19, 0xf35e6b) then -- 一直点离开,直到可以看到挂机的按钮
-                tap(555, 555)
+                tap(1067, 302)
                 mSleep(1000)
             elseif fail() then -- 战斗失败,先清除战斗失败提示 
-                tap(1067, 302)
+                tap(555, 555)
                 mSleep(1000)
             else
 

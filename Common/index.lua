@@ -138,16 +138,7 @@ end
 function Common.b2a(step)
     if step == nil then step = 1 end
 
-    timer.start(5)
-    while true do
-        if Common.checkMainPage() then break end
-        -- 定时器到点了,重新执行当前节点
-        if timer.check() then return "c2" end
-        mSleep(1000)
-    end
-
-    -- 可以看见活动的logo,就返回下一步,[确保主页面]
-    if Common.checkMainPage() then return 0 end
+    Common.blockCheckMainPage('回长安页面异常')
 
     -- 打开地图
     tap(35, 35)
@@ -164,7 +155,8 @@ function Common.b2a(step)
     tap(1000, 60)
     mSleep(1000)
 
-    if not Common.checkMainPage() then return 'c2' end -- 不是在首页,重新执行这个节点,[确保主页面]
+    Common.blockCheckMainPage('回长安页面异常2')
+
     return step
 end
 

@@ -37,9 +37,9 @@ uncharted.freq = 0
 -- 运镖次数统计
 escort.freq = 0
 
--- 上一次异常时间
-exception.freq = 0
--- 异常次数
+-- 页面卡住次数
+exception.freq = 20
+-- 页面卡住检测四个点
 exception.n1 = nil
 exception.n2 = nil
 exception.n3 = nil
