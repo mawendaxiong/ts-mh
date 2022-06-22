@@ -72,11 +72,9 @@ function Uncharted.findTask()
         -- 关闭活动板
         tap(1014, 43)
         mSleep(1000)
-        while true do
-            if Common.checkMainPage() then break end -- [确保在主页面]            
-            coroutine.yield('挖宝打开背包前页面异常', 'c2')
-            mSleep(1000)
-        end
+
+        Common.blockCheckMainPage('找不到秘境任务')
+
         return -2 -- 结束
     end
 
@@ -103,11 +101,7 @@ function Uncharted.waitNPC()
         coroutine.yield('没有出现云游乐', 'c2')
         if not Common.userDialog() then -- 二次确认,还是没有对话框
 
-            while true do
-                if Common.checkMainPage() then break end -- [确保在首页]
-                coroutine.yield('宝图领取任务异常', 'c2')
-                mSleep(1000)
-            end
+            Common.blockCheckMainPage('找不到云游乐')
 
             return 2 -- 打开活动板,重新去店小二领取任务
         end
@@ -253,11 +247,7 @@ function Uncharted.count()
                 mSleep(1000)
             else
 
-                while true do
-                    if Common.checkMainPage() then break end -- [保证在主页]
-                    coroutine.yield('进入秘境内部异常', 'c2')
-                    mSleep(1000)
-                end
+                Common.blockCheckMainPage('进入秘境内部异常')
 
                 return -2 -- 结束
             end

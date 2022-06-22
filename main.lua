@@ -68,20 +68,17 @@ local function shifutuijian()
 end
 
 function init()
-    -- createGobalTable("mainStatus")
 
     mainStatus.isCrash = -1
     mainStatus.needLogin = 1
     mainStatus.logining = -1
 
-    -- createGobalTable("taskRecord")
     -- 当前正在执行的任务
     taskRecord.currentTaskIndex = 1
     -- 当前任务正在执行的步骤
     taskRecord.currentStep = -1
     taskRecord.taskStr = ""
 
-    -- createGobalTable("UISetting")
     -- 当前正在执行任务的账号
     UISetting.currentAccountIndex = 1
 
@@ -160,8 +157,6 @@ local c1 = coroutine.create(execute)
 
 local function daemon()
     if exception.n1 == nil then
-        toast("异常1: " .. exception.freq, 1)
-        mSleep(1000)
         exception.n1 = getColor(221, 255)
         exception.n2 = getColor(992, 230)
         exception.n3 = getColor(991, 464)
@@ -175,11 +170,11 @@ local function daemon()
         if n1 == exception.n1 and n2 == exception.n2 and n3 == exception.n3 and
             n4 == exception.n4 then
             exception.freq = exception.freq + 1
-            toast("异常2: " .. exception.freq, 1)
-            mSleep(1000)
         else
-            toast("异常3: " .. exception.freq, 1)
-            mSleep(1000)
+            exception.n1 = n1
+            exception.n2 = n2
+            exception.n3 = n3
+            exception.n4 = n4
             exception.freq = 0
         end
     end
@@ -290,7 +285,7 @@ local function masterMain()
     end
 end
 
-dev = true
+-- dev = true
 init()
 now = os.date("%Y-%m-%d %X")
 createGobalTable("log")

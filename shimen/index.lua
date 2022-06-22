@@ -184,12 +184,7 @@ function Sect.findTaskOnTaskBoard()
         tap(1014, 43)
         mSleep(1000)
 
-        while true do
-            if Common.checkMainPage() then break end -- [确保在主页面]            
-            coroutine.yield('挖宝打开背包前页面异常', 'c2')
-            mSleep(1000)
-        end
-
+        Common.blockCheckMainPage('师门提前结束页面异常')
         return -2 -- 结束
     end
 
@@ -236,11 +231,7 @@ function Sect.chooseTask()
             tap(991, 130) -- 关闭选择师门类型的窗口
             mSleep(1000)
 
-            while true do
-                if Common.checkMainPage() then break end -- [保证在首页]
-                coroutine.yield('师门任务继续任务页面异常', 'c2')
-                mSleep(1000)
-            end
+            Common.blockCheckMainPage('师门任务继续任务页面异常')
 
             -- 从右侧找 师门任务
             return 6
@@ -248,11 +239,7 @@ function Sect.chooseTask()
             tap(992, 130) -- 关闭选择师门类型的窗口
             mSleep(1000)
 
-            while true do
-                if Common.checkMainPage() then break end -- [保证在首页]
-                coroutine.yield('师门任务继续任务页面异常', 'c2')
-                mSleep(1000)
-            end
+            Common.blockCheckMainPage('师门任务继续任务页面异常')
 
             Common.record("师门已做完")
             return -2
@@ -267,20 +254,11 @@ function Sect.chooseTask()
             tap(x, y)
             mSleep(1000)
 
-            while true do
-                if Common.userDialog() then break end -- [保证到了门派师傅]
-                coroutine.yield('师门任务选择后页面异常', 'c2')
-                mSleep(1000)
-            end
+            Common.blockCheckMainPage('师门任务选择后页面异常')
 
             return 0
         else
-            while true do
-                if Common.checkMainPage() then break end -- [首页]
-                coroutine.yield('师门任务选择后页面异常', 'c2')
-                mSleep(1000)
-            end
-
+            Common.blockCheckMainPage('师门任务选择后页面异常')
             Common.record("师门已做完")
             return -2
         end
@@ -306,21 +284,14 @@ function Sect.waitMaster()
         coroutine.yield('门派师傅没有选项', 'c2')
     end
 
-    while true do
-        if Common.checkMainPage() then break end
-        coroutine.yield('师门任务继续任务页面异常', 'c2')
-        mSleep(1000)
-    end
+    Common.blockCheckMainPage('师门任务领取后页面异常')
 
     return 0
 end
 
 function Sect.findRightTask()
-    while true do
-        if Common.checkMainPage() then break end
-        coroutine.yield('师门任务继续任务页面异常', 'c2')
-        mSleep(1000)
-    end
+
+    Common.blockCheckMainPage('主页查找师门任务异常')
 
     -- 激活右侧任务tab
     if not isColor(931, 122, 0xcde5ac, 100) then
@@ -339,20 +310,14 @@ function Sect.findRightTask()
     -- 成功领取任务
     if moveAndFindRightTask() == 0 then
 
-        while true do -- [确保在首页]
-            if Common.checkMainPage() then break end
-            coroutine.yield('师门任务继续任务页面异常', 'c2')
-            mSleep(1000)
-        end
+        Common.blockCheckMainPage('开始师门任务后页面异常')
 
         return 0
     end
 
-    while true do -- [确保在首页]
-        if Common.checkMainPage() then break end
-        coroutine.yield('师门任务继续任务页面异常', 'c2')
-        mSleep(1000)
-    end
+    Common.blockCheckMainPage(
+        '主页找不到师门任务,结束时页面异常')
+
     -- 结束
     return -2
 end
@@ -365,11 +330,8 @@ end
 类型5: 回去师傅,师门任务,师傅请 答题
 ]]
 function Sect.excute()
-    while true do
-        if Common.checkMainPage() then break end
-        coroutine.yield('师门任务继续任务页面异常', 'c2')
-        mSleep(1000)
-    end
+
+    Common.blockCheckMainPage('师门任务执行前页面异常')
 
     while true do
         mSleep(1000)
@@ -384,15 +346,11 @@ function Sect.excute()
                 toast(x .. ',' .. y, 1)
                 mSleep(1000)
                 if ret then -- 有选项的对话框
-                    -- toast('11111',1)
-                    -- mSleep(1000)
                     tap(x, y)
                     mSleep(1000)
                 else -- 有对话,没有选项
-                    -- toast('22222',1)
-                    -- mSleep(1000)
-                    -- 清除对话
-                    tap(500, 400)
+
+                    tap(500, 400) -- 清除对话
                     mSleep(1000)
                 end
             elseif useProp() then -- 右下角使用道具
@@ -483,11 +441,7 @@ function Sect.excute()
             tap(992, 130)
             mSleep(1000)
 
-            while true do -- [确保在首页]
-                if Common.checkMainPage() then break end
-                coroutine.yield('师门任务继续任务页面异常', 'c2')
-                mSleep(1000)
-            end
+            Common.blockCheckMainPage('师门正常结束时页面异常')
 
             return -2 -- 结束师门任务
         else -- 等对话

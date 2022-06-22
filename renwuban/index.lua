@@ -60,11 +60,8 @@ TaskBoard.taskContainer = {
 function TaskBoard.new(targetTask) TaskBoard.task = targetTask end
 
 function TaskBoard.open()
-    while true do
-        if Common.checkMainPage() then break end
-        coroutine.yield('打开任务板时被挡住了', 'c2')
-        mSleep(1000)
-    end
+    Common.blockCheckMainPage('打开任务板时被挡住了')
+
 
     ret = multiColTap({
         {36, 115, 0xe5d45b}, {315, 28, 0xd79a50}, {327, 31, 0xdab291},

@@ -290,4 +290,18 @@ function Common.easyGroupPage()
                            500, 1)
 end
 
+-- 阻塞检查主页面,因为很多地方用,所以包装起来复用
+function Common.blockCheckMainPage(tip)
+    Common.blockCheck(Common.checkMainPage, tip)
+end
+
+-- 阻塞检查页面
+function Common.blockCheck(func, tip)
+    while true do
+        if func() then break end
+        coroutine.yield(tip, 'c2')
+        mSleep(1000)
+    end
+end
+
 return Common

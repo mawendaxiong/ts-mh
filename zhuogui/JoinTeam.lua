@@ -124,11 +124,7 @@ function Ghost.waitTeam()
         return 3
     end
 
-    while true do
-        if Common.checkMainPage() then break end
-        coroutine.yield('混队捉鬼组队失败', 'c2')
-        mSleep(1000)
-    end
+    Common.blockCheckMainPage('混队捉鬼组队失败')
 
     -- 结束捉鬼了
     return -2
@@ -206,11 +202,7 @@ end
 
 -- 统计捉鬼次数
 function Ghost.checkGhostNum()
-    while true do
-        if Common.checkMainPage() then break end
-        coroutine.yield('统计捉鬼次数页面异常', 'c2')
-        mSleep(1000)
-    end
+    Common.blockCheckMainPage('统计捉鬼次数页面异常')
 
     if globalGhost["ghostNum"] < UISetting.g2 then
         Common.commonOpenGroup()
@@ -225,11 +217,7 @@ function Ghost.checkGhostNum()
         return 2
     end
 
-    while true do
-        if Common.checkMainPage() then break end
-        coroutine.yield('统计捉鬼次数页面异常', 'c2')
-        mSleep(1000)
-    end
+    Common.blockCheckMainPage('混队捉鬼结束时页面异常')
 
     toast("结束捉鬼")
     return -2

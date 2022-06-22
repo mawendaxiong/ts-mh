@@ -88,7 +88,6 @@ function excute()
 
         mSleep(1500)
         ret, after = class[method]()
-        toast('ret: '..ret)
         if ret == 'c2' then
             -- 协程暂停
             afterMsg = '无'

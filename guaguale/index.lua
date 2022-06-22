@@ -36,11 +36,7 @@ local function checkScratchFinish()
 end
 -- 打开福利
 function Lottery.openWelfareBox()
-    while true do
-        if Common.checkMainPage() then break end
-        coroutine.yield('打开福利异常', 'c2')
-        mSleep(1000)
-    end
+    Common.blockCheckMainPage('打开福利异常')
 
     -- 打开福利
     tap(37, 123)
@@ -77,11 +73,8 @@ function Lottery.openScratch()
 
     tap(961, 71) -- 关闭福利
 
-    while true do
-        if Common.checkMainPage() then break end
-        coroutine.yield('福利页面异常', 'c2')
-        mSleep(1000)
-    end
+    Common.blockCheckMainPage('福利页面异常')
+
     -- 已经刮奖了,结束
     return -2
 end
