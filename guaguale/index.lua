@@ -94,6 +94,12 @@ function Lottery.Scratch()
         mSleep(1000)
     end
 
+    while true do
+        if guagualePage() then break end
+        coroutine.yield('刮刮乐结束时页面异常', 'c2')
+        mSleep(1000)
+    end
+    
     return 0
 end
 

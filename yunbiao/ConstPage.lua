@@ -39,13 +39,6 @@ function page.index()
         },
         ["4"] = {
             ["now"] = "4",
-            ["name"] = "等郑镖头",
-            ["class"] = yunbiao,
-            ["method"] = "waitLeader",
-            ["next"] = "5"
-        },
-        ["5"] = {
-            ["now"] = "5",
             ["name"] = "执行运镖",
             ["class"] = yunbiao,
             ["method"] = "excute",

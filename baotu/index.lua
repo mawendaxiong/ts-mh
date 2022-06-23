@@ -162,7 +162,11 @@ function Treasure.waitBattle()
             else
                 waitingTime = waitingTime - 1
                 Common.record("倒计时: " .. waitingTime)
-
+                
+                if waitingTime <= 20 then -- 有时候打宝图会莫名停住,防止停住了
+                    r, t, x, y = rightTask()
+                    if ret then tap(x, y) end
+                end
                 -- 超过1分钟没进入战斗,说明打宝图结束了
                 if waitingTime == 0 then break end
             end
@@ -328,31 +332,22 @@ function Treasure.findTaskOnTaskBoard()
 end
 
 function Treasure.crashCallack()
-    nowNode = taskRecord.crashNode
-    toast("crash num: " .. nowNode["now"], 3)
+    crashNode = taskRecord.crashNode
+    toast("crash num: " .. crashNode["now"], 3)
     mSleep(3000)
-    if nowNode["now"] == "1" then -- 回长安
-        return 2
-    elseif nowNode["now"] == "2" then -- 打开活动面板
-        return 2
-    elseif nowNode["now"] == "3" then -- 查找任务并打开
-        return 2
-    elseif nowNode["now"] == "4" then -- 领取任务
-        return 2
-    elseif nowNode["now"] == "5" then -- 右侧查找任务
-        return 2
-    elseif nowNode["now"] == "6" then -- 等待打宝图
+    crashStep = tonumber(crashNode["now"])
+
+    if crashStep < 6 then
+        return 1
+    elseif crashStep == 6 then -- 等待打宝图
         while true do
             if Common.checkBattle() then return 6 end -- 如果在战斗继续打宝图
             if Common.checkMainPage() then return 5 end -- 在首页查找任务
             mSleep(2000)
         end
-    elseif nowNode["now"] == "7" then -- 打开背包
-        return 7
-    elseif nowNode["now"] == "8" then -- 查找宝图
-        return 7
-    elseif nowNode["now"] == "9" then -- 使用宝图
-    else -- 7,8,9 逻辑一样
+    elseif crashStep < 9 then
+        return 7 -- 打开背包
+    else
         while true do -- 到了首页,执行打开背包
             if Common.checkBattle() then return 6 end -- 如果在战斗继续打宝图
             if Common.checkMainPage() then return 7 end

@@ -49,7 +49,7 @@ function page.index()
             ["name"] = "关闭",
             ["class"] = guaguale,
             ["method"] = "close",
-            ["next"] = "6"
+            ["next"] = "1"
         }
     }
     return page

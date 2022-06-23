@@ -37,17 +37,27 @@ end
 
 -- 任务板找任务
 function Escort.findTaskOnTaskBoard()
+    while true do
+        if TaskBoard.checkTaskBoard() then break end
+        coroutine.yield('任务板查找任务异常', 'c2')
+        mSleep(1000)
+    end
 
     if TaskBoard.findTask() == -1 then -- 没有找到任务,那就是已经打完了
-        coroutine.yield('任务板可能被弹窗挡住了', 'c2')
-        if TaskBoard.findTask() == -1 then -- 二次确认
-            -- 关闭活动板
-            tap(1014, 43)
-            mSleep(1000)
+        -- 关闭活动板
+        tap(1014, 43)
+        mSleep(1000)
 
-            return -2
-        end
+        Common.blockCheckMainPage('提前结束运镖任务时页面异常')
+        return -2
     end
+
+    while true do
+        if Common.userDialog() then break end -- 到达镖头
+        coroutine.yield('等待去镖头', 'c2')
+        mSleep(1000)
+    end
+
     -- 执行下一步
     return 0
 end
@@ -67,6 +77,12 @@ end
 
 -- 执行运镖
 function Escort.excute()
+    while true do
+        if Common.userDialog() then break end -- 到达镖头
+        coroutine.yield('等待去镖头', 'c2')
+        mSleep(1000)
+    end
+
     freq = 0 -- 统计运镖次数
     while true do
         ret, tim, x, y = escortButton() -- 运镖按钮
@@ -74,8 +90,10 @@ function Escort.excute()
             tap(x, y)
             mSleep(1000)
             if enough50() then -- 活跃值不足50
+                tap(473,388) -- 点击取消
                 Common.record("活跃不足50,执行下一个任务")
-                mSleep(2000)
+
+                Common.blockCheckMainPage('运镖结束时页面页面异常')
                 return -2 -- 活跃不足50,直接结束
             end
 

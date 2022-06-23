@@ -210,13 +210,17 @@ function Uncharted.count()
                 -- 结束
                 return -2
             elseif pauseTime == 0 then
-                coroutine.yield('秘境常规检查', 'c2')
-                if mijingInnerPage() then -- 秘境里的页面
-                    tap(1020, 233)
-                    mSleep(1000)
-                    tap(1020, 233) -- 多点一次,防止有对话框,只是取消了对话框
+                while true do
+                    if mijingInnerPage() then break end -- 秘境里的页面
+                    coroutine.yield('秘境停住了', 'c2')
                     mSleep(1000)
                 end
+
+                tap(1020, 233)
+                mSleep(1000)
+                tap(1020, 233) -- 多点一次,防止有对话框,只是取消了对话框
+                mSleep(1000)
+
                 pauseTime = 30
             elseif not Common.checkMainPage() then
                 coroutine.yield('秘境出现弹窗', 'c2')

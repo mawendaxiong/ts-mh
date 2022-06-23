@@ -62,14 +62,12 @@ end
 
 -- 关闭弹窗
 function Common.closeWindow()
-    keepScreen(true)
     ret, tim, x, y = redCancle()
     if ret then
         tap(x, y)
         mSleep(1000)
     end
     ret, tim, x, y = Common.wordCancle()
-    keepScreen(false)
     if ret then
         tap(x, y)
         mSleep(1000)
