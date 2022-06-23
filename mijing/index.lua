@@ -231,23 +231,18 @@ function Uncharted.count()
 
     while true do
         if Common.checkBattle() then -- 战斗中不做任何处理
+        elseif not isColor(453, 19, 0xf35e6b) then -- 一直点离开,直到可以看到挂机的按钮
+            tap(1067, 302)
+            mSleep(1000)
+        elseif fail() then -- 战斗失败,先清除战斗失败提示 
+            tap(555, 555)
+            mSleep(1000)
         elseif Common.checkMainPage() then
-            if not isColor(453, 19, 0xf35e6b) then -- 一直点离开,直到可以看到挂机的按钮
-                tap(1067, 302)
-                mSleep(1000)
-            elseif fail() then -- 战斗失败,先清除战斗失败提示 
-                tap(555, 555)
-                mSleep(1000)
-            else
-
-                Common.blockCheckMainPage('进入秘境内部异常')
-
-                return -2 -- 结束
-            end
+            return -2 -- 结束        
         else
             coroutine.yield('秘境结束前常规检查', 'c2')
         end
-        mSleep(200)
+        mSleep(1000)
     end
 end
 
