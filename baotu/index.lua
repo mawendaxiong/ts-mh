@@ -162,10 +162,10 @@ function Treasure.waitBattle()
             else
                 waitingTime = waitingTime - 1
                 Common.record("倒计时: " .. waitingTime)
-                
+
                 if waitingTime <= 20 then -- 有时候打宝图会莫名停住,防止停住了
                     r, t, x, y = rightTask()
-                    if ret then tap(x, y) end
+                    if r then tap(x, y) end
                 end
                 -- 超过1分钟没进入战斗,说明打宝图结束了
                 if waitingTime == 0 then break end
@@ -263,11 +263,7 @@ end
 
 -- 挖宝
 function Treasure.excute()
-    while true do
-        if Common.checkMainPage() then break end
-        coroutine.yield('挖宝页面使用宝图异常', 'c2')
-        mSleep(1000)
-    end
+    Common.blockCheckMainPage('挖宝页面使用宝图异常')
 
     waitingTime = 40
     while true do
@@ -346,12 +342,15 @@ function Treasure.crashCallack()
             mSleep(2000)
         end
     elseif crashStep < 9 then
+        Common.blockCheckMainPage('挖宝闪退重启游戏页面异常')
         return 7 -- 打开背包
     else
-        while true do -- 到了首页,执行打开背包
-            if Common.checkBattle() then return 6 end -- 如果在战斗继续打宝图
-            if Common.checkMainPage() then return 7 end
-            mSleep(2000)
+        while true do
+            if Common.checkMainPage() then
+                if useTreasureMap() then return 9 end -- 右下角的使用宝图
+                return 7 -- 到了首页,执行打开背包
+            end
+            mSleep(1000)
         end
     end
 end

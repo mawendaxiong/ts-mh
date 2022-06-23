@@ -201,14 +201,7 @@ function Uncharted.count()
             elseif fail() then -- 战斗失败
                 Common.record("战斗失败")
 
-                -- 消除失败提示
-                tap(555, 555)
-                mSleep(1000)
-
-                -- 离开秘境
-                tap(1075, 310)
-                -- 结束
-                return -2
+                break
             elseif pauseTime == 0 then
                 while true do
                     if mijingInnerPage() then break end -- 秘境里的页面
@@ -231,14 +224,13 @@ function Uncharted.count()
 
     while true do
         if Common.checkBattle() then -- 战斗中不做任何处理
+            Common.record('等待战斗结束')
         elseif not isColor(453, 19, 0xf35e6b) then -- 一直点离开,直到可以看到挂机的按钮
             tap(1067, 302)
-            mSleep(1000)
-        elseif fail() then -- 战斗失败,先清除战斗失败提示 
+        elseif fail() then -- 战斗失败,先清除战斗失败提示
             tap(555, 555)
-            mSleep(1000)
         elseif Common.checkMainPage() then
-            return -2 -- 结束        
+            return -2 -- 结束
         else
             coroutine.yield('秘境结束前常规检查', 'c2')
         end
@@ -248,21 +240,31 @@ end
 
 -- 闪退补偿
 function Uncharted.crashCallack()
-    nowNode = taskRecord.currentNode
-    toast("num: " .. nowNode["now"])
-    if nowNode["now"] == "1" then -- 回长安
-        return 2
-    elseif nowNode["now"] == "2" then -- 打开活动面板
-        return 2
-    elseif nowNode["now"] == "3" then -- 查找任务并打开
-        return 2
-    elseif nowNode["now"] == "4" then -- 等云乐游
-        return 2
-    elseif nowNode["now"] == "5" then -- 进入秘境
-        -- 在秘境里面
-        if mijingInnerPage() then return 6 end
-        return 2
-    elseif nowNode["now"] == "6" then -- 计算次数
+    crashNode = taskRecord.crashNode
+    toast("crash num: " .. crashNode["now"], 3)
+    mSleep(3000)
+    crashStep = tonumber(crashNode["now"])
+
+    if crashStep <= 4 then
+        return 1
+    elseif crashStep == 5 then
+        while true do
+            if mijingInnerPage() then -- 在秘境里面
+                return 6
+            elseif Common.checkMainPage() then -- 主页
+                return 1
+            end
+        end
+    elseif crashStep == 6 then
+        while true do
+            if mijingInnerPage() then break end -- 可能在战斗,等到页面是在秘境里面
+            mSleep(500)
+
+        end
+        tap(555, 555) -- 点击地板防止进入下一关
+        mSleep(500)
+        tap(555, 555) -- 点击地板防止进入下一关
+
         return 6
     end
 end

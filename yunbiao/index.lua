@@ -90,7 +90,7 @@ function Escort.excute()
             tap(x, y)
             mSleep(1000)
             if enough50() then -- 活跃值不足50
-                tap(473,388) -- 点击取消
+                tap(473, 388) -- 点击取消
                 Common.record("活跃不足50,执行下一个任务")
 
                 Common.blockCheckMainPage('运镖结束时页面页面异常')
@@ -105,15 +105,17 @@ function Escort.excute()
                 freq = freq + 1
                 Common.record("运镖: " .. freq)
             end
+        elseif freq == 3 then -- 运镖三次了
+            Common.blockCheckMainPage('运镖结束时页面异常')
+            return -2
         elseif not yunbiaozhong() then -- 运镖中
             coroutine.yield('运镖中可能弹出了弹窗', 'c2')
             -- 没有运镖且不在主页
             if not Common.checkMainPage() then Common.closeWindow() end
-        elseif freq == 3 and Common.checkMainPage() then -- 运镖三次了
-            return -2
+
         end
     end
 end
 
-function Escort.crashCallack() return 2 end
+function Escort.crashCallack() return 1 end
 return Escort

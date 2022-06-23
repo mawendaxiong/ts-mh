@@ -456,8 +456,19 @@ end
 
 -- 闪退补偿
 function Sect.crashCallack()
-    nowNode = taskRecord.currentNode
-    toast("num: " .. nowNode["now"])
+    crashNode = taskRecord.crashNode
+    toast("crash num: " .. crashNode["now"], 3)
+    mSleep(3000)
+    crashStep = tonumber(crashNode["now"])
+    if crashStep < 6 then
+        return 1
+    elseif crashStep == 6 then
+        while true do if Common.checkMainPage() then break end end
+        return 6
+    elseif crashStep == 7 then
+        while true do if Common.checkMainPage() then break end end
+        return 7
+    end
     if nowNode["now"] == "1" then -- 回长安
         return 2
     elseif nowNode["now"] == "2" then -- 打开活动面板
