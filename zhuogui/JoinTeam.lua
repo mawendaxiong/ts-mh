@@ -91,17 +91,26 @@ function Ghost.waitTeam()
         elseif timer.check() then -- 时间到了
             if Common.easyGroupPage() then
                 tap(684, 584) -- 取消自动匹配
+                mSleep(1000)
             end
             break
         elseif TaskBoard.checkTaskBoard() then -- 任务板界面
             tap(1014, 43) -- 关闭任务板
+            mSleep(1000)
+
         elseif Common.teamPage() then -- 组队的页面
             tap(981, 39) -- 关闭组队页面
+            mSleep(1000)
+
         elseif watchBattle() then -- 正在观战
             if not checkGhostBattle() then -- 观战的不是鬼,说明带队的人不是在捉鬼
                 battleQuitTeam() -- 战斗中退出队伍
             end
             tap(1109, 585) -- 退出观战
+            mSleep(1000)
+
+            Common.blockCheckMainPage('退出观战页面异常')
+            return 2
 
         elseif Common.easyGroupPage() then -- 便捷组队页面不做处理
         else

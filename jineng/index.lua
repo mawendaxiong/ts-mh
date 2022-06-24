@@ -10,6 +10,13 @@ local function logo()
                            90, 426, 564, 1064, 630, {orient = 2}, 500, 1)
 end
 
+-- 技能页面
+local function jinengPage()
+    return findColorsUntil(0xce0000,
+                           '-466|-16|0x764a2c,-429|-12|0x764a2c,-409|-20|0x764a2c,-281|526|0xebb151,-70|530|0xda8643',
+                           90, 426, 564, 1064, 630, {orient = 2}, 500, 1)
+end
+
 -- 打开技能
 function jineng.open()
     Common.blockCheckMainPage('打开技能板时页面异常')
@@ -26,13 +33,25 @@ function jineng.open()
     -- 说明还没开技能,退出
     if not r then return -2 end
     tap(x, y)
-    
+
+    while true do
+        if jinengPage() then break end
+        coroutine.yield('技能页面异常', 'c2')
+        mSleep(1000)
+    end
+
     return 0
 end
 
 -- 升级技能
 function jineng.sj()
-    toast('aaa', 3)
+
+    while true do
+        if jinengPage() then break end
+        coroutine.yield('技能页面异常', 'c2')
+        mSleep(1000)
+    end
+
     -- 点击人物技能
     tap(1017, 163)
     mSleep(1500)
@@ -47,6 +66,7 @@ function jineng.sj()
     -- 关闭技能对话框
     tap(980, 43)
 
+    Common.blockCheckMainPage('技能结束时页面异常')
     return -2
 end
 
