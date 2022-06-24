@@ -224,11 +224,11 @@ function Uncharted.count()
 
     while true do
         if Common.checkBattle() then -- 战斗中不做任何处理
+        elseif fail() then -- 战斗失败,先清除战斗失败提示
+            tap(555, 555)
             Common.record('等待战斗结束')
         elseif not isColor(453, 19, 0xf35e6b) then -- 一直点离开,直到可以看到挂机的按钮
             tap(1067, 302)
-        elseif fail() then -- 战斗失败,先清除战斗失败提示
-            tap(555, 555)
         elseif Common.checkMainPage() then
             return -2 -- 结束
         else

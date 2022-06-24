@@ -469,20 +469,5 @@ function Sect.crashCallack()
         while true do if Common.checkMainPage() then break end end
         return 7
     end
-    if nowNode["now"] == "1" then -- 回长安
-        return 2
-    elseif nowNode["now"] == "2" then -- 打开活动面板
-        return 2
-    elseif nowNode["now"] == "3" then -- 查找任务并打开
-        return 2
-    elseif nowNode["now"] == "4" then -- 选择任务
-        return 2
-    elseif nowNode["now"] == "5" then -- 等师傅
-        return 2
-    elseif nowNode["now"] == "6" then -- 找任务
-        return 6
-    elseif nowNode["now"] == "7" then -- 执行
-        return 6
-    end
 end
 return Sect
