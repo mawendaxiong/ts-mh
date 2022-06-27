@@ -6,6 +6,7 @@ local container = require("Main.state")
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
+local log = container.log
 
 Login = {}
 
@@ -132,7 +133,7 @@ function Login.waitLoginPage()
         return 6
     end
 
-    while (true) do
+    while true do
         if userLogo() then
             break
         elseif gameLogo() then -- 能够看见选择账号的游戏logo
@@ -158,7 +159,7 @@ end
 
 -- 账号类型页面
 function Login.accountType()
-    while (true) do
+    while true do
         if switchAccount() then break end
 
         -- 点击其他账号登录
@@ -243,6 +244,7 @@ function Login.selectServer()
     if UISetting.lianxiaohao == 1 then
         toast('练小号', 2)
         mSleep(2000)
+
         return -2
     end
 

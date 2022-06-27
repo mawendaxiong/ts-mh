@@ -8,6 +8,7 @@ local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
 local exception = container.exception
+local log = container.log
 
 initSuccess = false
 finish = false
@@ -201,6 +202,7 @@ local function daemon()
         -- 结束辅助协程
         return
     end
+
     -- 弹出的确认 取消 框框,类似于运镖的确认
     x, y = commonTip()
 
@@ -216,9 +218,6 @@ local function daemon()
             mSleep(1000)
             -- 记录当前正在执行的任务
             taskRecord.currentStep = taskRecord.currentNode["now"]
-            -- 表示不用登录
-            -- mainStatus.needLogin = -1
-
             return
         end
     end
@@ -233,9 +232,6 @@ local function daemon()
 
         -- 记录当前正在执行的任务
         taskRecord.currentStep = taskRecord.currentNode["now"]
-        -- 表示不用登录
-        -- mainStatus.needLogin = -1
-
         return
     end
 
@@ -248,8 +244,6 @@ local function daemon()
         mSleep(1000)
         -- 记录当前正在执行的任务
         taskRecord.currentStep = taskRecord.currentNode["now"]
-        -- 表示不用登录
-        -- mainStatus.needLogin = -1
         return
     end
 
@@ -279,7 +273,7 @@ local function masterMain()
     while coroutine.status(c1) ~= "dead" do
         local status, tips, ret, after = coroutine.resume(c1)
         if nil == after then after = '无' end
-        wLog(log.name, "daemon :" .. tips .. "后续执行 :" .. after);
+        wLog(log.name, "daemon :" .. tips .. " | 后续执行 :" .. after);
         mSleep(1000)
         if ret == 'c2' then
             local c2 = coroutine.create(daemon)
@@ -290,9 +284,6 @@ end
 
 dev = true
 init()
-now = os.date("%Y-%m-%d %X")
-createGobalTable("log")
-log.name = "mh-debug-" .. now
 initLog(log.name, 0);
 
 if initSuccess then
@@ -302,6 +293,9 @@ if initSuccess then
 
     wLog(log.name, "------------分割线------------");
     wLog(log.name, "[DATE] script start");
+
+    -- local jinengPage = require("jineng.ConstPage")
+    -- Main.excuteLocal(jinengPage.index(), 1)
 
     masterMain()
 end

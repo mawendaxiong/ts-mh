@@ -5,6 +5,7 @@ local container = require("Main.state")
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
+local log = container.log
 
 Main = {}
 
@@ -86,7 +87,7 @@ function excute()
         wLog(log.name,
              "[DATE] step: " .. step .. " " .. taskRecord.currentNode["name"]);
 
-        mSleep(1500)
+        mSleep(1000)
         ret, after = class[method]()
         if ret == 'c2' then
             -- 协程暂停
@@ -105,14 +106,12 @@ function excute()
             taskRecord.currentNode = taskRecord.nextNode
             taskRecord.nextNode =
                 taskRecord.currentPage[taskRecord.currentNode["next"]]
-            mSleep(2000)
         elseif ret == -2 then -- 一系类任务执行完毕
             break
         else -- 执行指定跳转的步骤
             taskRecord.currentNode = taskRecord.currentPage["" .. ret]
             taskRecord.nextNode =
                 taskRecord.currentPage[taskRecord.currentNode["next"]]
-            mSleep(2000)
         end
     end
 end
@@ -240,23 +239,30 @@ function Main.excuteLocal(page, step)
         step = node["now"]
 
         Common.record("step: " .. step .. " " .. node["name"])
-        mSleep(1500)
+        -- 打印日志
+        wLog(log.name, "[DATE] step: " .. step .. " " .. node["name"])
+
         ret = class[method]()
 
-        if ret == nil then
-            toast("[" .. method .. "]执行失败")
-            mSleep(1000)
-            break
+        if ret == 'c2' then
+            -- 协程暂停
+            afterMsg = '无'
+            if nil ~= after then
+                afterNode = page['' .. after]
+                afterMsg = afterNode['name']
+
+                node = afterNode
+                node = page[node["next"]]
+            end
+            coroutine.yield(node["name"] .. "|" .. method, "c2", afterMsg)
         elseif ret == 0 then -- 直接执行next
             node = nextNode
             nextNode = page[node["next"]]
-            mSleep(2000)
         elseif ret == -2 then -- 一系类任务执行完毕
             break
         else -- 执行指定跳转的步骤
             node = page["" .. ret]
             nextNode = page[node["next"]]
-            mSleep(2000)
         end
     end
 end

@@ -5,6 +5,7 @@ uncharted = {}
 escort = {}
 exception = {}
 globalGhost = {}
+log = {}
 
 mainStatus.isCrash = -1
 mainStatus.needLogin = 1
@@ -51,6 +52,10 @@ globalGhost.ghostNum = 0
 -- 练小号时的检查等级
 globalGhost.checkLevel = nil
 
+now = os.date("%Y-%m-%d %X")
+
+log.name = "mh-debug-" .. now
+
 return {
     ["taskRecord"] = taskRecord,
     ["UISetting"] = UISetting,
@@ -58,4 +63,5 @@ return {
     ["uncharted"] = uncharted,
     ["exception"] = exception,
     ["globalGhost"] = globalGhost,
+    ["log"] = log,
 }

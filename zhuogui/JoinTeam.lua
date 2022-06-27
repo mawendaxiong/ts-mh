@@ -265,8 +265,22 @@ local function crashAfter()
 end
 
 function Ghost.crashCallack()
-    nowNode = taskRecord.currentNode
-    toast("num: " .. nowNode["now"])
+    crashNode = taskRecord.crashNode
+    toast("crash num: " .. crashNode["now"], 3)
+    mSleep(3000)
+    crashStep = tonumber(crashNode["now"])
+
+    if crashStep <= 3 then
+        return 1
+    elseif crashStep == 4 then
+        while true do
+            if Common.checkBattle() then
+                return 5
+            elseif Common.checkMainPage() then
+
+            end
+        end
+    end
     if nowNode["now"] == "1" then -- 回长安
         return 2
     elseif nowNode["now"] == "2" then -- 打开队伍

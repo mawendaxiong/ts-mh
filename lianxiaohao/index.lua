@@ -1,12 +1,14 @@
 require("TSLib")
 
 Common = require("Common.index")
+local timer = require("Common.timer")
 TaskBoard = require("renwuban.index")
 Main = require("Main.index")
 local container = require("Main.state")
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
+local log = container.log
 
 lxh = {}
 -- 敬请期待
@@ -217,11 +219,21 @@ function investigation()
                            {orient = 2}, 500, 1)
 end
 
+-- 背包
+local function bag()
+    offset = "-166|136|0xf9d847,43|133|0xd0d8d9,81|6|0xf6dcba"
+    return findColorsUntil(0x926848, offset, 90, 122, 423, 414, 606,
+                           {orient = 2}, 500, 1)
+end
+
 -- 佩戴领取回来的装备
 local function chuanzhuangbei()
-    -- 打开背包
-    tap(1090, 517)
-    mSleep(3000)
+    while true do
+        mSleep(1000)
+        if bag() then break end
+        coroutine.yield('佩戴装备打开背包异常', 'c2')
+        tap(1090, 517) -- 打开背包
+    end
 
     -- 整理背包
     tap(883, 577)
@@ -260,6 +272,8 @@ local function chuanzhuangbei()
 
     -- 关闭包裹
     tap(980, 43)
+
+    Common.blockCheckMainPage('佩戴装备结束关闭背包异常')
 end
 
 function chongwu2()
@@ -279,7 +293,6 @@ function jineng2()
     offset = '-5|91|0x553a23,444|336|0xeebe5b,-17|-29|0x3fb5ef,31|160|0xd9956b'
     return findColorsUntil(0x1345c4, offset, 90, 100, 92, 1015, 551,
                            {orient = 2}, 500, 1)
-
 end
 
 function zhuzhan22()
@@ -312,6 +325,29 @@ function tip()
     offset =
         "-132|-122|0xe9d5ba,201|-94|0xeddfce,200|-2|0xeddfcd,-129|-3|0xeddfcc"
     return findColorsUntil(0xedc060, offset, 90, 352, 218, 787, 422,
+                           {orient = 2}, 500, 1)
+end
+
+-- 创建角色页面
+local function createRolePage()
+    offset =
+        '-840|53|0xb9b4ad,-490|-11|0x6c310a,-438|-2|0x6c310a,-409|-8|0x6c310a,-384|-7|0x6c310a,-385|0|0x6c310a'
+    return findColorsUntil(0xce0000, offset, 90, 109, 13, 1043, 173,
+                           {orient = 2}, 500, 1)
+end
+
+-- 选择角色页面
+local function chooseRolePage()
+    offset = '78|16|0xe7e6ff,77|-7|0xe7e6ff,915|550|0xf5b146,1028|548|0xf5b045'
+    return findColorsUntil(0xfce398, offset, 90, 0, 0, 1114, 621, {orient = 2},
+                           500, 1)
+end
+
+-- 起名的页面
+local function qimingPage()
+    offset =
+        '-18|14|0x6c310a,-8|14|0x6c310a,19|17|0x6c310a,-156|91|0xf5af46,-35|89|0xf5b045'
+    return findColorsUntil(0xefdbc1, offset, 90, 860, 471, 1125, 624,
                            {orient = 2}, 500, 1)
 end
 
@@ -461,11 +497,24 @@ foo = {
 
 -- 创建角色,选择服务器那里
 function lxh.createRole()
+    while true do
+        if createRolePage() then break end
+        coroutine.yield('创建角色时页面异常', 'c2')
+        mSleep(1000)
+    end
+
     r, t, x, y = chuangjianjuese()
     if not r then -- 说明这个号创建角色满了
         return -2
     end
+
     tap(x, y)
+
+    while true do
+        if isColor(538, 55, 0x000000) then break end
+        coroutine.yield('创建角色完毕页面异常', 'c2')
+        mSleep(1000)
+    end
 
     return 0
 end
@@ -473,8 +522,17 @@ end
 -- 跳过动画
 function lxh.skipCartoon()
     while true do
+        if isColor(538, 55, 0x000000) then break end
+        coroutine.yield('创建角色完毕页面异常', 'c2')
+        mSleep(1000)
+    end
+
+    timer.start(10000)
+    while true do
         -- 到了选人物的界面就停止
         if isColor(998, 583, 0xf5b447) then
+            break
+        elseif timer.check() then -- 定时器到点,防止一直死循环
             break
         else
             tap(1082, 32)
@@ -482,10 +540,22 @@ function lxh.skipCartoon()
         end
     end
 
+    while true do
+        if chooseRolePage() then break end
+        coroutine.yield('创建角色时页面异常', 'c2')
+        mSleep(1000)
+    end
+
     return 0
 end
 
 function lxh.xuanjuese()
+    while true do
+        if chooseRolePage() then break end
+        coroutine.yield('创建角色时页面异常', 'c2')
+        mSleep(1000)
+    end
+
     lianxiaohaoObj = UISetting.lianxiaohaoList[UISetting.currentAccountIndex]
     renwu = lianxiaohaoObj.renwu
     menpai = lianxiaohaoObj.menpai
@@ -506,15 +576,28 @@ function lxh.xuanjuese()
     -- 点击下一步
     tap(1000, 590)
 
+    while true do
+        if qimingPage() then break end
+        coroutine.yield('创建角色完毕页面异常', 'c2')
+        mSleep(1000)
+    end
+
     return 0
 end
 
 -- 起名
 function lxh.name()
     while true do
-        if randomName() then
+        if qimingPage() then break end
+        coroutine.yield('创建角色完毕页面异常', 'c2')
+        mSleep(1000)
+    end
+
+    while true do
+        r, t, x, y = qimingPage()
+        if r then
             -- 点击随机名字
-            tap(1074, 516)
+            tap(x, y)
 
             -- 进入游戏
             tap(997, 592)
@@ -526,11 +609,365 @@ function lxh.name()
         end
     end
 
+    while true do
+        if isColor(538, 55, 0x000000, 100) then break end
+        coroutine.yield('创建角色完毕页面异常', 'c2')
+        mSleep(1000)
+    end
+
     return 0
 end
 
 function lxh.checkLevel() end
 
+local methodContainer = {
+    { -- 选择引导人,选好角色后,选择吉里吉里 主角团 还是张艺兴那个
+        ["func"] = function() return "选择引导人", chooseGuide() end,
+        ["after"] = function()
+            Common.record("选择引导人")
+            -- 选择引导人
+            tap(569, 518)
+        end,
+        ["remove"] = 1
+    },
+    { -- 新手调查,初次战斗结束后,我是老手 我是新手的选择
+        ["func"] = function() return "新手调查", investigation() end,
+        ["after"] = function()
+            Common.record("新手调查")
+            -- 选择有经验
+            tap(447, 439)
+        end,
+        ["remove"] = 1
+    }, { -- 主页面 
+        ["func"] = function() return "主页面", Common.checkMainPage() end,
+        ["after"] = function()
+            while true do
+                mSleep(1000)
+                if not Common.checkMainPage() then break end
+
+                if Common.userDialog() then -- 有对话框
+                    Common.record("对话")
+                    mSleep(1000)
+
+                    ret, tim, x, y = dialogSelection()
+                    if ret then -- 有选项的对话框
+                        -- 点击第一个选项
+                        tap(x, y)
+                        mSleep(1000)
+                    else -- 有对话,没有选项
+                        -- 清除对话
+                        tap(500, 400)
+                        mSleep(1000)
+                    end
+                elseif useProp() then -- 右下角使用道具
+                    mSleep(1000)
+
+                    -- 点击使用道具
+                    tap(967, 511)
+                    mSleep(2000)
+                else
+                    if not jingqingqidai() then
+                        -- 点击剧情
+                        tap(990, 209)
+                    else
+                        r, t, x, y = shifulaixin() -- 师傅来信
+                        if r then tap(x, y) end
+
+                        r, t, x, y = shimenrenwu() -- 师门任务
+                        if r then
+                            -- todo 做师门升级了20,领取装备卡着了
+                            tap(x, y)
+                            mSleep(2000)
+                            local shimenPage = require("shimen.ConstPage")
+                            Main.excuteLocal(sectPage.index(), 4)
+                        else
+                            local zhuoguiPage = require("zhuogui.ConstPage")
+                            globalGhost.checkLevel = 1
+                            Main.excuteLocal(zhuoguiPage.leadTeam(), 1)
+                            -- 捉鬼到37结束
+                            return -2
+                        end
+                    end
+                end
+            end
+
+        end,
+        ["remove"] = 0
+    }, { -- 跳过剧情                                                    
+        ["func"] = function() return "跳过剧情", tiaoguojuqing() end,
+        ["after"] = function()
+            Common.record("跳过剧情")
+            tap(1020, 36)
+            mSleep(500)
+            tap(1020, 36)
+            mSleep(500)
+
+            while true do
+                if not tiaoguojuqing() then break end
+                coroutine.yield("等待跳过剧情")
+                mSleep(1000)
+            end
+        end,
+        ["remove"] = 0
+    }, { -- 跳过对话
+        ["func"] = function()
+            return "跳过对话", Common.userDialog(nil, nil, 2)
+        end,
+        ["after"] = function()
+            while true do
+                mSleep(1000)
+
+                if not Common.userDialog(nil, nil, 2) then break end
+
+                Common.record("跳过对话")
+                tap(600, 400)
+            end
+
+        end,
+        ["remove"] = 0
+    }, { -- 跳过动画
+        ["func"] = function()
+            return "跳过动画", isColor(538, 55, 0x000000)
+        end,
+        ["after"] = function()
+            while true do
+                if not isColor(538, 55, 0x000000) then break end
+                tap(1082, 32)
+                mSleep(500)
+            end
+        end
+    }, { -- 战斗
+        ["func"] = function() return "战斗", Common.checkBattle() end,
+        ["after"] = function()
+            while true do
+                mSleep(1000)
+
+                if not Common.checkBattle() then break end
+
+                r, t, x, y = guideTap()
+                if r then
+                    Common.record("点击引导目标")
+                    tap(x - 20, y - 40)
+                    mSleep(1000)
+                end
+            end
+
+        end,
+        ["remove"] = 0
+    }, { -- 推荐师傅
+        ["func"] = function() return "推荐师傅", shifutuijian() end,
+        ["after"] = function()
+            Common.record("推荐师傅")
+            -- 关闭师傅推荐
+            tap(901, 135)
+
+            Common.blockCheckMainPage('等待关闭师傅推荐')
+            while true do
+                if not shifutuijian() then break end
+
+                mSleep(1000)
+            end
+        end,
+        ["remove"] = 0
+    }, { -- 剧情难度提示
+        ["func"] = function() return "剧情难度提示", zhandounandu() end,
+        ["after"] = function()
+            Common.record("难度提示")
+            -- 点确定
+            tap(663, 375)
+
+            while true do
+                if Common.checkBattle() then break end
+                coroutine.yield('等待进入剧情战斗异常', 'c2')
+                mSleep(1000)
+            end
+        end,
+        ["remove"] = 0
+    }, { -- 首冲页面
+        ["func"] = function() return "首冲", jianmianli() end,
+        ["after"] = function()
+            Common.record("首冲")
+            -- 关闭首冲
+            tap(869, 73)
+
+            Common.blockCheckMainPage('等待关闭首冲')
+        end,
+        ["remove"] = 0
+    }, { -- 每10级领取装备
+        ["func"] = function() return "领取装备", lingzhuangbei() end,
+        ["after"] = function()
+            Common.record("领装备")
+            while true do
+                if isColor(874, 276, 0xedbf60) then
+                    -- 领取装备
+                    tap(874, 278)
+                    mSleep(3500)
+                else
+                    break
+                end
+            end
+
+            -- 关闭福利
+            tap(969, 65)
+            mSleep(3500)
+
+            Common.blockCheckMainPage('等待关闭领取装备')
+
+            -- 佩戴装备
+            chuanzhuangbei()
+
+            Common.blockCheckMainPage('等待关闭领取装备')
+
+            wLog(log.name, "[DATE] 领取装备后升级技能...")
+            -- 升级技能
+            local jinengPage = require("jineng.ConstPage")
+            Main.excuteLocal(jinengPage.index(), 1)
+        end,
+        ["remove"] = 0
+    }, { -- 宠物引导
+        ["func"] = function() return "宠物引导", chongwuGuide() end,
+        ["after"] = function()
+            Common.record("宠物引导")
+            -- 点击领取奖励
+            tap(557, 427)
+            mSleep(2000)
+
+            while true do
+                mSleep(1000)
+                if chongwu2() then -- 查看宠物
+                    tap(656, 486)
+                elseif chongwu3() then -- 关闭宠物框
+                    tap(999, 43)
+                    break
+                end
+                Common.record('宠物引导...')
+                wLog(log.name, "[DATE] 宠物引导...")
+            end
+
+            Common.blockCheckMainPage('等待关闭宠物引导')
+
+        end,
+        ["remove"] = 1
+    }, { -- 技能引导
+        ["func"] = function() return "技能引导", jinengGuide() end,
+        ["after"] = function()
+            Common.record("技能引导")
+            -- 点击领取奖励
+            tap(557, 427)
+            mSleep(2000)
+
+            while true do
+                mSleep(1000)
+                if jineng2() then
+                    -- 查看师门技能
+                    tap(656, 486)
+                    break
+                end
+                Common.record('技能引导...')
+                wLog(log.name, "[DATE] 技能引导...")
+            end
+
+            Common.blockCheckMainPage('等待关闭关闭技能引导')
+
+            wLog(log.name, "[DATE] 技能升级...")
+            local jinengPage = require("jineng.ConstPage")
+            Main.excuteLocal(jinengPage.index(), 1)
+        end,
+        ["remove"] = 1
+    }, { -- 助战引导
+        ["func"] = function() return "助战引导", zhuzhanGuide() end,
+        ["after"] = function()
+            Common.record("助战引导")
+            -- 点击领取奖励
+            tap(557, 427)
+            mSleep(2000)
+
+            while true do
+                mSleep(1000)
+                if zhuzhan22() then -- 打开助战
+                    tap(656, 486)
+                    break
+                end
+                Common.record('助战引导...')
+                wLog(log.name, "[DATE] 助战引导...")
+            end
+
+            wLog(log.name, "[DATE] 调整助战...")
+            local zhuzhanPage = require("zhuzhan.ConstPage")
+            Main.excuteLocal(zhuzhanPage.index(), 1)
+        end,
+        ["remove"] = 1
+    }, { -- 红尘引导
+        ["func"] = function() return "红尘引导", hongchenGuide() end,
+        ["after"] = function()
+            Common.record("红尘引导")
+            -- 点击领取奖励
+            tap(557, 427)
+            mSleep(2000)
+
+            while true do
+                mSleep(1000)
+                if hongchen2() then
+                    -- 关闭红尘的提示框
+                    tap(1016, 116)
+                    break
+                end
+                Common.record('红尘引导...')
+                wLog(log.name, "[DATE] 红尘引导...")
+            end
+        end,
+        ["remove"] = 1
+    }, { -- 师门引导
+        ["func"] = function() return "师门引导", shimenGuide() end,
+        ["after"] = function()
+            Common.record("师门引导")
+            -- 领取奖励
+            tap(874, 278)
+            mSleep(2000)
+
+            while true do
+                mSleep(1000)
+                if shimen2() then
+                    -- 去做师门
+                    tap(657, 486)
+                    break
+                end
+                Common.record('师门引导...')
+                wLog(log.name, "[DATE] 师门引导...")
+            end
+        end,
+        ["remove"] = 1
+    }, { -- 提升引导
+        ["func"] = function() return "提升引导", tishengGuide() end,
+        ["after"] = function()
+            Common.record("提升引导")
+            -- 领取奖励
+            tap(874, 278)
+            mSleep(2000)
+
+            while true do
+                mSleep(1000)
+                if tisheng2() then
+                    -- 确定
+                    tap(656, 486)
+                    break
+                end
+                Common.record('提升引导...')
+                wLog(log.name, "[DATE] 提升引导...")
+            end
+        end,
+        ["remove"] = 1
+    }, { -- 一路同行,师傅来信之后的弹窗那个
+        ["func"] = function() return "一路同行", yilutongxing() end,
+        ["after"] = function()
+            Common.record("一路同行")
+            -- 关闭一路同行窗口
+            tap(968, 112)
+        end,
+        ["remove"] = 1
+    }
+
+}
 --[[
 1.在主页
 1.1 检查有没有主线任务
@@ -544,229 +981,34 @@ function lxh.checkLevel() end
 2.1 检查各种引导
 ]]
 function lxh.execute()
-    while (true) do
-        -- fwCloseView("recordBoard", "record")
-        if Common.checkMainPage() then
-            if Common.userDialog() then -- 有对话框
-                Common.record("对话")
-                mSleep(1000)
+    while true do
+        if isColor(538, 55, 0x000000, 100) or Common.checkMainPage() then
+            break
+        end
+        coroutine.yield('创建角色完毕页面异常', 'c2')
+        mSleep(1000)
+    end
 
-                ret, tim, x, y = dialogSelection()
-                if ret then -- 有选项的对话框
-                    -- 点击第一个选项
-                    tap(x, y)
-                    mSleep(1000)
-                else -- 有对话,没有选项
-                    -- 清除对话
-                    tap(500, 400)
-                    mSleep(1000)
-                end
-            elseif useProp() then -- 右下角使用道具
-                mSleep(1000)
+    while true do
+        mSleep(1500)
+        local removeNum = -1
 
-                -- 点击使用道具
-                tap(967, 511)
-                mSleep(2000)
-            else
-                if not jingqingqidai() then
-                    -- 点击剧情
-                    tap(990, 209)
-                else
-                    r, t, x, y = shifulaixin() -- 师傅来信
-                    if r then tap(x, y) end
+        for i = 1, #methodContainer, 1 do
+            local methodObj = methodContainer[i]
+            local msg, r, t, x, y = methodObj.func()
+            if r then
+                wLog(log.name, "[DATE] 练小号 " .. msg);
 
-                    r, t, x, y = shimenrenwu() -- 师门任务
-                    if r then
-                        -- todo 做师门升级了20,领取装备卡着了
-                        tap(x, y)
-                        mSleep(2000)
-                        local shimenPage = require("shimen.ConstPage")
-                        Main.excuteLocal(sectPage.index(), 4)
-                    else
-                        local zhuoguiPage = require("zhuogui.ConstPage")
-                        globalGhost.checkLevel = 1
-                        Main.excuteLocal(zhuoguiPage.leadTeam(), 1)
-                        -- 捉鬼到37结束
-                        return -2
-                    end
-                end
+                methodObj.after()
+                if methodObj.remove == 1 then removeNum = i end
+                break -- 结束for循环
             end
-        else
-            if tiaoguojuqing() then -- 跳过剧情
-                Common.record("跳过剧情")
-                tap(1020, 36)
-                mSleep(500)
-                tap(1020, 36)
-                mSleep(500)
-            elseif Common.userDialog(nil, nil, 2) then -- 跳过对话
-                Common.record("跳过对话")
-                tap(600, 400)
-            elseif Common.checkBattle() then
-                r, t, x, y = guideTap()
-                if r then
-                    Common.record("点击引导目标")
-                    tap(x - 20, y - 40)
-                    mSleep(1000)
-                end
-            elseif shifutuijian() then -- 推荐师傅
-                Common.record("推荐师傅")
-                -- 关闭师傅推荐
-                tap(901, 135)
-            elseif zhandounandu() then
-                Common.record("难度提示")
-                -- 点确定
-                tap(663, 375)
-            elseif jianmianli() then
-                Common.record("首冲")
-                -- 关闭首冲
-                tap(869, 73)
-            elseif lingzhuangbei() then -- 每10级领取装备
-                Common.record("领装备")
-                while (true) do
-                    if isColor(874, 276, 0xedbf60) then
-                        -- 领取装备
-                        tap(874, 278)
-                        mSleep(3500)
-                    else
-                        break
-                    end
-                end
+        end
 
-                -- 关闭福利
-                tap(969, 65)
-                mSleep(3500)
-
-                -- 佩戴装备
-                chuanzhuangbei()
-
-                -- 升级技能
-                local jinengPage = require("jineng.ConstPage")
-                Main.excuteLocal(jinengPage.index(), 1)
-            elseif chongwuGuide() then -- 宠物引导 todo 第二步卡着不动
-                Common.record("宠物引导")
-                -- 点击领取奖励
-                tap(557, 427)
-                mSleep(2000)
-
-                local now = os.time()
-                while true do
-                    mSleep(500)
-                    if chongwu2() then -- 查看宠物
-                        tap(656, 486)
-                    elseif chongwu3() then -- 关闭宠物框
-                        tap(999, 43)
-                    elseif os.time() - now >= 8 then -- 8秒之后结束
-                        break
-                    end
-                    toast('wait...',1)
-                end
-
-            elseif jinengGuide() then -- 技能引导
-                Common.record("技能引导")
-                -- 点击领取奖励
-                tap(557, 427)
-                mSleep(2000)
-
-                local now = os.time()
-                while true do
-                    mSleep(500)
-                    if jineng2() then
-                        -- 查看师门技能
-                        tap(656, 486)
-                    elseif os.time() - now >= 8 then -- 8秒之后结束
-                        break
-                    end
-                    toast('wait...',1)
-                end
-
-                local jinengPage = require("jineng.ConstPage")
-                Main.excuteLocal(jinengPage.index(), 1)
-            elseif zhuzhanGuide() then -- 助战引导
-                Common.record("助战引导")
-                -- 点击领取奖励
-                tap(557, 427)
-                mSleep(2000)
-
-                local now = os.time()
-                while true do
-                    mSleep(500)
-                    if zhuzhan22() then -- 打开助战
-                        tap(656, 486)
-                    elseif os.time() - now >= 8 then -- 8秒之后结束
-                        break
-                    end
-                    toast('wait...',1)
-                end
-
-                local zhuzhanPage = require("zhuzhan.ConstPage")
-                Main.excuteLocal(zhuzhanPage.index(), 1)
-            elseif hongchenGuide() then -- 红尘引导
-                Common.record("红尘引导")
-                -- 点击领取奖励
-                tap(557, 427)
-                mSleep(2000)
-
-                local now = os.time()
-                while true do
-                    mSleep(500)
-                    if hongchen2() then
-                        -- 关闭红尘的提示框
-                        tap(1016, 116)
-                    elseif os.time() - now >= 8 then -- 8秒之后结束
-                        break
-                    end
-                    toast('wait...',1)
-                end
-
-            elseif shimenGuide() then -- 师门引导
-                Common.record("师门引导")
-                -- 领取奖励
-                tap(874, 278)
-                mSleep(2000)
-
-                local now = os.time()
-                while true do
-                    mSleep(500)
-                    if shimen2() then
-                        -- 去做师门
-                        tap(657, 486)
-                    elseif os.time() - now >= 8 then -- 8秒之后结束
-                        break
-                    end
-                    toast('wait...',1)
-                end
-
-            elseif tishengGuide() then -- 提升引导
-                Common.record("提升引导")
-                -- 领取奖励
-                tap(874, 278)
-                mSleep(2000)
-
-                local now = os.time()
-                while true do
-                    mSleep(500)
-                    if tisheng2() then
-                        -- 确定
-                        tap(656, 486)
-                    elseif os.time() - now >= 8 then -- 8秒之后结束
-                        break
-                    end
-                    toast('wait...',1)
-                end
-
-            elseif yilutongxing() then -- 一路同行,师傅来信之后的弹窗
-                Common.record("一路同行")
-                -- 关闭一路同行窗口
-                tap(968, 112)
-            elseif chooseGuide() then
-                Common.record("选择引导人")
-                -- 选择引导人
-                tap(569, 518)
-            elseif investigation() then -- 新手调查
-                Common.record("新手调查")
-                -- 选择有经验
-                tap(447, 439)
-            end
+        if removeNum ~= -1 then
+            table.remove(methodContainer, removeNum)
+            removeNum = -1
+            wLog(log.name, "[DATE] 函数size: " .. #methodContainer)
         end
     end
 end

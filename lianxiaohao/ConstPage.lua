@@ -1,7 +1,6 @@
 --[[
 练小号
-]]
-require("TSLib")
+]] require("TSLib")
 
 lxh = require("lianxiaohao.index")
 -- TaskBoard = require("TaskBoard.index")
@@ -11,12 +10,47 @@ page = {}
 
 function page.index()
     page = {
-        ["-1"] = {["now"] = "-1", ["name"] = "闪退补偿", ["class"] = lxh, ["method"] = "crashCallack"},
-        ["1"] = {["now"] = "1", ["name"] = "创建角色", ["class"] = lxh, ["method"] = "createRole", ["next"] = "2"},
-        ["2"] = {["now"] = "2", ["name"] = "跳动画", ["class"] = lxh, ["method"] = "skipCartoon", ["next"] = "3"},
-        ["3"] = {["now"] = "3", ["name"] = "选择角色", ["class"] = lxh, ["method"] = "xuanjuese", ["next"] = "4"},
-        ["4"] = {["now"] = "4", ["name"] = "起名", ["class"] = lxh, ["method"] = "name", ["next"] = "5"},
-        ["5"] = {["now"] = "5", ["name"] = "执行", ["class"] = lxh, ["method"] = "execute", ["next"] = "1"}
+        ["-1"] = {
+            ["now"] = "-1",
+            ["name"] = "闪退补偿",
+            ["class"] = lxh,
+            ["method"] = "crashCallack"
+        },
+        ["1"] = {
+            ["now"] = "1",
+            ["name"] = "创建角色",
+            ["class"] = lxh,
+            ["method"] = "createRole",
+            ["next"] = "2"
+        },
+        ["2"] = {
+            ["now"] = "2",
+            ["name"] = "跳动画",
+            ["class"] = lxh,
+            ["method"] = "skipCartoon",
+            ["next"] = "3"
+        },
+        ["3"] = {
+            ["now"] = "3",
+            ["name"] = "选择角色",
+            ["class"] = lxh,
+            ["method"] = "xuanjuese",
+            ["next"] = "4"
+        },
+        ["4"] = {
+            ["now"] = "4",
+            ["name"] = "起名",
+            ["class"] = lxh,
+            ["method"] = "name",
+            ["next"] = "5"
+        },
+        ["5"] = {
+            ["now"] = "5",
+            ["name"] = "执行",
+            ["class"] = lxh,
+            ["method"] = "execute",
+            ["next"] = "1"
+        }
     }
     return page
 end
@@ -24,8 +58,19 @@ end
 -- 不建号直接练小号
 function page.simple()
     page = {
-        ["-1"] = {["now"] = "-1", ["name"] = "闪退补偿", ["class"] = lxh, ["method"] = "crashCallack"},
-        ["1"] = {["now"] = "1", ["name"] = "执行", ["class"] = lxh, ["method"] = "execute", ["next"] = "1"}
+        ["-1"] = {
+            ["now"] = "-1",
+            ["name"] = "闪退补偿",
+            ["class"] = lxh,
+            ["method"] = "crashCallack"
+        },
+        ["1"] = {
+            ["now"] = "1",
+            ["name"] = "执行",
+            ["class"] = lxh,
+            ["method"] = "execute",
+            ["next"] = "1"
+        }
     }
     return page
 end

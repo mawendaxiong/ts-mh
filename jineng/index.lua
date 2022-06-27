@@ -12,9 +12,10 @@ end
 
 -- 技能页面
 local function jinengPage()
-    return findColorsUntil(0xce0000,
-                           '-466|-16|0x764a2c,-429|-12|0x764a2c,-409|-20|0x764a2c,-281|526|0xebb151,-70|530|0xda8643',
-                           90, 426, 564, 1064, 630, {orient = 2}, 500, 1)
+    offset =
+        '-466|-16|0x764a2c,-429|-12|0x764a2c,-409|-20|0x764a2c,-281|526|0xebb151,-70|530|0xda8643'
+    return findColorsUntil(0xce0000, offset, 90, 102, 20, 1035, 628,
+                           {orient = 2}, 500, 1)
 end
 
 -- 打开技能
