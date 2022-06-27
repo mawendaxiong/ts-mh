@@ -432,6 +432,7 @@ function UI.analysis(uiValues)
     UISetting.taskOrder = uiValues.taskOrder
     -- 定时执行科举和三界
     UISetting.schedule = uiValues.schedule
+    
     -- 第二天零点重新执行
     UISetting.restart = uiValues.restart
 
@@ -453,9 +454,7 @@ function UI.analysis(uiValues)
         UISetting.g2 = tonumber(uiValues.g2)
     end
 
-    if uiValues.devMode == '0' then
-        dev.status = 1
-    end
+    if uiValues.devMode == '0' then dev.status = 1 end
 end
 
 return UI

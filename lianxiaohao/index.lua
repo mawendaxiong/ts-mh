@@ -768,6 +768,18 @@ local methodContainer = {
             end
         end,
         ["remove"] = 0
+    },
+    { -- 人物属性,要放在跳过对话的前面,因为跳过对话会识别成人物属性
+        ["func"] = function()
+            return "打开了人物属性", statusPage()
+        end,
+        ["after"] = function()
+            Common.record("关闭人物属性")
+            tap(980, 43)
+
+            Common.blockCheckMainPage('等待关闭人物属性')
+
+        end
     }, { -- 跳过对话
         ["func"] = function()
             return "跳过对话", Common.userDialog(nil, nil, 2)
@@ -852,17 +864,6 @@ local methodContainer = {
             Common.blockCheckMainPage('等待关闭首冲')
         end,
         ["remove"] = 0
-    }, { -- 人物属性
-        ["func"] = function()
-            return "打开了人物属性", statusPage()
-        end,
-        ["after"] = function()
-            Common.record("关闭人物属性")
-            tap(980, 43)
-
-            Common.blockCheckMainPage('等待关闭人物属性')
-
-        end
     }, { -- 每10级领取装备
         ["func"] = function() return "领取装备", lingzhuangbei() end,
         ["after"] = function()

@@ -78,9 +78,9 @@ end
 
 function excute()
     while taskRecord.nextNode ~= nil do
-        class = taskRecord.currentNode["class"]
-        method = taskRecord.currentNode["method"]
-        step = taskRecord.currentNode["now"]
+        local class = taskRecord.currentNode["class"]
+        local method = taskRecord.currentNode["method"]
+        local step = taskRecord.currentNode["now"]
 
         Common.record("step: " .. step .. " " .. taskRecord.currentNode["name"])
         -- 打印日志
@@ -88,12 +88,12 @@ function excute()
              "[DATE] step: " .. step .. " " .. taskRecord.currentNode["name"]);
 
         mSleep(1000)
-        ret, after = class[method]()
+        local ret, after = class[method]()
         if ret == 'c2' then
             -- 协程暂停
-            afterMsg = '无'
+            local afterMsg = '无'
             if nil ~= after then
-                afterNode = taskRecord.currentPage['' .. after]
+                local afterNode = taskRecord.currentPage['' .. after]
                 afterMsg = afterNode['name']
 
                 taskRecord.currentNode = afterNode
@@ -107,7 +107,7 @@ function excute()
             taskRecord.nextNode =
                 taskRecord.currentPage[taskRecord.currentNode["next"]]
         elseif ret == -2 then -- 一系类任务执行完毕
-            break
+            return taskRecord.taskName .. ' end!'
         else -- 执行指定跳转的步骤
             taskRecord.currentNode = taskRecord.currentPage["" .. ret]
             taskRecord.nextNode =
@@ -122,12 +122,12 @@ end
 然后通过关闭游戏,触发[游戏闪退线程]
 ]]
 function Main.checkStuck()
-    point1 = nil
-    point2 = nil
-    point3 = nil
-    point4 = nil
+    local point1 = nil
+    local point2 = nil
+    local point3 = nil
+    local point4 = nil
 
-    checkTime = 0
+    local checkTime = 0
     while true do
         p1 = isColor(270, 143, 0x63594b)
         p2 = isColor(974, 129, 0x61554c)

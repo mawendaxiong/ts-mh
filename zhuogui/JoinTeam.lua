@@ -113,6 +113,7 @@ function Ghost.waitTeam()
             return 2
 
         elseif Common.easyGroupPage() then -- 便捷组队页面不做处理
+        elseif Common.checkMainPage() then -- 首页不做处理
         else
             coroutine.yield('混队捉鬼,等队伍页面异常', 'c2')
         end

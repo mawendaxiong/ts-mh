@@ -247,17 +247,6 @@ local function daemon()
         return
     end
 
-    -- 0点重启脚本
-    if UISetting.restart == "0" then
-        while true do
-            now = os.dates("%H")
-            if now == "0" then -- 到零点了
-                break
-            end
-        end
-        lua_restart()
-    end
-
     -- 游戏关服更新
     x, y = serverShutDown()
     if x ~= -1 then
@@ -267,6 +256,26 @@ local function daemon()
         waitUpdate = true
         return
     end
+end
+
+local function wait5pm()
+    Common.record("5点科举三界")
+    while true do
+        -- 获取24小时进制的当前小时
+        now = os.date("%H")
+        if tonumber(now) >= 17 then -- 到5点了
+            break
+        end
+        mSleep(1000 * 10)
+    end
+    toast("到5点!!!")
+
+    -- 复位执行账号
+    UISetting.currentAccountIndex = 1
+    -- 复位执行任务下标
+    taskRecord.currentTaskIndex = 1
+    -- 将要执行的任务设为科举和三界
+    UISetting.taskOrder = "schedule"
 end
 
 local function masterMain()
@@ -284,11 +293,9 @@ end
 
 init()
 
-if devStatus.status == 1 then
-    dev = true
-else
-    dev = false
-end
+local dev = false
+if devStatus.status == 1 then dev = true end
+
 initLog(log.name, 0);
 
 if initSuccess then
@@ -300,4 +307,29 @@ if initSuccess then
     wLog(log.name, "[DATE] script start");
 
     masterMain()
+
+    if UISetting.schedule == '0' then -- 到了5点三界和科举
+        -- 先关闭游戏
+        state = closeApp("com.netease.my")
+        local c3 = coroutine.create(wait5pm)
+        -- 复位执行账号
+        UISetting.currentAccountIndex = 1
+        -- 复位执行任务下标
+        taskRecord.currentTaskIndex = 1
+        -- 将要执行的任务设为科举和三界
+        UISetting.taskOrder = "schedule"
+        
+        c1 = coroutine.create(execute)
+        masterMain()
+    end
+
+    if UISetting.restart == '0' then -- 12点重新执行
+        while true do
+            now = os.date("%H")
+            if now == "0" then -- 到零点了
+                break
+            end
+        end
+        lua_restart()
+    end
 end

@@ -2,6 +2,21 @@
     "touchsprite-extension.snapDir": "/Users/mawen/Documents/TSStudio/ScreenShot",
     "Lua.diagnostics.globals": [
         "mSleep",
-        "wLog"
+        "wLog",
+        "closeApp",
+        "toast",
+        "initLog",
+        "tap",
+        "findColorsUntil",
+        "getColor",
+        "moveTo",
+        "findMultiColorInRegionFuzzy",
+        "multiColTap",
+        "isColor",
+        "inputKey",
+        "inputStr",
+        "keepScreen",
+        "fwShowTextView",
+        "lua_restart"
     ]
 }

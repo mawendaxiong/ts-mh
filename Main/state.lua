@@ -19,6 +19,7 @@ taskRecord.currentStep = -1
 taskRecord.taskStr = ""
 taskRecord.crashPage = nil
 taskRecord.crashNode = nil
+taskRecord.taskName = ''
 
 -- 当前正在执行任务的账号
 UISetting.currentAccountIndex = 1
