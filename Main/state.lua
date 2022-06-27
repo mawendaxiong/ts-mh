@@ -6,6 +6,7 @@ escort = {}
 exception = {}
 globalGhost = {}
 log = {}
+dev = {}
 
 mainStatus.isCrash = -1
 mainStatus.needLogin = 1
@@ -56,6 +57,8 @@ now = os.date("%Y-%m-%d %X")
 
 log.name = "mh-debug-" .. now
 
+dev.status = 0
+
 return {
     ["taskRecord"] = taskRecord,
     ["UISetting"] = UISetting,
@@ -64,4 +67,5 @@ return {
     ["exception"] = exception,
     ["globalGhost"] = globalGhost,
     ["log"] = log,
+    ["dev"] = dev
 }

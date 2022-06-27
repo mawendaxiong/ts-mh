@@ -6,7 +6,7 @@ TaskBoard = {}
 
 function TaskBoard.checkTaskBoard()
     offset =
-        '-805|-18|0x9d591f,-873|477|0x6a0500,-787|489|0xf8d6a3,-794|549|0xf7d5a1'
+        '-711|542|0x0eb00b,-696|544|0xa4712b,-667|549|0xa37029,-603|545|0xa37029,-36|546|0xa37029,-96|548|0xad7e3d'
     return findColorsUntil(0xce0000, offset, 90, 66, 9, 1067, 619, {orient = 2},
                            1000, 2)
 end
@@ -61,7 +61,6 @@ function TaskBoard.new(targetTask) TaskBoard.task = targetTask end
 
 function TaskBoard.open()
     Common.blockCheckMainPage('打开任务板时被挡住了')
-
 
     ret = multiColTap({
         {36, 115, 0xe5d45b}, {315, 28, 0xd79a50}, {327, 31, 0xdab291},

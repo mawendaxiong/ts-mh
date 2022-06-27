@@ -9,6 +9,7 @@ local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
 local log = container.log
+local globalGhost = container.globalGhost
 
 lxh = {}
 -- 敬请期待
@@ -351,6 +352,36 @@ local function qimingPage()
                            {orient = 2}, 500, 1)
 end
 
+-- 助战page
+local function zhuzhanPage()
+    return findColorsUntil(0xf88011,
+                           '81|-12|0x8be5fe,167|1|0xf33a90,256|-8|0xa6c4ff,346|3|0xacd234',
+                           90, 121, 562, 570, 622, {orient = 2}, 500, 1)
+end
+
+--  任务属性
+local function statusPage()
+    offset =
+        '39|112|0x48301e,36|249|0x48301e,37|344|0x48301e,47|345|0x48301e,40|368|0x48301e,-49|186|0x936324'
+    return findColorsUntil(0xce0000, offset, 90, 891, 7, 1046, 493,
+                           {orient = 2}, 500, 1)
+end
+
+-- 跳过动画
+function skipCartoon()
+    offset = '-69|-3|0x000000,-112|-3|0x000000,-176|-3|0x000000,121|4|0x000000'
+    return findColorsUntil(0x000000, offset, 90, 200, 16, 1128, 76,
+                           {orient = 2}, 500, 1)
+end
+
+-- 去见师傅(师门引导的前置任务)
+function qujianshifu()
+    offset =
+        '-18|1|0x51e414,-11|5|0x51e414,-7|1|0x51e414,27|6|0x51e414,3|-4|0x51e414,6|6|0x50d119'
+    return findColorsUntil(0x50d118, offset, 90, 906, 149, 1132, 490,
+                           {orient = 2}, 1000, 2)
+end
+
 foo = {
     ["剑侠客"] = {
         ["种族"] = {33, 253},
@@ -670,16 +701,23 @@ local methodContainer = {
                         -- 点击剧情
                         tap(990, 209)
                     else
-                        r, t, x, y = shifulaixin() -- 师傅来信
-                        if r then tap(x, y) end
 
-                        r, t, x, y = shimenrenwu() -- 师门任务
-                        if r then
+                        keepScreen(true)
+                        r1, t1, x1, y1 = shifulaixin() -- 师傅来信
+                        r2, t2, x2, y2 = shimenrenwu() -- 师门任务
+                        r3, t3, x3, y3 = qujianshifu() -- 去见师傅
+                        keepScreen(false)
+
+                        if r1 then
+                            tap(x1, y1)
+                        elseif r3 then
+                            tap(x3, y3)
+                        elseif r2 then
                             -- todo 做师门升级了20,领取装备卡着了
-                            tap(x, y)
+                            tap(x2, y2)
                             mSleep(2000)
                             local shimenPage = require("shimen.ConstPage")
-                            Main.excuteLocal(sectPage.index(), 4)
+                            Main.excuteLocal(shimenPage.index(), 4)
                         else
                             local zhuoguiPage = require("zhuogui.ConstPage")
                             globalGhost.checkLevel = 1
@@ -731,9 +769,9 @@ local methodContainer = {
         end,
         ["after"] = function()
             while true do
-                if not isColor(538, 55, 0x000000) then break end
+                if not skipCartoon() then break end
                 tap(1082, 32)
-                mSleep(500)
+                mSleep(1000)
             end
         end
     }, { -- 战斗
@@ -793,6 +831,17 @@ local methodContainer = {
             Common.blockCheckMainPage('等待关闭首冲')
         end,
         ["remove"] = 0
+    }, {
+        ["func"] = function()
+            return "打开了人物属性", statusPage()
+        end,
+        ["after"] = function()
+            Common.record("关闭人物属性")
+            tap(980, 43)
+
+            Common.blockCheckMainPage('等待关闭人物属性')
+
+        end
     }, { -- 每10级领取装备
         ["func"] = function() return "领取装备", lingzhuangbei() end,
         ["after"] = function()
@@ -824,6 +873,19 @@ local methodContainer = {
             Main.excuteLocal(jinengPage.index(), 1)
         end,
         ["remove"] = 0
+    }, { -- 战斗失败可能会跳出助战页面
+        ["func"] = function() return "助战页面", zhuzhanPage() end,
+        ["after"] = function()
+            while true do
+                if zhuzhanPage() then break end
+                coroutine.yield('助战页面异常', 'c2')
+                mSleep(1000)
+            end
+
+            wLog(log.name, "[DATE] 调整助战...")
+            local zhuzhanPage = require("zhuzhan.ConstPage")
+            Main.excuteLocal(zhuzhanPage.index(), 3)
+        end
     }, { -- 宠物引导
         ["func"] = function() return "宠物引导", chongwuGuide() end,
         ["after"] = function()
@@ -884,8 +946,8 @@ local methodContainer = {
 
             while true do
                 mSleep(1000)
-                if zhuzhan22() then -- 打开助战
-                    tap(656, 486)
+                if zhuzhan22() then
+                    tap(656, 486) -- 打开助战
                     break
                 end
                 Common.record('助战引导...')

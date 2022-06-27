@@ -408,7 +408,7 @@ function Sect.excute()
             mSleep(1000)
 
         elseif lingzhuangbei() then -- 领取福利
-            while (true) do
+            while true do
                 if isColor(874, 276, 0xedbf60) then
                     -- 领取装备
                     tap(874, 278)

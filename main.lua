@@ -9,6 +9,7 @@ local taskRecord = container.taskRecord
 local UISetting = container.UISetting
 local exception = container.exception
 local log = container.log
+local devStatus = container.dev
 
 initSuccess = false
 finish = false
@@ -16,7 +17,6 @@ waitUpdate = false
 -- 等待晚上5点
 wait5pm = false
 
-dev = false
 init(1)
 
 -- 梦幻迷城弹出框
@@ -282,8 +282,13 @@ local function masterMain()
     end
 end
 
-dev = true
 init()
+
+if devStatus.status == 1 then
+    dev = true
+else
+    dev = false
+end
 initLog(log.name, 0);
 
 if initSuccess then
@@ -293,9 +298,6 @@ if initSuccess then
 
     wLog(log.name, "------------分割线------------");
     wLog(log.name, "[DATE] script start");
-
-    -- local jinengPage = require("jineng.ConstPage")
-    -- Main.excuteLocal(jinengPage.index(), 1)
 
     masterMain()
 end

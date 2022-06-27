@@ -5,6 +5,7 @@ local container = require("Main.state")
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
+local dev = container.dev
 
 local cjson = ts.json
 UI = {}
@@ -53,6 +54,11 @@ function UI.show()
                     ["text"] = "3.运行脚本时,请将home键置于右侧(正对屏幕),否则脚本运行不了",
                     ["size"] = 15,
                     ["valign"] = "bottom"
+                }, {
+                    ["type"] = "CheckBoxGroup",
+                    ["id"] = "devMode",
+                    ["list"] = "调试模式(不启动游戏|不处理闪退)",
+                    ["countperline"] = "1"
                 }
             }, {
                 {
@@ -445,6 +451,10 @@ function UI.analysis(uiValues)
     else
         -- 混队捉鬼次数
         UISetting.g2 = tonumber(uiValues.g2)
+    end
+
+    if uiValues.devMode == '0' then
+        dev.status = 1
     end
 end
 
