@@ -1,3 +1,7 @@
 {
-    "touchsprite-extension.snapDir": "/Users/mawen/Documents/TSStudio/ScreenShot"
+    "touchsprite-extension.snapDir": "/Users/mawen/Documents/TSStudio/ScreenShot",
+    "Lua.diagnostics.globals": [
+        "mSleep",
+        "wLog"
+    ]
 }

@@ -98,7 +98,7 @@ end
 -- 调整等级
 function Ghost.fixLevel()
     while true do
-        if leadTeamPage() then break end
+        if Common.teamPage() then break end
         coroutine.yield('调整等级,但页面异常', 'c2')
         mSleep(1000)
     end
@@ -106,6 +106,12 @@ function Ghost.fixLevel()
     -- 打开调整等级
     tap(757, 101)
     mSleep(1000)
+
+    while true do
+        if fixLevelPage() then break end
+        coroutine.yield('调整等级,但页面异常', 'c2')
+        mSleep(1000)
+    end
 
     -- 等级拉到最大匹配
     Common.move(nil, function() moveTo(730, 315, 730, 130, 200, 50) end,
@@ -127,6 +133,11 @@ function Ghost.fixLevel()
     tap(654, 585)
     mSleep(1000)
 
+    while true do
+        if Common.teamPage() then break end
+        coroutine.yield('调整等级,但页面异常', 'c2')
+        mSleep(1000)
+    end
     return 0
 end
 
@@ -265,9 +276,8 @@ function Ghost.findTask()
             local p3 = getColor(711, 212)
             local p4 = getColor(723, 224)
             return p1, p2, p3, p4
-        end, function() Common.resetRightTaskBoard() end,function ()
-            return Common.checkMainPage()
-        end)
+        end, function() Common.resetRightTaskBoard() end,
+                    function() return Common.checkMainPage() end)
 
         return 0
     end
@@ -347,6 +357,8 @@ end
 
 -- 检查队伍人数
 function Ghost.checkTeamMember()
+    Common.blockCheckMainPage('带队捉鬼打开队伍页面异常')
+
     -- 打开组队
     Common.commonOpenGroup()
 
@@ -365,11 +377,18 @@ function Ghost.checkTeamMember()
     tap(982, 39) -- 关闭组队界面
     mSleep(1000)
 
+    Common.blockCheckMainPage('带队捉鬼组人异常')
     return 0 -- 接着打开任务板
 end
 
 -- 打开便捷组队
 function Ghost.simpleGroup()
+    while true do
+        if Common.easyGroupPage() then break end
+        coroutine.yield('混队捉鬼等待加入队伍异常', 'c2')
+        mSleep(1000)
+    end
+
     -- 打开右下角便捷组队
     tap(960, 580)
     mSleep(1000)
@@ -396,10 +415,24 @@ function Ghost.simpleGroup()
 end
 
 function Ghost.findTaskOnTaskBoard()
-    if TaskBoard.findTask() == -1 then
-        coroutine.yield('混队捉鬼的任务板被弹窗挡住了', 'c2')
-        if TaskBoard.findTask() == -1 then end -- todo 还是没捉鬼任务怎么处理
+    while true do
+        if TaskBoard.checkTaskBoard() then break end
+        coroutine.yield('带队捉鬼查找任务异常', 'c2')
+        mSleep(1000)
     end
+
+    while true do
+        if TaskBoard.findTask() == 0 then break end
+        coroutine.yield('带队捉鬼的任务板被弹窗挡住了', 'c2')
+        mSleep(1000)
+    end
+
+    while true do
+        if Common.easyGroupPage() then break end
+        coroutine.yield('带队捉鬼等待加入队伍异常', 'c2')
+        mSleep(1000)
+    end
+
     -- 执行下一步
     return 0
 end
@@ -409,6 +442,13 @@ function Ghost.getTaskOrWaitMember()
         if Common.easyGroupPage() then -- 便捷组队页面
             tap(465, 584) -- 创建队伍
             mSleep(1000)
+
+            while true do
+                if Common.teamPage() then break end
+                coroutine.yield('带队捉鬼创建队伍异常', 'c2')
+                mSleep(1000)
+            end
+
             return 0
         elseif Common.userDialog() then -- 钟馗的对话框
             return 10 -- 领取任务

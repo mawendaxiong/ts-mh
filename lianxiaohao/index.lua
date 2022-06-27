@@ -382,6 +382,13 @@ function qujianshifu()
                            {orient = 2}, 1000, 2)
 end
 
+-- 师门任务类型选择页面
+local function shimenTypeChoosePage()
+    offset = "6|6|0xef3d47,48|-362|0xffe7b8,59|-365|0xc5311b,7|-18|0xff5362"
+    return findColorsUntil(0xa84407, offset, 90, 876, 81, 1015, 538,
+                           {orient = 2}, 500, 1)
+end
+
 foo = {
     ["剑侠客"] = {
         ["种族"] = {33, 253},
@@ -731,7 +738,21 @@ local methodContainer = {
 
         end,
         ["remove"] = 0
-    }, { -- 跳过剧情                                                    
+    }, { -- 首次师门任务
+        ["func"] = function()
+            return "首次师门任务", shimenTypeChoosePage()
+        end,
+        ["after"] = function()
+            while true do
+                if shimenTypeChoosePage() then break end
+                coroutine.yield('首次师门任务异常', 'c2')
+                mSleep(1000)
+            end
+
+            local shimenPage = require("shimen.ConstPage")
+            Main.excuteLocal(shimenPage.index(), 4)
+        end
+    }, { -- 跳过剧情
         ["func"] = function() return "跳过剧情", tiaoguojuqing() end,
         ["after"] = function()
             Common.record("跳过剧情")
@@ -831,7 +852,7 @@ local methodContainer = {
             Common.blockCheckMainPage('等待关闭首冲')
         end,
         ["remove"] = 0
-    }, {
+    }, { -- 人物属性
         ["func"] = function()
             return "打开了人物属性", statusPage()
         end,
