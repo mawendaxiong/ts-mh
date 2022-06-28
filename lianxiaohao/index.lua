@@ -125,10 +125,9 @@ end
 
 -- 师傅的来信
 local function shifulaixin()
-    offset =
-        "-14|0|0x51e414,-14|-4|0x51e414,-92|-11|0x51e414,-92|-5|0x51e414,-80|-3|0x51e414"
+    offset = '-28|-4|0x51e414,-92|-7|0x51e414,-80|-3|0x51e414,-67|-1|0x51e414'
     return findColorsUntil(0x51e414, offset, 90, 902, 147, 1134, 454,
-                           {orient = 2}, 500, 1)
+                           {orient = 2}, 1000, 2)
 end
 
 -- 首页的任务tab
@@ -708,7 +707,6 @@ local methodContainer = {
                         -- 点击剧情
                         tap(990, 209)
                     else
-                        Common.b2a()
                         keepScreen(true)
                         r1, t1, x1, y1 = shifulaixin() -- 师傅来信
                         r2, t2, x2, y2 = qujianshifu() -- 去见师傅
@@ -768,7 +766,8 @@ local methodContainer = {
 
             local shimenPage = require("shimen.ConstPage")
             Main.excuteLocal(shimenPage.index(), 4)
-        end
+        end,
+        ["remove"] = 1
     }, { -- 跳过剧情
         ["func"] = function() return "跳过剧情", tiaoguojuqing() end,
         ["after"] = function()
@@ -1094,6 +1093,7 @@ function lxh.execute()
         mSleep(1500)
         local removeNum = -1
 
+        local errorHold = 0
         for i = 1, #methodContainer, 1 do
             local methodObj = methodContainer[i]
             local msg, r, t, x, y = methodObj.func()
@@ -1103,7 +1103,14 @@ function lxh.execute()
                 methodObj.after()
                 if methodObj.remove == 1 then removeNum = i end
                 break -- 结束for循环
+            else
+                errorHold = errorHold + 1
             end
+        end
+
+        if errorHold == #methodContainer then
+            coroutine.yield('练小号页面异常', 'c2')
+            errorHold = 0
         end
 
         if removeNum ~= -1 then

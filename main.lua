@@ -323,6 +323,7 @@ if initSuccess then
 
     masterMain()
 
+
     if UISetting.schedule == '0' then -- 到了5点三界和科举
         -- 先关闭游戏
         state = closeApp("com.netease.my")
