@@ -779,7 +779,7 @@ local methodContainer = {
 
             while true do
                 if not tiaoguojuqing() then break end
-                coroutine.yield("等待跳过剧情")
+                coroutine.yield("等待跳过剧情", "c2")
                 mSleep(1000)
             end
         end,
