@@ -170,6 +170,13 @@ local function shifutuijian()
                            {orient = 2}, 500, 2)
 end
 
+local function shangjiaochongwu()
+    offset =
+        '-77|425|0xecbe5f,-478|415|0x8d5d2c,-339|417|0x8d5d2c,-258|422|0x8d5d2c,-234|415|0x8d5d2c'
+    return findColorsUntil(0xbf1500, offset, 90, 283, 73, 858, 561,
+                           {orient = 2}, 500, 2)
+end
+
 -- 任务板查找任务
 function Sect.findTaskOnTaskBoard()
     while true do
@@ -343,7 +350,6 @@ function Sect.excute()
                 mSleep(1000)
                 -- 点击第一个选项
                 ret, tim, x, y = dialogSelection()
-                toast(x .. ',' .. y, 1)
                 mSleep(1000)
                 if ret then -- 有选项的对话框
                     tap(x, y)
@@ -381,6 +387,9 @@ function Sect.excute()
             Common.record("买宠物")
             -- 购买
             tap(917, 573)
+            mSleep(1000)
+        elseif shangjiaochongwu then
+            tap(752, 525) -- 上交宠物
             mSleep(1000)
         elseif weaponAndDrug() then -- 药店或者武器店
             Common.record("药或者武器")

@@ -171,7 +171,6 @@ function Uncharted.count()
     tap(1020, 233) -- 点击秘境任务,开始通关
     mSleep(1000)
 
-    unchartedState.freq = 0
     pauseTime = 30
     isCount = false
     while true do
@@ -230,6 +229,7 @@ function Uncharted.count()
         elseif not isColor(453, 19, 0xf35e6b) then -- 一直点离开,直到可以看到挂机的按钮
             tap(1067, 302)
         elseif Common.checkMainPage() then
+            unchartedState.freq = 0 -- 清零,下一个账号从0开始
             return -2 -- 结束
         else
             coroutine.yield('秘境结束前常规检查', 'c2')

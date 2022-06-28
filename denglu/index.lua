@@ -91,9 +91,9 @@ function Login.restartGame()
             return step
         end
     end
-    state = closeApp("com.netease.my")
+    closeApp("com.netease.my")
     mSleep(2000)
-    state = runApp("com.netease.my")
+    runApp("com.netease.my")
     return 0
 end
 
@@ -187,14 +187,14 @@ function Login.inputAccountPasswd()
     mSleep(1000)
 
     -- 输入邮箱账号
-    Common.inputText(UISetting.currentAccount.account, 1000)
+    Common.inputText(UISetting.currentAccount.account)
 
     -- 输入密码
     tap(608, 303)
     mSleep(1000)
 
     -- 输入邮箱密码
-    Common.inputPasswd(UISetting.currentAccount.passwd, 1000)
+    Common.inputPasswd(UISetting.currentAccount.passwd)
 
     -- 点击登录
     tap(491, 407)
@@ -234,7 +234,7 @@ function Login.selectServer()
     tap(254, 86)
     mSleep(1000)
 
-    Common.inputText(UISetting.currentAccount.server, 1000)
+    Common.inputText(UISetting.currentAccount.server)
 
     -- 选择第一个服务器
     tap(501, 163)

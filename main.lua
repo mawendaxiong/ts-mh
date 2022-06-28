@@ -16,6 +16,10 @@ finish = false
 waitUpdate = false
 -- 等待晚上5点
 wait5pm = false
+-- 调试模式
+local dev = false
+-- 一个月的第几天,用来判断脚本是不是跨日执行了
+local day = os.date('%d')
 
 init(1)
 
@@ -152,7 +156,7 @@ local function execute()
         -- 一个账号的任务做完后复位
         taskRecord.currentTaskIndex = 1
     end
-
+    return 'all finish'
 end
 local c1 = coroutine.create(execute)
 
@@ -183,7 +187,7 @@ local function daemon()
         end
     end
 
-    flag = appIsRunning("com.netease.my")
+    local flag = appIsRunning("com.netease.my")
     if flag == 0 or exception.freq <= 0 then -- 程序闪退
         toast("闪退", 2)
         mSleep(2000)
@@ -247,6 +251,17 @@ local function daemon()
         return
     end
 
+    now = os.date("%H")
+    if now == "0" then -- 到零点了
+        newDay = os.date("%d")
+        if tonumber(newDay) > tonumber(day) and UISetting.restart == '0' then -- 说明垮了一天了
+            lua_restart()
+        else
+            closeApp("com.netease.my") -- 停止app
+            lua_exit() -- 退出app
+        end
+    end
+
     -- 游戏关服更新
     x, y = serverShutDown()
     if x ~= -1 then
@@ -256,6 +271,7 @@ local function daemon()
         waitUpdate = true
         return
     end
+
 end
 
 local function wait5pm()
@@ -293,7 +309,6 @@ end
 
 init()
 
-local dev = false
 if devStatus.status == 1 then dev = true end
 
 initLog(log.name, 0);
@@ -318,7 +333,7 @@ if initSuccess then
         taskRecord.currentTaskIndex = 1
         -- 将要执行的任务设为科举和三界
         UISetting.taskOrder = "schedule"
-        
+
         c1 = coroutine.create(execute)
         masterMain()
     end

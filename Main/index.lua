@@ -107,7 +107,8 @@ function excute()
             taskRecord.nextNode =
                 taskRecord.currentPage[taskRecord.currentNode["next"]]
         elseif ret == -2 then -- 一系类任务执行完毕
-            return taskRecord.taskName .. ' end!'
+            wLog(log.name, "[DATE] " .. taskRecord.taskName .. ' end!')
+            break
         else -- 执行指定跳转的步骤
             taskRecord.currentNode = taskRecord.currentPage["" .. ret]
             taskRecord.nextNode =

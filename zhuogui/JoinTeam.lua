@@ -223,6 +223,10 @@ function Ghost.checkGhostNum()
             mSleep(1000)
         end
 
+        tap(981, 39) -- 关闭组队页面
+        mSleep(1000)
+
+        Common.blockCheckMainPage('混队捉鬼重新找队伍异常')
         -- 返回 [便捷组队]
         return 2
     end

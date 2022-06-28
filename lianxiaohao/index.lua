@@ -377,8 +377,8 @@ end
 -- 去见师傅(师门引导的前置任务)
 function qujianshifu()
     offset =
-        '-18|1|0x51e414,-11|5|0x51e414,-7|1|0x51e414,27|6|0x51e414,3|-4|0x51e414,6|6|0x50d119'
-    return findColorsUntil(0x50d118, offset, 90, 906, 149, 1132, 490,
+        '36|-7|0xfaefd4,74|-4|0xf9eed3,82|-2|0xfaefd4,109|7|0xfaefd4,43|-30|0x4ad013,25|-32|0x51e414'
+    return findColorsUntil(0xfaefd4, offset, 90, 906, 149, 1132, 490,
                            {orient = 2}, 1000, 2)
 end
 
@@ -680,7 +680,7 @@ local methodContainer = {
         ["func"] = function() return "主页面", Common.checkMainPage() end,
         ["after"] = function()
             while true do
-                mSleep(1000)
+                mSleep(1500)
                 if not Common.checkMainPage() then break end
 
                 if Common.userDialog() then -- 有对话框
@@ -708,23 +708,40 @@ local methodContainer = {
                         -- 点击剧情
                         tap(990, 209)
                     else
-
+                        Common.b2a()
                         keepScreen(true)
                         r1, t1, x1, y1 = shifulaixin() -- 师傅来信
-                        r2, t2, x2, y2 = shimenrenwu() -- 师门任务
-                        r3, t3, x3, y3 = qujianshifu() -- 去见师傅
+                        r2, t2, x2, y2 = qujianshifu() -- 去见师傅
+                        r3, t3, x3, y3 = shimenrenwu() -- 师门任务
                         keepScreen(false)
 
                         if r1 then
                             tap(x1, y1)
-                        elseif r3 then
-                            tap(x3, y3)
                         elseif r2 then
-                            -- todo 做师门升级了20,领取装备卡着了
                             tap(x2, y2)
+                            while true do
+                                if Common.userDialog() then
+                                    break
+                                end
+                                coroutine.yield('去见师傅页面异常', 'c2')
+                                mSleep(1000)
+                            end
+                        elseif r3 then
+                            -- todo 做师门升级了20,领取装备卡着了
+                            tap(x3, y3)
                             mSleep(2000)
                             local shimenPage = require("shimen.ConstPage")
-                            Main.excuteLocal(shimenPage.index(), 4)
+                            local step = 1
+                            keepScreen(true)
+                            if shimenTypeChoosePage() then
+                                step = 4
+                            end
+                            if Common.userDialog() then
+                                tap(600, 400) -- 清除对话框
+                            end
+                            keepScreen(false)
+
+                            Main.excuteLocal(shimenPage.index(), step)
                         else
                             local zhuoguiPage = require("zhuogui.ConstPage")
                             globalGhost.checkLevel = 1

@@ -17,6 +17,14 @@
         "inputStr",
         "keepScreen",
         "fwShowTextView",
-        "lua_restart"
+        "lua_restart",
+        "appIsRunning",
+        "runApp",
+        "getNetTime",
+        "fwCloseView",
+        "getScreenSize",
+        "showUI",
+        "strSplit",
+        "lua_exit"
     ]
 }

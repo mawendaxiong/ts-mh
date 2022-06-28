@@ -67,6 +67,7 @@ return {
     ["uncharted"] = uncharted,
     ["exception"] = exception,
     ["globalGhost"] = globalGhost,
+    ["escort"] = escort,
     ["log"] = log,
     ["dev"] = dev
 }
