@@ -388,7 +388,7 @@ function Sect.excute()
             -- 购买
             tap(917, 573)
             mSleep(1000)
-        elseif shangjiaochongwu then
+        elseif shangjiaochongwu() then
             tap(752, 525) -- 上交宠物
             mSleep(1000)
         elseif weaponAndDrug() then -- 药店或者武器店

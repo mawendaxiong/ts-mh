@@ -321,8 +321,9 @@ if initSuccess then
     wLog(log.name, "------------分割线------------");
     wLog(log.name, "[DATE] script start");
 
-    masterMain()
-
+    -- masterMain()
+    local jinengPage = require("shimen.ConstPage")
+    Main.excuteLocal(jinengPage.index(), 7)
 
     if UISetting.schedule == '0' then -- 到了5点三界和科举
         -- 先关闭游戏
