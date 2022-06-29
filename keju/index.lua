@@ -51,7 +51,7 @@ function keju.findTaskOnTaskBoard()
     end
 
     while true do
-        if kejuPage() then break end
+        if penLogo() then break end
         coroutine.yield('科举准备答题异常', 'c2')
         mSleep(1000)
     end
@@ -62,7 +62,7 @@ end
 -- 答题
 function keju.answer()
     while true do
-        if kejuPage() then break end
+        if penLogo() then break end
         coroutine.yield('科举准备答题异常', 'c2')
         mSleep(1000)
     end
