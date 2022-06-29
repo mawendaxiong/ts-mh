@@ -70,7 +70,10 @@ function generateRandomTaskList(dev)
             end
 
         end
-        if UISetting.money == 1 then taskOrder = taskOrder .. 'w' end
+
+        if UISetting.money == 1 then
+            taskOrder = taskOrder .. 'w'
+        end
     end
 
     taskRecord.taskStr = taskOrder
@@ -175,7 +178,6 @@ function Main.switchTaskPage(taskNum)
     local taskName = ''
     wLog(log.name, "------------分割线------------");
     wLog(log.name, "------------分割线------------");
-
     if taskNum == "1" then -- 师门
         taskName = "执行: 师门"
         local sectPage = require("shimen.ConstPage")

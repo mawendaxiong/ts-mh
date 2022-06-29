@@ -133,16 +133,15 @@ local function execute()
             wLog(log.name, "[DATE] 闪退后继续执行的步骤:" ..
                      taskRecord.currentStep);
         end
-
         wLog(log.name, "[DATE] 本次执行任务顺序:" .. taskRecord.taskStr);
 
         -- 执行任务
-        for taskIndex = taskRecord.currentTaskIndex, #taskRecord.taskStr do
+        for taskIndex = taskRecord.currentTaskIndex, #taskRecord.taskStr, 1 do
+
             -- 记录当前正在执行的任务,游戏闪退是保存状态
             taskRecord.currentTaskIndex = taskIndex
 
             taskNum = string.sub(taskRecord.taskStr, taskIndex, taskIndex)
-
             taskRecord.currentPage = Main.switchTaskPage(taskNum)
 
             if taskRecord.currentStep == -1 then -- 没有记录的任务步骤,就从1开始
@@ -309,7 +308,8 @@ local function wait5pm()
         end
         mSleep(1000 * 10)
     end
-    toast("到5点!!!")
+    toast("到5点!!!", 1)
+    mSleep(1000)
 
     -- 复位执行账号
     UISetting.currentAccountIndex = 1
@@ -375,11 +375,15 @@ if initSuccess then
     wLog(log.name, "[DATE] script start");
 
     masterMain()
+    toast("master..", 2)
+    mSleep(2000)
 
     if UISetting.schedule == '0' then -- 到了5点三界和科举
+        toast('5pm')
         -- 先关闭游戏
         state = closeApp("com.netease.my")
         local c3 = coroutine.create(wait5pm)
+        coroutine.resume(c3)
         -- 复位执行账号
         UISetting.currentAccountIndex = 1
         -- 复位执行任务下标

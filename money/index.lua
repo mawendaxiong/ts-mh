@@ -59,7 +59,11 @@ function money.use()
         coroutine.yield('使用活力页面异常', 'c2')
         mSleep(1000)
     end
-    
+
+    for i = 1, 30, 1 do
+        tap(860,235)
+    end
+    return -2
 end
 
 -- 闪退补偿
