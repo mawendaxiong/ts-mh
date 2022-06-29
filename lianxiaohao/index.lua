@@ -358,7 +358,7 @@ local function zhuzhanPage()
                            90, 121, 562, 570, 622, {orient = 2}, 500, 1)
 end
 
---  任务属性
+--  人物属性
 local function statusPage()
     offset =
         '39|112|0x48301e,36|249|0x48301e,37|344|0x48301e,47|345|0x48301e,40|368|0x48301e,-49|186|0x936324'

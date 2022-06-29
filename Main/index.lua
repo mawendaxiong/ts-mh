@@ -27,7 +27,7 @@ end
 -- 生成随机任务列表
 function generateRandomTaskList(dev)
     if dev == nil then dev = false end
-    taskOrder = UISetting.taskOrder
+    local taskOrder = UISetting.taskOrder
 
     -- 练小号只执行登录和练小号功能
     if UISetting.lianxiaohao == 1 then
@@ -70,7 +70,7 @@ function generateRandomTaskList(dev)
             end
 
         end
-
+        if UISetting.money == 1 then taskOrder = taskOrder .. 'w' end
     end
 
     taskRecord.taskStr = taskOrder
@@ -153,7 +153,7 @@ end
 
 function Main.login()
     taskRecord.taskName = 'login'
-    
+
     -- 生成任务列表
     if taskRecord.currentStep == -1 then generateRandomTaskList() end
     loginPage = require("denglu.ConstPage")
@@ -165,14 +165,14 @@ function Main.login()
     taskRecord.currentNode = page["1"]
     taskRecord.nextNode = page[taskRecord.currentNode["next"]]
     excute()
-    
+
     wLog(log.name, "[DATE] 当前执行: 登录");
 
 end
 
 function Main.switchTaskPage(taskNum)
-    page = nil
-    taskName = ''
+    local page = nil
+    local taskName = ''
     wLog(log.name, "------------分割线------------");
     wLog(log.name, "------------分割线------------");
 
@@ -208,6 +208,10 @@ function Main.switchTaskPage(taskNum)
         taskName = "执行: 科举"
         local kejuPage = require("keju.ConstPage")
         page = kejuPage.index()
+    elseif taskNum == "w" then -- 使用活力
+        taskName = "执行: 使用活力"
+        local money = require("money.ConstPage")
+        page = money.index()
     elseif taskNum == "x" then -- 建号练小号
         taskName = "执行: 练小号"
         local lianxiaohaoPage = require("lianxiaohao.ConstPage")

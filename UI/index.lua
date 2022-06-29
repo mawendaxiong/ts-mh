@@ -97,7 +97,6 @@ function UI.show()
                     ["type"] = "Label",
                     ["align"] = "left",
                     ["text"] = "1-师门 2-秘境 3-宝图 4-混队捉鬼 5-带队捉鬼 6-运镖 7-三界 8-科举 \ra-一条龙 b-一条龙不捉鬼",
-                    -- ["text"] = "0=一条龙 1=一条龙加捉鬼  2=秘境 3=师门 4=宝图 5=混队捉鬼 6=带队捉鬼 7=运镖 8=科举 9=三界 a=练级",
                     ["size"] = 12,
                     ["width"] = -1,
                     ["nowrap"] = 0,
@@ -216,6 +215,36 @@ function UI.show()
                 }, {
                     ["type"] = "Line",
                     ["color"] = "255,0,0",
+                    ["align"] = "center",
+                    ["valign"] = "top",
+                    ["height"] = 5,
+                    ["width"] = 500
+                }, {
+                    ["type"] = "Label",
+                    ["align"] = "left",
+                    ["text"] = "活力配置",
+                    ["size"] = 16,
+                    ["width"] = -1,
+                    ["nowrap"] = 0,
+                    ["valign"] = "bottom"
+                }, {
+                    ["type"] = "Label",
+                    ["align"] = "left",
+                    ["text"] = "目前仅支持打工换100金币,默认执行30次,勾上即可",
+                    ["size"] = 16,
+                    ["color"] = "51,51,255",
+                    ["width"] = -1,
+                    ["nowrap"] = 0,
+                    ["valign"] = "bottom"
+                }, {
+                    ["type"] = "CheckBoxGroup",
+                    ["id"] = "money",
+                    ["list"] = "打工消耗活力",
+                    ["select"] = "0",
+                    ["countperline"] = "1"
+                }, {
+                    ["type"] = "Line",
+                    ["color"] = "51,51,255",
                     ["align"] = "center",
                     ["valign"] = "top",
                     ["height"] = 5,
@@ -432,7 +461,7 @@ function UI.analysis(uiValues)
     UISetting.taskOrder = uiValues.taskOrder
     -- 定时执行科举和三界
     UISetting.schedule = uiValues.schedule
-    
+
     -- 第二天零点重新执行
     UISetting.restart = uiValues.restart
 
@@ -454,7 +483,8 @@ function UI.analysis(uiValues)
         UISetting.g2 = tonumber(uiValues.g2)
     end
 
-    if uiValues.devMode == '0' then dev.status = 1 end
+    if uiValues.devMode == '0' then dev.status = 1 end -- 调试模式
+    if uiValues.money == '0' then UISetting.money = 1 end -- 活力用来打工
 end
 
 return UI

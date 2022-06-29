@@ -27,7 +27,7 @@ end
 -- 选择服务器页面
 function serverPage()
     offset =
-        '-838|55|0xb9b4ad,-834|103|0xd58825,-834|117|0xd58825,-855|47|0xb9b4ad,-730|98|0xf3d8ba'
+        '-841|52|0xb9b4ad,-805|43|0xb9b4ad,-466|-19|0x6c310a,-445|-11|0x6c310a,-411|-11|0x6c310a,-385|-7|0x6c310a,-386|-19|0x6c310a'
     return findColorsUntil(0xce0000, offset, 90, 88, 25, 1085, 271,
                            {orient = 2}, 500, 1)
 end

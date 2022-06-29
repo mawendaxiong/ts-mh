@@ -32,6 +32,8 @@ UISetting.restart = nil
 
 UISetting.g1 = 20
 UISetting.g2 = 20
+-- 打工消耗活力
+UISetting.money = 0
 
 -- 秘境次数统计
 uncharted.freq = 0
