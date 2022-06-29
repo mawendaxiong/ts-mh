@@ -80,17 +80,6 @@ end
 
 -- 重启游戏
 function Login.restartGame()
-    -- 不需要登录游戏
-    if mainStatus.needLogin ~= 1 then
-        mainStatus.needLogin = 1
-        if mainStatus.logining == -1 then -- 非登录直接退出
-            return -2
-        else -- 正在登录就返回到之前登录的步骤
-            step = taskRecord.currentStep
-            taskRecord.currentStep = -1
-            return step
-        end
-    end
     closeApp("com.netease.my")
     mSleep(2000)
     runApp("com.netease.my")

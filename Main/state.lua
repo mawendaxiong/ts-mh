@@ -9,7 +9,6 @@ log = {}
 dev = {}
 
 mainStatus.isCrash = -1
-mainStatus.needLogin = 1
 mainStatus.logining = -1
 
 -- 当前正在执行的任务

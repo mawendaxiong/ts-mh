@@ -34,9 +34,16 @@ end
 -- 服务器已关闭,周三维护更新
 local function serverShutDown()
     offset =
-        "27|5|0x4f3621,37|-6|0x48301e,54|1|0xedc061,-59|-79|0x8d5d2c,-51|-79|0x8d5d2c,-12|-84|0x8d5d2c,2|-68|0x8d5d2c,63|-80|0x8d5d2c,61|-74|0x8f602f,83|-78|0x8d5d2c,74|-70|0x936536"
-    return findMultiColorInRegionFuzzy(0x48301e, offset, 90, 342, 217, 788, 420,
-                                       {orient = 2})
+        '20|8|0x533922,-64|-77|0x8d5d2c,-37|-75|0x8d5d2c,-5|-78|0x8d5d2c,6|-86|0x8d5d2c,71|-77|0x8d5d2c'
+    return findColorsUntil(0x48301e, offset, 90, 474, 276, 675, 403,
+                           {orient = 2}, 500, 1)
+end
+
+-- 维护过程中弹出的 [连接不上服务器]
+local function cannotConnect()
+    offset = '19|-6|0x48301e,7|-5|0x48301e,-59|-115|0x8d5d2c,-18|-108|0x8d5d2c'
+    return findColorsUntil(0x48301e, offset, 90, 474, 276, 675, 403,
+                           {orient = 2}, 500, 1)
 end
 
 -- 通用提示框
@@ -75,7 +82,6 @@ end
 function init()
 
     mainStatus.isCrash = -1
-    mainStatus.needLogin = 1
     mainStatus.logining = -1
 
     -- 当前正在执行的任务
@@ -252,7 +258,9 @@ local function daemon()
     end
 
     now = os.date("%H")
-    if now == "0" then -- 到零点了
+    toast("now: " .. now, 1)
+    mSleep(1000)
+    if now == "00" then -- 到零点了
         newDay = os.date("%d")
         if tonumber(newDay) > tonumber(day) and UISetting.restart == '0' then -- 说明垮了一天了
             lua_restart()
@@ -263,7 +271,7 @@ local function daemon()
     end
 
     -- 游戏关服更新
-    x, y = serverShutDown()
+    r, t, x, y = serverShutDown()
     if x ~= -1 then
         -- 确定
         tap(x, y)
@@ -294,15 +302,43 @@ local function wait5pm()
     UISetting.taskOrder = "schedule"
 end
 
+local function wait2Update()
+    Common.record("等待更新")
+    while true do
+        mSleep(5000)
+
+        if miniRedManLogo() then -- 在进入游戏界面
+            -- 点击选择服务器
+            tap(639, 382)
+        elseif cannotConnect() then -- 连接不上服务器
+            tap(473,387) -- 点击好的
+        elseif updateNotice() then -- 出现更新公告
+            -- 关闭更新公告
+            tap(648, 691)
+            mSleep(1000)
+        elseif serverPage() then -- 选择服务器的页面
+            denglu.selectServer() -- 选择服务器,进入游戏
+            break
+        end
+    end
+
+    waitUpdate = false
+end
+
 local function masterMain()
     while coroutine.status(c1) ~= "dead" do
         local status, tips, ret, after = coroutine.resume(c1)
         if nil == after then after = '无' end
-        wLog(log.name, "daemon :" .. tips .. " | 后续执行 :" .. after);
-        mSleep(1000)
+        wLog(log.name, "daemon :" .. tips .. " | 后续执行 :" .. after)
+
         if ret == 'c2' then
             local c2 = coroutine.create(daemon)
             coroutine.resume(c2)
+        end
+
+        if waitUpdate then -- 游戏更新
+            wait_update = coroutine.create(wait2Update)
+            coroutine.resume(wait_update)
         end
     end
 end
@@ -338,7 +374,7 @@ if initSuccess then
         masterMain()
     end
 
-    if UISetting.restart == '0' then -- 12点重新执行
+    if UISetting.restart == '00' then -- 12点重新执行
         while true do
             now = os.date("%H")
             if now == "0" then -- 到零点了
