@@ -152,8 +152,8 @@ function Main.checkStuck()
 end
 
 function Main.login()
-    -- 表示正在登录
-    mainStatus.logining = 1
+    taskRecord.taskName = 'login'
+    
     -- 生成任务列表
     if taskRecord.currentStep == -1 then generateRandomTaskList() end
     loginPage = require("denglu.ConstPage")
@@ -165,9 +165,7 @@ function Main.login()
     taskRecord.currentNode = page["1"]
     taskRecord.nextNode = page[taskRecord.currentNode["next"]]
     excute()
-    -- 复位
-    mainStatus.logining = -1
-
+    
     wLog(log.name, "[DATE] 当前执行: 登录");
 
 end

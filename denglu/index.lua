@@ -63,7 +63,7 @@ function gameLogo()
 end
 
 -- 账号已退出和资源更新提醒
-function tip()
+function loginTip()
     offset =
         "-132|-122|0xe9d5ba,201|-94|0xeddfce,200|-2|0xeddfcd,-129|-3|0xeddfcc"
     return findColorsUntil(0xedc060, offset, 90, 352, 218, 787, 422,
@@ -83,11 +83,24 @@ function Login.restartGame()
     closeApp("com.netease.my")
     mSleep(2000)
     runApp("com.netease.my")
+
+    while true do
+        if miniRedManLogo() then break end
+        tap(400, 600) -- 跳过动画
+        mSleep(1000)
+    end
+
     return 0
 end
 
 -- 等登录页面
 function Login.waitLoginPage()
+    while true do
+        if miniRedManLogo() then break end
+        coroutine.yield('启动游戏异常', 'c2')
+        mSleep(1000)
+    end
+
     -- 程序闪退了
     if mainStatus.isCrash == 1 then
 
@@ -123,15 +136,16 @@ function Login.waitLoginPage()
     end
 
     while true do
-        if userLogo() then
+        if updateNotice() then -- 更新公告
+            -- 关闭更新公告
+            tap(648, 691)
+            mSleep(1000)
+
+        elseif userLogo() then
             break
         elseif gameLogo() then -- 能够看见选择账号的游戏logo
             -- 直接执行下一步
             return 0
-        elseif updateNotice() then -- 更新公告
-            -- 关闭更新公告
-            tap(648, 691)
-            mSleep(1000)
         end
 
         -- 点击右上角的小红人
@@ -143,11 +157,23 @@ function Login.waitLoginPage()
     tap(1028, 142)
     mSleep(1000)
 
+    while true do
+        if gameLogo() then break end
+        coroutine.yield('准备登录,出现异常', 'c2')
+        mSleep(1000)
+    end
+
     return 0
 end
 
 -- 账号类型页面
 function Login.accountType()
+    while true do
+        if gameLogo() then break end
+        coroutine.yield('准备登录,出现异常', 'c2')
+        mSleep(1000)
+    end
+
     while true do
         if switchAccount() then break end
 
@@ -161,6 +187,12 @@ end
 
 -- 输入账号密码
 function Login.inputAccountPasswd()
+    while true do
+        if switchAccount() then break end
+        coroutine.yield('输入账号密码时异常', 'c2')
+        mSleep(1000)
+    end
+
     if not aggrement() then
         -- 勾上同意
         tap(361, 518)
@@ -189,22 +221,28 @@ function Login.inputAccountPasswd()
     tap(491, 407)
     mSleep(1000)
 
-    local now = getNetTime()
+    -- local now = getNetTime()
+    -- while true do
+    --     -- 10秒钟都没有出现退出登录
+    --     if getNetTime() - now >= 10 then
+    --         break
+    --     elseif loginTip() then
+    --         -- 关闭退出登录提醒
+    --         tap(568, 377)
+    --         mSleep(1000)
+    --         break
+    --     elseif updateNotice() then
+    --         -- 关闭更新公告
+    --         tap(648, 691)
+    --         mSleep(1000)
+    --     end
+    --     mSleep(1000)
+    -- end
+
     while true do
-        -- 10秒钟都没有出现退出登录
-        if getNetTime() - now >= 10 then
-            break
-        elseif tip() then
-            -- 关闭退出登录提醒
-            tap(568, 377)
-            mSleep(1000)
-            break
-        elseif updateNotice() then
-            -- 关闭更新公告
-            tap(648, 691)
-            mSleep(1000)
-        end
-        mSleep(1000)
+        mSleep(3000)
+        if miniRedManLogo() then break end
+        coroutine.yield('登录账号后异常', 'c2')
     end
 
     return 0
@@ -212,6 +250,12 @@ end
 
 -- 选择区服
 function Login.selectServer()
+    while true do
+        mSleep(3000)
+        if miniRedManLogo() then break end
+        coroutine.yield('登录账号后异常', 'c2')
+    end
+
     -- 直到打开选择服务器页面
     while true do
         if serverPage() then break end
@@ -231,8 +275,13 @@ function Login.selectServer()
 
     -- 如果是练小号,打开了指定服务器即可
     if UISetting.lianxiaohao == 1 then
-        toast('练小号', 2)
-        mSleep(2000)
+        toast('练小号', 1)
+        -- 直到打开选择服务器页面
+        while true do
+            if serverPage() then break end
+            coroutine.yield('练小号页面异常', 'c2')
+            mSleep(1000)
+        end
 
         return -2
     end
@@ -249,7 +298,7 @@ function Login.selectServer()
         return -2
     end
 
-    if tip() then -- 去了测试服,要更新资源
+    if loginTip() then -- 去了测试服,要更新资源
         wLog(log.name, "[DATE] 去了测试服,要更新资源");
 
         -- 点击确定

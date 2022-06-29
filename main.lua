@@ -82,7 +82,6 @@ end
 function init()
 
     mainStatus.isCrash = -1
-    mainStatus.logining = -1
 
     -- 当前正在执行的任务
     taskRecord.currentTaskIndex = 1
@@ -191,6 +190,24 @@ local function daemon()
             exception.n4 = n4
             exception.freq = 20
         end
+    end
+
+    if taskRecord.taskName == 'login' then -- 登录时出现异常
+        if updateNotice() then
+            -- 关闭更新公告
+            tap(648, 691)
+            mSleep(1000)
+            return
+        end
+
+        if loginTip() then
+            -- 点击确定
+            tap(568, 377)
+            mSleep(1000)
+            return
+        end
+
+        return
     end
 
     local flag = appIsRunning("com.netease.my")
@@ -311,7 +328,7 @@ local function wait2Update()
             -- 点击选择服务器
             tap(639, 382)
         elseif cannotConnect() then -- 连接不上服务器
-            tap(473,387) -- 点击好的
+            tap(473, 387) -- 点击好的
         elseif updateNotice() then -- 出现更新公告
             -- 关闭更新公告
             tap(648, 691)

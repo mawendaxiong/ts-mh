@@ -25,6 +25,7 @@
         "getScreenSize",
         "showUI",
         "strSplit",
-        "lua_exit"
+        "lua_exit",
+        "fwShowWnd"
     ]
 }
