@@ -631,12 +631,15 @@ function sell2User()
 
             lastColor = color
         end
+        if i % 5 == 0 then moveTo(789, 513, 789, 121, 2, 50) end
 
         initX = 706 -- 复位,下一行第一个开始
         initY = initY + 80 -- 换到下一行
     end
 
 end
+
+
 bag_table = {
     [str_jingtie] = {["use"] = function() store(jingtie_bag) end},
     [str_guiguzi] = {["use"] = function() store(guiguzi_bag) end},
