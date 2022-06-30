@@ -1,3 +1,5 @@
+require("TSLib")
+
 -- 月亮石
 local function yueliangshi_bag()
     offset = '-24|-7|0x99ddff,-7|-26|0x22bbee,-8|8|0xaa66ff'
@@ -139,6 +141,13 @@ local function xuanwushi()
                            {orient = 2}, 500, 1)
 end
 
+-- 月华露
+local function yuehualu_bag()
+    offset = '24|-11|0xffee93,10|12|0xc6ee60,16|-9|0xccff71'
+    return findColorsUntil(0xccf466, offset, 90, 149, 131, 991, 534,
+                           {orient = 2}, 500, 1)
+end
+
 ---------------------------以下是商会------------------------------
 
 -- 百炼精铁(商会)
@@ -195,6 +204,7 @@ local function taiyangshi_market()
     return findColorsUntil(0xffae91, offset, 90, 149, 131, 991, 534,
                            {orient = 2}, 500, 1)
 end
+-- 昆仑玉(商会)
 local function kunlunyu_market()
     offset = '19|15|0xffdda0,9|-8|0xfffeaa,8|19|0xfffffe'
     return findColorsUntil(0xffffff, offset, 90, 149, 131, 991, 534,
@@ -243,6 +253,14 @@ local function bag()
                            {orient = 2}, 500, 1)
 end
 
+-- 商会为空
+local function empty()
+    offset =
+        '155|-52|0x8d5d2c,170|-49|0x8d5d2c,182|-49|0x8d5d2c,201|-53|0x8d5d2c,208|-53|0x8d5d2c,235|-52|0x936536,316|-47|0x8d5d2c'
+    return findColorsUntil(0x5144aa, offset, 90, 345, 273, 799, 417,
+                           {orient = 2}, 500, 1)
+end
+
 -- 修炼页面 (九转金丹 和 修炼果)
 local function xiulianPage()
     offset =
@@ -270,6 +288,21 @@ local function bagSell()
     offset =
         '-225|240|0x875832,-83|239|0x875832,-31|243|0x6c310a,-23|242|0x70350e,-148|393|0xecbe5f'
     return findColorsUntil(0xbf1500, offset, 100, 394, 85, 741, 540,
+                           {orient = 2}, 500, 1)
+end
+
+-- 珍品出售
+local function zhenpin()
+    offset =
+        '-292|152|0x8cd626,-273|147|0x36bf7f,-120|153|0x81532a,97|285|0xffe195'
+    return findColorsUntil(0xc01500, offset, 100, 562, 56, 991, 335,
+                           {orient = 2}, 500, 1)
+end
+-- 普通出售
+local function simple()
+    offset =
+        '-236|359|0x875832,-25|360|0x875832,-105|483|0x6c310a,-85|492|0x6c310a,-58|490|0x6c310a,-30|485|0x6c310a'
+    return findColorsUntil(0xc01500, offset, 90, 559, 43, 913, 587,
                            {orient = 2}, 500, 1)
 end
 
@@ -345,44 +378,287 @@ local function dropSth(resFunc)
     end
 
 end
+local str_jingtie = "1"
+local str_guiguzi = "2"
+local str_heibaoshi = "3"
+local str_taiyangshi = "4"
+local str_shelizi = "5"
+local str_yueliangshi = "6"
+local str_hongwenshi = "7"
+local str_shenmishi = "8"
+local str_feicuishi = "9"
+local str_guangmangshi = "10"
+local str_kunlunyu = "11"
+local str_qinglongshi = "12"
+local str_baihushi = "13"
+local str_zhuqueshi = "14"
+local str_xuanwushi = "15"
+local str_jiuzhuan = "16"
+local str_xiulianguo = "17"
+local str_juling = "18"
+local str_xinmobaozhu = "19"
+local str_canjuan = "20"
+local str_jieri = "21"
+local str_yuehualu = "22"
+local str_duanaoce = "23"
 
-local market_table = {
-    {["res"] = function() jingtie_market() end, ["bagIndex"] = 1},
-    {["res"] = function() guiguzi_market() end, ["bagIndex"] = 1},
-    {["res"] = function() heibaoshi_market() end, ["bagIndex"] = 1},
-    {["res"] = function() taiyangshi_market() end, ["bagIndex"] = 1},
-    {["res"] = function() shenmishi_market() end, ["bagIndex"] = 1},
-    {["res"] = function() shelizi_market() end, ["bagIndex"] = 1},
-    {["res"] = function() feicuishi_market() end, ["bagIndex"] = 1},
-    {["res"] = function() hongwenshi_market() end, ["bagIndex"] = 1},
-    {["res"] = function() yueliangshi_market() end, ["bagIndex"] = 1},
-    {["res"] = function() guangmangshi_market() end, ["bagIndex"] = 1},
-    {["res"] = function() kunlunyu_market() end, ["bagIndex"] = 1},
-    {["res"] = function() yuehualu_market() end, ["bagIndex"] = 1},
-    {["res"] = function() duanzaoce_market() end, ["bagIndex"] = 1}
+bag_table = {
+    [str_jingtie] = {["use"] = function() store(jingtie_bag) end},
+    [str_guiguzi] = {["use"] = function() store(guiguzi_bag) end},
+    [str_heibaoshi] = {["use"] = function() store(heibaoshi_bag) end},
+    [str_taiyangshi] = {["use"] = function() store(taiyangshi_bag) end},
+    [str_shenmishi] = {["use"] = function() store(shenmieshi_bag) end},
+    [str_shelizi] = {["use"] = function() store(shelizi_bag) end},
+    [str_feicuishi] = {["use"] = function() store(feicuishi_bag) end},
+    [str_hongwenshi] = {["use"] = function() store(hongwenshi_bag) end},
+    [str_yueliangshi] = {["use"] = function() store(yueliangshi_bag) end},
+    [str_guangmangshi] = {["use"] = function() store(guangmangshi_bag) end},
+    [str_kunlunyu] = {["use"] = function() store(kunlunyu_bag) end},
+    [str_qinglongshi] = {["use"] = function() store(qinglongshi) end},
+    [str_baihushi] = {["use"] = function() store(baihushi) end},
+    [str_xuanwushi] = {["use"] = function() store(xuanwushi) end},
+    [str_zhuqueshi] = {["use"] = function() store(zhuqueshi) end},
+    [str_jiuzhuan] = {["use"] = function() xiulian(jiuzhuan_bag) end},
+    [str_xiulianguo] = {["use"] = function() xiulian(xiulianguo_bag) end},
+    [str_juling] = {["use"] = function() doubleClick(juling_bag) end},
+    [str_xinmobaozhu] = {["use"] = function() doubleClick(xinmobaozhu) end},
+    [str_canjuan] = {["use"] = function() doubleClick(canjuan) end},
+    [str_jieri] = {["use"] = function() dropSth(jieri) end}
 }
 
-local bag_table = {
-    {["use"] = function() store(jingtie_bag) end},
-    {["use"] = function() store(guiguzi_bag) end},
-    {["use"] = function() store(heibaoshi_bag) end},
-    {["use"] = function() store(taiyangshi_bag) end},
-    {["use"] = function() store(shenmieshi_bag) end},
-    {["use"] = function() store(shelizi_bag) end},
-    {["use"] = function() store(feicuishi_bag) end},
-    {["use"] = function() store(hongwenshi_bag) end},
-    {["use"] = function() store(yueliangshi_bag) end},
-    {["use"] = function() store(guangmangshi_bag) end},
-    {["use"] = function() store(kunlunyu_bag) end},
-    {["use"] = function() store(qinglongshi) end},
-    {["use"] = function() store(baihushi) end},
-    {["use"] = function() store(xuanwushi) end},
-    {["use"] = function() store(zhuqueshi) end},
-    {["use"] = function() xiulian(jiuzhuan_bag) end},
-    {["use"] = function() xiulian(xiulianguo_bag) end},
-    {["use"] = function() doubleClick(juling_bag) end},
-    {["use"] = function() doubleClick(xinmobaozhu) end},
-    {["use"] = function() doubleClick(canjuan) end},
-    {["use"] = function() dropSth(jieri) end}
+function marketSellTable()
+    setting = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
+    sell_table = {}
+    for i = 1, #setting, 1 do
+        num = setting[i]
+        if num == 0 then
+            table.insert(sell_table, {
+                ["res"] = function() return jingtie_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_jingtie))
+            bag_table[str_jingtie] = nil
+        elseif num == 1 then
+            table.insert(sell_table, {
+                ["res"] = function() return guiguzi_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_guiguzi))
+            bag_table[str_guiguzi] = nil
+
+        elseif num == 2 then
+            table.insert(sell_table, {
+                ["res"] = function() return heibaoshi_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_heibaoshi))
+            bag_table[str_heibaoshi] = nil
+
+        elseif num == 3 then
+            table.insert(sell_table, {
+                ["res"] = function() return taiyangshi_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_taiyangshi))
+            bag_table[str_taiyangshi] = nil
+
+        elseif num == 4 then
+            table.insert(sell_table, {
+                ["res"] = function() return shenmishi_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_shenmishi))
+            bag_table[str_shenmishi] = nil
+
+        elseif num == 5 then
+            table.insert(sell_table, {
+                ["res"] = function() return shelizi_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_shelizi))
+            bag_table[str_shelizi] = nil
+
+        elseif num == 6 then
+            table.insert(sell_table, {
+                ["res"] = function() return feicuishi_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_feicuishi))
+            bag_table[str_feicuishi] = nil
+
+        elseif num == 7 then
+            table.insert(sell_table, {
+                ["res"] = function() return hongwenshi_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_hongwenshi))
+            bag_table[str_hongwenshi] = nil
+
+        elseif num == 8 then
+            table.insert(sell_table, {
+                ["res"] = function() return yueliangshi_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_yueliangshi))
+            bag_table[str_yueliangshi] = nil
+
+        elseif num == 9 then
+            table.insert(sell_table, {
+                ["res"] = function() return guangmangshi_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_guangmangshi))
+            bag_table[str_guangmangshi] = nil
+
+        elseif num == 10 then
+            table.insert(sell_table, {
+                ["res"] = function() return kunlunyu_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_kunlunyu))
+            bag_table[str_kunlunyu] = nil
+
+        elseif num == 11 then
+            table.insert(sell_table, {
+                ["res"] = function() return yuehualu_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_yuehualu))
+            bag_table[str_yuehualu] = nil
+
+        elseif num == 12 then
+            table.insert(sell_table, {
+                ["res"] = function() return duanzaoce_market() end,
+                ["bagIndex"] = 1
+            })
+            -- table.remove(bag_table, tonumber(str_duanaoce))
+        end
+    end
+    return sell_table
+end
+
+function sell()
+    t1 = marketSellTable()
+    if empty() then return end -- 商会没有可出售的
+    for i = 1, 10, 1 do -- 直接滑动10次
+        for i = 1, #t1, 1 do
+            obj = t1[i]
+            r, t, x, y = obj.res()
+            while true do
+                r, t, x, y = obj.res()
+                if r then
+                    tap(x, y)
+                    mSleep(1000)
+
+                    tap(716, 586) -- 打开数量
+                    mSleep(1000)
+
+                    tap(662, 500) -- 点击数字9
+                    mSleep(500)
+                    tap(662, 500) -- 点击数字9
+                    mSleep(500)
+
+                    tap(896, 584) -- 出售
+                    mSleep(1000)
+
+                else
+                    break
+                end
+            end
+            mSleep(1000)
+            tap(1, 1)
+        end
+        if empty() then break end -- 商会没有可出售的
+    end
+end
+
+function sell2User()
+    -- moveTo(824, 288, 824, 131, 2, 50)
+
+    initX = 706
+    initY = 171
+
+    targetX = 0
+    targetY = 0
+    -- 从第一行找到第一个装备
+    for i = 1, 10, 1 do
+        lastColor = nil
+        while initX < 946 do
+            if not isColor(582,473, 0xdfc2a0) then
+                toast('没位置上架了')
+                return
+            end -- 上架满了,无法上架了
+            color = getColor(initX, initY)
+            if color == 0xdfc2a0 then -- 说明没有东西可以上架了
+                toast('没东西上架了')
+                return
+            end
+            if color == lastColor then initX = initX + 80 end
+            tap(initX, initY)
+            mSleep(1000)
+            if not baitanPage() then -- 说面点击了物品有变化
+                -- 普通出售
+                r, t, x, y = simple()
+                if not r then -- 不是普通物品出售
+                    initX = initX + 80
+
+                    r, t, x, y = zhenpin()
+                    if r then -- 珍品装备出售
+                        tap(x, y) -- 关闭窗口
+                    else
+                        tap(661, 561) -- 珍品,取消掉
+                    end
+
+                    if isColor(661, 561, 0xecbc5e) then
+                        tap(661, 561)
+                    end -- 有取消按钮点击取消
+                else
+                    tap(653, 423) -- 价格-10%
+                    mSleep(1000)
+                    tap(825, 555) -- 上架
+
+                end
+
+                mSleep(2000)
+
+                if success() then
+                    tap(400, 437) -- 7天不提示
+                    mSleep(1000)
+                    tap(569, 497) -- 确定
+                    mSleep(1000)
+                end
+            end
+
+            lastColor = color
+        end
+
+        initX = 706 -- 复位,下一行第一个开始
+        initY = initY + 80 -- 换到下一行
+    end
+
+end
+bag_table = {
+    [str_jingtie] = {["use"] = function() store(jingtie_bag) end},
+    [str_guiguzi] = {["use"] = function() store(guiguzi_bag) end},
+    [str_heibaoshi] = {["use"] = function() store(heibaoshi_bag) end},
+    [str_taiyangshi] = {["use"] = function() store(taiyangshi_bag) end},
+    [str_shenmishi] = {["use"] = function() store(shenmieshi_bag) end},
+    [str_shelizi] = {["use"] = function() store(shelizi_bag) end},
+    [str_feicuishi] = {["use"] = function() store(feicuishi_bag) end},
+    [str_hongwenshi] = {["use"] = function() store(hongwenshi_bag) end},
+    [str_yueliangshi] = {["use"] = function() store(yueliangshi_bag) end},
+    [str_guangmangshi] = {["use"] = function() store(guangmangshi_bag) end},
+    [str_kunlunyu] = {["use"] = function() store(kunlunyu_bag) end},
+    [str_qinglongshi] = {["use"] = function() store(qinglongshi) end},
+    [str_baihushi] = {["use"] = function() store(baihushi) end},
+    [str_xuanwushi] = {["use"] = function() store(xuanwushi) end},
+    [str_zhuqueshi] = {["use"] = function() store(zhuqueshi) end},
+    [str_jiuzhuan] = {["use"] = function() xiulian(jiuzhuan_bag) end},
+    [str_xiulianguo] = {["use"] = function() xiulian(xiulianguo_bag) end},
+    [str_juling] = {["use"] = function() doubleClick(juling_bag) end},
+    [str_xinmobaozhu] = {["use"] = function() doubleClick(xinmobaozhu) end},
+    [str_canjuan] = {["use"] = function() doubleClick(canjuan) end},
+    [str_jieri] = {["use"] = function() dropSth(jieri) end}
 }
 
+-- todo 背包的锻造册 无法识别 , 打造书无法识别
