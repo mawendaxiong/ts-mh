@@ -403,28 +403,29 @@ local str_yuehualu = "22"
 local str_duanaoce = "23"
 
 bag_table = {
-    [str_jingtie] = {["use"] = function() store(jingtie_bag) end},
-    [str_guiguzi] = {["use"] = function() store(guiguzi_bag) end},
-    [str_heibaoshi] = {["use"] = function() store(heibaoshi_bag) end},
-    [str_taiyangshi] = {["use"] = function() store(taiyangshi_bag) end},
-    [str_shenmishi] = {["use"] = function() store(shenmieshi_bag) end},
-    [str_shelizi] = {["use"] = function() store(shelizi_bag) end},
-    [str_feicuishi] = {["use"] = function() store(feicuishi_bag) end},
-    [str_hongwenshi] = {["use"] = function() store(hongwenshi_bag) end},
-    [str_yueliangshi] = {["use"] = function() store(yueliangshi_bag) end},
-    [str_guangmangshi] = {["use"] = function() store(guangmangshi_bag) end},
-    [str_kunlunyu] = {["use"] = function() store(kunlunyu_bag) end},
-    [str_qinglongshi] = {["use"] = function() store(qinglongshi) end},
-    [str_baihushi] = {["use"] = function() store(baihushi) end},
-    [str_xuanwushi] = {["use"] = function() store(xuanwushi) end},
-    [str_zhuqueshi] = {["use"] = function() store(zhuqueshi) end},
-    [str_jiuzhuan] = {["use"] = function() xiulian(jiuzhuan_bag) end},
-    [str_xiulianguo] = {["use"] = function() xiulian(xiulianguo_bag) end},
-    [str_juling] = {["use"] = function() doubleClick(juling_bag) end},
-    [str_xinmobaozhu] = {["use"] = function() doubleClick(xinmobaozhu) end},
-    [str_canjuan] = {["use"] = function() doubleClick(canjuan) end},
-    [str_jieri] = {["use"] = function() dropSth(jieri) end}
+    function() store(jingtie_bag) end,
+    function() store(guiguzi_bag) end,
+    function() store(heibaoshi_bag) end,
+    function() store(taiyangshi_bag) end,
+    function() store(shenmieshi_bag) end,
+    function() store(shelizi_bag) end,
+    function() store(feicuishi_bag) end,
+    function() store(hongwenshi_bag) end,
+    function() store(yueliangshi_bag) end,
+    function() store(guangmangshi_bag) end,
+    function() store(kunlunyu_bag) end,
+    function() store(qinglongshi) end,
+    function() store(baihushi) end,
+    function() store(xuanwushi) end,
+    function() store(zhuqueshi) end,
+    function() xiulian(jiuzhuan_bag) end,
+    function() xiulian(xiulianguo_bag) end,
+    function() doubleClick(juling_bag) end,
+    function() doubleClick(xinmobaozhu) end,
+    function() doubleClick(canjuan) end,
+    function() dropSth(jieri) end
 }
+
 
 function marketSellTable()
     setting = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
@@ -639,29 +640,10 @@ function sell2User()
 
 end
 
+local function cleanBag()
 
-bag_table = {
-    [str_jingtie] = {["use"] = function() store(jingtie_bag) end},
-    [str_guiguzi] = {["use"] = function() store(guiguzi_bag) end},
-    [str_heibaoshi] = {["use"] = function() store(heibaoshi_bag) end},
-    [str_taiyangshi] = {["use"] = function() store(taiyangshi_bag) end},
-    [str_shenmishi] = {["use"] = function() store(shenmieshi_bag) end},
-    [str_shelizi] = {["use"] = function() store(shelizi_bag) end},
-    [str_feicuishi] = {["use"] = function() store(feicuishi_bag) end},
-    [str_hongwenshi] = {["use"] = function() store(hongwenshi_bag) end},
-    [str_yueliangshi] = {["use"] = function() store(yueliangshi_bag) end},
-    [str_guangmangshi] = {["use"] = function() store(guangmangshi_bag) end},
-    [str_kunlunyu] = {["use"] = function() store(kunlunyu_bag) end},
-    [str_qinglongshi] = {["use"] = function() store(qinglongshi) end},
-    [str_baihushi] = {["use"] = function() store(baihushi) end},
-    [str_xuanwushi] = {["use"] = function() store(xuanwushi) end},
-    [str_zhuqueshi] = {["use"] = function() store(zhuqueshi) end},
-    [str_jiuzhuan] = {["use"] = function() xiulian(jiuzhuan_bag) end},
-    [str_xiulianguo] = {["use"] = function() xiulian(xiulianguo_bag) end},
-    [str_juling] = {["use"] = function() doubleClick(juling_bag) end},
-    [str_xinmobaozhu] = {["use"] = function() doubleClick(xinmobaozhu) end},
-    [str_canjuan] = {["use"] = function() doubleClick(canjuan) end},
-    [str_jieri] = {["use"] = function() dropSth(jieri) end}
-}
+    
+end
+
 
 -- todo 背包的锻造册 无法识别 , 打造书无法识别
