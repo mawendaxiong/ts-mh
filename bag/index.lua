@@ -1,5 +1,15 @@
 require("TSLib")
 
+local can_store = true
+
+-- 鬼怪画像
+function guiguaihuaxiang_bag()
+    offset =
+    '15|3|0xaa4acc,-13|-2|0xb58d6a,-10|-31|0xb58d6a,38|-30|0xb58d6a,29|-14|0xd260d7'
+    return findColorsUntil(0xbb33c6, offset, 90, 561, 137, 970, 534,
+                           {orient = 2}, 500, 1)
+end
+
 -- 月亮石
 local function yueliangshi_bag()
     offset = '-24|-7|0x99ddff,-7|-26|0x22bbee,-8|8|0xaa66ff'
@@ -65,8 +75,8 @@ end
 
 -- 九转金丹
 local function jiuzhuan_bag()
-    offset = '12|12|0xcc881c,23|-5|0xdd3311,-6|29|0xeeb033'
-    return findColorsUntil(0xffffff, offset, 90, 561, 137, 970, 534,
+    offset = '-20|11|0xd8881d,-29|-4|0xffffff,-30|28|0xeeaa22'
+    return findColorsUntil(0x881d11, offset, 90, 561, 137, 970, 534,
                            {orient = 2}, 500, 1)
 end
 
@@ -149,7 +159,13 @@ local function yuehualu_bag()
 end
 
 ---------------------------以下是商会------------------------------
-
+-- 制造书(商会)
+function zhizaoshu()
+    offset =
+        '49|0|0xb58d6a,30|72|0x5d422c,30|77|0x5d422d,36|77|0x5c412b,6|75|0x634832,6|83|0x644a34,0|81|0x765e49,0|71|0x765e49'
+    return findColorsUntil(0xb58d6a, offset, 90, 151, 140, 982, 546,
+                           {orient = 2}, 500, 1)
+end
 -- 百炼精铁(商会)
 local function jingtie_market()
     offset = '27|14|0x4a5577,32|38|0xffffff,25|10|0x5b668e'
@@ -306,27 +322,41 @@ local function simple()
                            {orient = 2}, 500, 1)
 end
 
-local function doubleClick(resFunc)
-    r, t, x, y = resFunc() -- 识别物品位置
+local function doubleClick(resFunc, x, y)
+    if resFunc ~= nil then r, t, x, y = resFunc() end
     tap(x, y)
     mSleep(100)
     tap(x, y)
+    mSleep(1000)
 end
 
 local function store(resFunc)
     while true do
         if bag() then break end
-        coroutine.yield('存放仓库异常', 'c2')
+        -- coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
-    tap(1037, 284) -- 打开仓库
 
-    doubleClick(resFunc)
+    if not can_store then return end -- 因为是扫描全仓库,如果有一个确定了无法存储,其他的也无需存储了,节省时间
 
-    tap(1021, 171) -- 回到背包,继续下个物品
+    while true do
+        local r, t, x, y = resFunc()
+        if r then
+            tap(1037, 284) -- 打开仓库
+            mSleep(1500)
+            find_store()
+
+            doubleClick(nil, x, y)
+            tap(1021, 171) -- 回到背包,继续下个物品
+            mSleep(1000)
+        else
+            break
+        end
+    end
+
     while true do
         if bag() then break end
-        coroutine.yield('存放仓库异常', 'c2')
+        -- coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
 end
@@ -334,23 +364,28 @@ end
 local function xiulian(resFunc)
     while true do
         if bag() then break end
-        coroutine.yield('存放仓库异常', 'c2')
+        -- coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
 
-    doubleClick(resFunc)
-    while true do
-        if xiulianPage() then break end
-        coroutine.yield('修炼页面异常', 'c2')
-        mSleep(1000)
+    r, t, x, y = resFunc()
+    if r then
+        doubleClick(nil, x, y)
+        mSleep(1500)
+        while true do
+            if xiulianPage() then break end
+            -- coroutine.yield('修炼页面异常', 'c2')
+            mSleep(1000)
+        end
+        tap(863, 562) -- 使用修炼丹or修炼果
+        mSleep(1500)
+        tap(980, 43) -- 关闭修炼页面
+        mSleep(1500)
     end
-    tap(863, 562) -- 使用修炼丹or修炼果
-
-    tap(980, 43) -- 关闭修炼页面
 
     while true do
         if bag() then break end
-        coroutine.yield('存放仓库异常', 'c2')
+        -- coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
 end
@@ -358,25 +393,52 @@ end
 local function dropSth(resFunc)
     while true do
         if bag() then break end
-        coroutine.yield('存放仓库异常', 'c2')
+        -- coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
 
     r, t, x, y = resFunc()
-    tap(x, y) -- 选中物品
-    r, t, x, y = drop()
     if r then
-        tap(x, y)
-        mSleep(2000)
+        tap(x, y) -- 选中物品
+        mSleep(1000)
+
+        r, t, x, y = drop()
+        tap(x, y) -- 丢弃
+        mSleep(1000)
+
         tap(665, 373) -- 确认丢弃
+        mSleep(1000)
     end
 
     while true do
         if bag() then break end
-        coroutine.yield('存放仓库异常', 'c2')
+        -- coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
 
+end
+
+function unlock_huaxiang()
+    while true do
+        if guiPage() then break end
+        -- coroutine.yield('','c2')
+        mSleep(1000)
+    end
+
+    for i = 1, 4, 1 do -- 最多四个碎片
+        local r, t, x, y = guilock()
+        if r then tap(x, y) end
+        mSleep(2000)
+    end
+
+    tap(1018, 61) -- 关闭
+    mSleep(1000)
+
+    while true do
+        if bag() then break end
+        -- coroutine.yield('存放仓库异常', 'c2')
+        mSleep(1000)
+    end
 end
 local str_jingtie = "1"
 local str_guiguzi = "2"
@@ -403,29 +465,179 @@ local str_yuehualu = "22"
 local str_duanaoce = "23"
 
 bag_table = {
-    function() store(jingtie_bag) end,
-    function() store(guiguzi_bag) end,
-    function() store(heibaoshi_bag) end,
-    function() store(taiyangshi_bag) end,
-    function() store(shenmieshi_bag) end,
-    function() store(shelizi_bag) end,
-    function() store(feicuishi_bag) end,
-    function() store(hongwenshi_bag) end,
-    function() store(yueliangshi_bag) end,
-    function() store(guangmangshi_bag) end,
-    function() store(kunlunyu_bag) end,
-    function() store(qinglongshi) end,
-    function() store(baihushi) end,
-    function() store(xuanwushi) end,
-    function() store(zhuqueshi) end,
-    function() xiulian(jiuzhuan_bag) end,
-    function() xiulian(xiulianguo_bag) end,
-    function() doubleClick(juling_bag) end,
-    function() doubleClick(xinmobaozhu) end,
-    function() doubleClick(canjuan) end,
-    function() dropSth(jieri) end
+    function()
+        toast('画像碎片', 1)
+        mSleep(1000)
+        while true do
+            local r, t, x, y = guiguaihuaxiang_bag()
+            if r then
+                doubleClick(nil, x, y)
+                mSleep(1000)
+                unlock_huaxiang()
+            else
+                break
+            end
+        end
+    end, -- 捉鬼碎片
+    function()
+        toast('精铁', 1)
+        mSleep(1000)
+        store(jingtie_bag)
+    end, -- 精铁(存储)
+    function()
+        toast('鬼谷子', 1)
+        mSleep(1000)
+        store(guiguzi_bag)
+    end, -- 鬼谷子(存储)
+    function()
+        toast('黑宝石', 1)
+        mSleep(1000)
+        store(heibaoshi_bag)
+    end, -- 黑宝石(存储)
+    function()
+        toast('太阳石', 1)
+        mSleep(1000)
+        store(taiyangshi_bag)
+    end, -- 太阳石(存储)
+    function()
+        toast('神秘石', 1)
+        mSleep(1000)
+        store(shenmieshi_bag)
+    end, -- 神秘石(存储)
+    function()
+        toast('舍利子', 1)
+        mSleep(1000)
+        store(shelizi_bag)
+    end, -- 舍利子(存储)
+    function()
+        toast('翡翠石', 1)
+        mSleep(1000)
+        store(feicuishi_bag)
+    end, -- 翡翠石(存储)
+    function()
+        toast('红纹石', 1)
+        mSleep(1000)
+        store(hongwenshi_bag)
+    end, -- 红纹石(存储)
+    function()
+        toast('月亮石', 1)
+        mSleep(1000)
+        store(yueliangshi_bag)
+    end, -- 月亮石(存储)
+    function()
+        toast('光芒石', 1)
+        mSleep(1000)
+        store(guangmangshi_bag)
+    end, -- 光芒石(存储)
+    function()
+        toast('昆仑玉', 1)
+        mSleep(1000)
+        store(kunlunyu_bag)
+    end, -- 昆仑玉(存储)
+    function()
+        toast('青龙石', 1)
+        mSleep(1000)
+        store(qinglongshi)
+    end, -- 青龙石(存储)
+    function()
+        toast('白虎石', 1)
+        mSleep(1000)
+        store(baihushi)
+    end, -- 白虎石(存储)
+    function()
+        toast('玄武石', 1)
+        mSleep(1000)
+        store(xuanwushi)
+    end, -- 玄武石(存储)
+    function()
+        toast('朱雀石', 1)
+        mSleep(1000)
+        store(zhuqueshi)
+    end, -- 朱雀石(存储)
+    function()
+        toast('九转金丹', 1)
+        mSleep(1000)
+        xiulian(jiuzhuan_bag)
+    end, -- 九转金丹(修炼)
+    function()
+        toast('修炼果', 1)
+        mSleep(1000)
+        xiulian(xiulianguo_bag)
+    end, -- 修炼果(修炼)
+    function()
+        toast('聚灵仙露', 1)
+        mSleep(1000)
+        doubleClick(juling_bag)
+    end, -- 聚灵仙露(使用)
+    function()
+        toast('心魔宝珠', 1)
+        mSleep(1000)
+        doubleClick(xinmobaozhu)
+    end, -- 心魔宝珠(使用)
+    function()
+        toast('阵法残卷', 1)
+        mSleep(1000)
+        while true do
+            -- if canjuan() then doubleClick(canjuan) end
+            if canjuan() then dropSth(canjuan) end
+            mSleep(1000)
+        end
+    end, -- 阵法残卷(使用)
+    function()
+        toast('节日道具', 1)
+        mSleep(1000)
+        dropSth(jieri)
+    end -- 节日道具(丢弃)
+
 }
 
+function empty_store()
+    offset =
+        '12|0|0xb58d6a,13|12|0xb58d6a,0|12|0xb58d6a,-35|6|0xdfc2a0,44|9|0xdfc2a0,5|45|0xdfc2a0,-9|-33|0xdfc2a0'
+    return findColorsUntil(0xb58d6a, offset, 90, 120, 124, 547, 549,
+                           {orient = 2}, 500, 1)
+end
+
+function first_store()
+    offset =
+        '67|2|0xf3d4aa,88|-46|0xf7e6c5,-3|-42|0xf8e5c5,304|-83|0x875832,313|-96|0x875832'
+    return findColorsUntil(0xf3d5ac, offset, 90, 127, 73, 545, 211,
+                           {orient = 2}, 500, 1)
+end
+function find_store()
+    if empty_store() then
+        can_store = true
+        return
+    end
+    tap(394, 93) -- 打开仓库选择页面
+
+    r, t, x, y = first_store()
+    tap(x, y) -- 打开第一个仓库
+
+    -- 记录五个格子的颜色,用于识别是不是扫完一遍仓库了
+    p1 = getColor(173, 177)
+    p2 = getColor(254, 260)
+    p3 = getColor(327, 338)
+    p4 = getColor(426, 417)
+    p5 = getColor(495, 511)
+    sameTime = 1
+
+    while sameTime <= 3 do
+        if empty_store() then
+            can_store = true
+            return
+        end
+        tap(271, 588) -- 下一个仓库
+        new_p1 = getColor(173, 177)
+        new_p2 = getColor(254, 260)
+        new_p3 = getColor(327, 338)
+        new_p4 = getColor(426, 417)
+        new_p5 = getColor(495, 511)
+        if new_p1 == p1 and new_p2 == p2 and new_p3 == p3 and new_p4 == p4 and
+            new_p5 == p5 then sameTime = sameTime + 1 end -- 5个点颜色一直,认为是回到了首页,防止是碰巧,相同3次才结束
+    end
+    can_store = false
+end
 
 function marketSellTable()
     setting = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
@@ -437,102 +649,79 @@ function marketSellTable()
                 ["res"] = function() return jingtie_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_jingtie))
-            bag_table[str_jingtie] = nil
+            table.remove(bag_table, tonumber(str_jingtie))
         elseif num == 1 then
             table.insert(sell_table, {
                 ["res"] = function() return guiguzi_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_guiguzi))
-            bag_table[str_guiguzi] = nil
-
+            table.remove(bag_table, tonumber(str_guiguzi))
         elseif num == 2 then
             table.insert(sell_table, {
                 ["res"] = function() return heibaoshi_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_heibaoshi))
-            bag_table[str_heibaoshi] = nil
-
+            table.remove(bag_table, tonumber(str_heibaoshi))
         elseif num == 3 then
             table.insert(sell_table, {
                 ["res"] = function() return taiyangshi_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_taiyangshi))
-            bag_table[str_taiyangshi] = nil
-
+            table.remove(bag_table, tonumber(str_taiyangshi))
         elseif num == 4 then
             table.insert(sell_table, {
                 ["res"] = function() return shenmishi_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_shenmishi))
-            bag_table[str_shenmishi] = nil
-
+            table.remove(bag_table, tonumber(str_shenmishi))
         elseif num == 5 then
             table.insert(sell_table, {
                 ["res"] = function() return shelizi_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_shelizi))
-            bag_table[str_shelizi] = nil
-
+            table.remove(bag_table, tonumber(str_shelizi))
         elseif num == 6 then
             table.insert(sell_table, {
                 ["res"] = function() return feicuishi_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_feicuishi))
-            bag_table[str_feicuishi] = nil
-
+            table.remove(bag_table, tonumber(str_feicuishi))
         elseif num == 7 then
             table.insert(sell_table, {
                 ["res"] = function() return hongwenshi_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_hongwenshi))
-            bag_table[str_hongwenshi] = nil
-
+            table.remove(bag_table, tonumber(str_hongwenshi))
         elseif num == 8 then
             table.insert(sell_table, {
                 ["res"] = function() return yueliangshi_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_yueliangshi))
-            bag_table[str_yueliangshi] = nil
-
+            table.remove(bag_table, tonumber(str_yueliangshi))
         elseif num == 9 then
             table.insert(sell_table, {
                 ["res"] = function() return guangmangshi_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_guangmangshi))
-            bag_table[str_guangmangshi] = nil
-
+            table.remove(bag_table, tonumber(str_guangmangshi))
         elseif num == 10 then
             table.insert(sell_table, {
                 ["res"] = function() return kunlunyu_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_kunlunyu))
-            bag_table[str_kunlunyu] = nil
-
+            table.remove(bag_table, tonumber(str_kunlunyu))
         elseif num == 11 then
             table.insert(sell_table, {
                 ["res"] = function() return yuehualu_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_yuehualu))
-            bag_table[str_yuehualu] = nil
-
+            table.remove(bag_table, tonumber(str_yuehualu))
         elseif num == 12 then
             table.insert(sell_table, {
                 ["res"] = function() return duanzaoce_market() end,
                 ["bagIndex"] = 1
             })
-            -- table.remove(bag_table, tonumber(str_duanaoce))
+            table.remove(bag_table, tonumber(str_duanaoce))
         end
     end
     return sell_table
@@ -585,7 +774,7 @@ function sell2User()
     for i = 1, 10, 1 do
         lastColor = nil
         while initX < 946 do
-            if not isColor(582,473, 0xdfc2a0) then
+            if not isColor(582, 473, 0xdfc2a0) then
                 toast('没位置上架了')
                 return
             end -- 上架满了,无法上架了
@@ -641,9 +830,29 @@ function sell2User()
 end
 
 local function cleanBag()
+    local point1 = 0xffffff
+    local point2 = 0xffffff
+    local point3 = 0xffffff
+    local point4 = 0xffffff
 
-    
+    while true do
+        local p1 = getColor(606, 180)
+        local p2 = getColor(686, 265)
+        local p3 = getColor(769, 337)
+        local p4 = getColor(841, 416)
+        for i = 1, #bag_table, 1 do bag_table[i]() end
+
+        if (p1 == point1 and p2 == point2 and p3 == point3 and p4 == point4) then -- 拉到底
+            break
+        end
+        point1 = p1
+        point2 = p2
+        point3 = p3
+        point4 = p4
+        moveTo(729, 358, 729, 217, 2, 50)
+    end
 end
 
-
 -- todo 背包的锻造册 无法识别 , 打造书无法识别
+init(1)
+cleanBag()
