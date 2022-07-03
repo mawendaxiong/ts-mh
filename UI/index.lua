@@ -461,10 +461,7 @@ function UI.analysis(uiValues)
     UISetting.taskOrder = uiValues.taskOrder
     -- 定时执行科举和三界
     UISetting.schedule = uiValues.schedule
-    toast('schedule: ' .. UISetting.schedule, 1)
-    mSleep(1000)
-    toast('type: ' .. type(UISetting.schedule), 1)
-    mSleep(1000)
+    
     -- 第二天零点重新执行
     UISetting.restart = uiValues.restart
 

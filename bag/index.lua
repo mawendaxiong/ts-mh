@@ -1,11 +1,12 @@
 require("TSLib")
+Common = require("Common.index")
 
 local can_store = true
-
+local bagFunc = {}
 -- 鬼怪画像
 function guiguaihuaxiang_bag()
     offset =
-    '15|3|0xaa4acc,-13|-2|0xb58d6a,-10|-31|0xb58d6a,38|-30|0xb58d6a,29|-14|0xd260d7'
+        '15|3|0xaa4acc,-13|-2|0xb58d6a,-10|-31|0xb58d6a,38|-30|0xb58d6a,29|-14|0xd260d7'
     return findColorsUntil(0xbb33c6, offset, 90, 561, 137, 970, 534,
                            {orient = 2}, 500, 1)
 end
@@ -322,6 +323,13 @@ local function simple()
                            {orient = 2}, 500, 1)
 end
 
+local function baitan_logo()
+    offset =
+        '-13|-3|0xfef9b0,-35|-3|0xfef9b0,394|-9|0xce0000,296|33|0x713710,298|42|0x6c310a,321|40|0x6c310a,337|40|0x6c310a'
+    return findColorsUntil(0xfefdb8, offset, 90, 464, 13, 1024, 117,
+                           {orient = 2}, 500, 1)
+end
+
 local function doubleClick(resFunc, x, y)
     if resFunc ~= nil then r, t, x, y = resFunc() end
     tap(x, y)
@@ -416,6 +424,21 @@ local function dropSth(resFunc)
         mSleep(1000)
     end
 
+end
+
+-- 商城页面
+local function baitanPage()
+    offset =
+        '47|392|0xffdd6d,45|402|0xffdd6d,45|423|0xffdd6d,35|424|0xffdc6d,36|315|0x6c310a,36|334|0x6c310a'
+    return findColorsUntil(0xce0000, offset, 90, 947, 11, 1064, 500,
+                           {orient = 2}, 500, 1)
+end
+
+local function shanghui_logo()
+    offset =
+        '-331|-530|0xfefcb7,-316|-531|0xfefbb6,-347|-530|0xfefdb8,-369|-531|0xfefbb6,-358|-536|0xfdf6a7'
+    return findColorsUntil(0xecb555, offset, 90, 493, 8, 994, 606, {orient = 2},
+                           500, 1)
 end
 
 function unlock_huaxiang()
@@ -642,6 +665,8 @@ end
 function marketSellTable()
     setting = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
     sell_table = {}
+    bag_table_use = {}
+    toast('bag_table: ' .. #bag_table)
     for i = 1, #setting, 1 do
         num = setting[i]
         if num == 0 then
@@ -649,84 +674,85 @@ function marketSellTable()
                 ["res"] = function() return jingtie_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_jingtie))
+            table.insert(bag_table_use, bag_table[tonumber(str_jingtie)])
         elseif num == 1 then
             table.insert(sell_table, {
                 ["res"] = function() return guiguzi_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_guiguzi))
+            table.insert(bag_table_use, bag_table[tonumber(str_guiguzi)])
         elseif num == 2 then
             table.insert(sell_table, {
                 ["res"] = function() return heibaoshi_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_heibaoshi))
+            table.insert(bag_table_use, bag_table[tonumber(str_heibaoshi)])
         elseif num == 3 then
             table.insert(sell_table, {
                 ["res"] = function() return taiyangshi_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_taiyangshi))
+            table.insert(bag_table_use, bag_table[tonumber(str_taiyangshi)])
         elseif num == 4 then
             table.insert(sell_table, {
                 ["res"] = function() return shenmishi_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_shenmishi))
+            table.insert(bag_table_use, bag_table[tonumber(str_shenmishi)])
         elseif num == 5 then
             table.insert(sell_table, {
                 ["res"] = function() return shelizi_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_shelizi))
+            table.insert(bag_table_use, bag_table[tonumber(str_shelizi)])
         elseif num == 6 then
             table.insert(sell_table, {
                 ["res"] = function() return feicuishi_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_feicuishi))
+            table.insert(bag_table_use, bag_table[tonumber(str_feicuishi)])
         elseif num == 7 then
             table.insert(sell_table, {
                 ["res"] = function() return hongwenshi_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_hongwenshi))
+            table.insert(bag_table_use, bag_table[tonumber(str_hongwenshi)])
         elseif num == 8 then
             table.insert(sell_table, {
                 ["res"] = function() return yueliangshi_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_yueliangshi))
+            table.insert(bag_table_use, bag_table[tonumber(str_yueliangshi)])
         elseif num == 9 then
             table.insert(sell_table, {
                 ["res"] = function() return guangmangshi_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_guangmangshi))
+            table.insert(bag_table_use, bag_table[tonumber(str_guangmangshi)])
         elseif num == 10 then
             table.insert(sell_table, {
                 ["res"] = function() return kunlunyu_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_kunlunyu))
+            table.insert(bag_table_use, bag_table[tonumber(str_kunlunyu)])
         elseif num == 11 then
             table.insert(sell_table, {
                 ["res"] = function() return yuehualu_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_yuehualu))
+            table.insert(bag_table_use, bag_table[tonumber(str_yuehualu)])
         elseif num == 12 then
             table.insert(sell_table, {
                 ["res"] = function() return duanzaoce_market() end,
                 ["bagIndex"] = 1
             })
-            table.remove(bag_table, tonumber(str_duanaoce))
+            table.insert(bag_table_use, bag_table[tonumber(str_duanaoce)])
         end
     end
     return sell_table
 end
 
+-- 商会出售
 function sell()
     t1 = marketSellTable()
     if empty() then return end -- 商会没有可出售的
@@ -851,8 +877,142 @@ local function cleanBag()
         point4 = p4
         moveTo(729, 358, 729, 217, 2, 50)
     end
+
+    tap(980, 42) -- 关闭背包
 end
 
--- todo 背包的锻造册 无法识别 , 打造书无法识别
-init(1)
-cleanBag()
+-- todo 背包的种子|打造书无法识别
+
+function bagFunc.openMall()
+    Common.blockCheckMainPage('打开商城异常')
+
+    tap(34, 195) -- 打开商城
+
+    while true do
+        if baitanPage() then break end
+        coroutine.yield('打开商城后页面异常', 'c2')
+        mSleep(1000)
+    end
+    return 0
+end
+
+function bagFunc.switch_shanghui()
+    while true do
+        if baitanPage() then break end
+        coroutine.yield('打开商城后页面异常', 'c2')
+        mSleep(1000)
+    end
+    tap(1023, 172) -- 切换商会
+    mSleep(1000)
+
+    tap(407, 94) -- 切换到出售
+    mSleep(1000)
+
+    while true do
+        if shanghui_logo() then break end
+        coroutine.yield('切换商会异常', 'c2')
+        mSleep(1000)
+    end
+    return 0
+end
+
+function bagFunc.sell_shanghui()
+    while true do
+        if shanghui_logo() then break end
+        coroutine.yield('切换商会异常', 'c2')
+        mSleep(1000)
+    end
+
+    sell()
+
+    while true do
+        if shanghui_logo() then break end
+        coroutine.yield('切换商会异常', 'c2')
+        mSleep(1000)
+    end
+
+    return 0
+end
+
+function bagFunc.switch_baitan()
+    while true do
+        if shanghui_logo() then break end
+        coroutine.yield('切换商会异常', 'c2')
+        mSleep(1000)
+    end
+    tap(1025, 272) -- 切换摆摊
+    mSleep(1000)
+
+    tap(401, 92) -- 切换到出售
+    mSleep(1000)
+
+    while true do
+        if baitan_logo() then break end
+        coroutine.yield('切换摆摊异常', 'c2')
+        mSleep(1000)
+    end
+
+    return 0
+end
+
+function bagFunc.sell_baitan()
+    while true do
+        if baitan_logo() then break end
+        coroutine.yield('切换摆摊异常', 'c2')
+        mSleep(1000)
+    end
+    sell2User()
+
+    while true do
+        if baitan_logo() then break end
+        coroutine.yield('切换摆摊异常', 'c2')
+        mSleep(1000)
+    end
+
+    return 0
+end
+
+function bagFunc.close_market()
+    while true do
+        if baitan_logo() then break end
+        coroutine.yield('切换摆摊异常', 'c2')
+        mSleep(1000)
+    end
+
+    tap(978, 40) -- 关闭商城
+    mSleep(1500)
+
+    Common.blockCheckMainPage('关闭商城异常')
+
+    return 0
+end
+
+function bagFunc.open_bag()
+    Common.blockCheckMainPage('打开背包异常')
+
+    tap(1096, 522) -- 打开背包
+    mSleep(1000)
+
+    while true do
+        if bag() then break end
+        coroutine.yield('打开背包后页面异常', 'c2')
+        mSleep(1000)
+    end
+
+    return 0
+end
+
+function bagFunc.clear_bag()
+    while true do
+        if bag() then break end
+        coroutine.yield('打开背包后页面异常', 'c2')
+        mSleep(1000)
+    end
+    cleanBag() -- 清空背包
+
+    Common.blockCheckMainPage('清空背包后页面异常')
+
+    return -2
+end
+
+return bagFunc

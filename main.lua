@@ -374,9 +374,9 @@ if initSuccess then
     wLog(log.name, "------------分割线------------");
     wLog(log.name, "[DATE] script start");
 
-    masterMain()
-    toast("master..", 2)
-    mSleep(2000)
+    -- masterMain()
+    local bag = require("bag.ConstPage")
+    Main.excuteLocal(bag.index(), 1)
 
     if UISetting.schedule == '0' then -- 到了5点三界和科举
         toast('5pm')
