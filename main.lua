@@ -374,12 +374,12 @@ if initSuccess then
     wLog(log.name, "------------分割线------------");
     wLog(log.name, "[DATE] script start");
 
-    -- masterMain()
-    local bag = require("bag.ConstPage")
-    test = coroutine.create(function ()
-        Main.excuteLocal(bag.index(), 1)
-    end)
-    coroutine.resume(test)
+    masterMain()
+    -- local bag = require("bag.ConstPage")
+    -- test = coroutine.create(function ()
+    --     Main.excuteLocal(bag.index(), 1)
+    -- end)
+    -- coroutine.resume(test)
 
     if UISetting.schedule == '0' then -- 到了5点三界和科举
         toast('5pm')

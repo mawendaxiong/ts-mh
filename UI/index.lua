@@ -537,7 +537,7 @@ function UI.analysis(uiValues)
 
     if uiValues.devMode == '0' then dev.status = 1 end -- 调试模式
     if uiValues.money == '0' then UISetting.money = 1 end -- 活力用来打工
-
+    bag_analysis(uiValues) -- 解析背包参数
 end
 
 function bag_analysis(uiValues)

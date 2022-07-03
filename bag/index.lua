@@ -5,7 +5,6 @@ local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
 
-
 local can_store = true
 local bagFunc = {}
 -- 鬼怪画像
@@ -252,6 +251,68 @@ local function yuehualu_market()
 end
 
 -----------------------------------------------------
+-- 推荐价格
+local function tuijianjiage()
+    offset =
+        '5|1|0x553923,40|4|0x553923,52|3|0x553923,66|7|0x553923,74|7|0x553923'
+    return findColorsUntil(0x5c402a, offset, 90, 662, 444, 850, 473,
+                           {orient = 2}, 500, 1)
+end
+
+local function up_tuijianjiage()
+    offset =
+        '0|10|0x0bb008,5|7|0x02ae00,21|8|0x14b20f,40|6|0x02ae00,52|6|0x02ae00,61|9|0x02ae00,74|9|0x02ae00'
+    return findColorsUntil(0x0ab007, offset, 90, 662, 444, 850, 473,
+                           {orient = 2}, 500, 1)
+end
+
+local function down_tuijianjiage()
+    offset =
+        '0|9|0xe01e09,5|8|0xe01500,40|7|0xe01500,52|8|0xe01500,61|9|0xe01500,74|10|0xe01500'
+    return findColorsUntil(0xe01702, offset, 90, 662, 444, 850, 473,
+                           {orient = 2}, 500, 1)
+end
+
+-- 调整价格
+local function fix_price()
+    local initX = 0
+    local initY = 0
+
+    keepScreen(true)
+    if not tuijianjiage() then -- 如果不是在原价,先调整到原价
+
+        if up_tuijianjiage() then
+            initX = 660
+            initY = 424
+        elseif down_tuijianjiage() then
+            initX = 865
+            initY = 424
+        end
+        while true do
+            if tuijianjiage() then break end
+            tap(initX, initY)
+            mSleep(1000)
+        end
+    end
+    keepScreen(false)
+
+    local tap_times = UISetting.price_baitan
+    if UISetting.price_baitan < 0 then -- 推荐价格以下,调整要按的按钮
+        initX = 660
+        initY = 424
+
+        tap_times = -(tap_times)
+    else
+        initX = 865
+        initY = 424
+    end
+
+    for i = 1, tap_times, 1 do
+        tap(initX, initY)
+        mSleep(1000)
+    end
+end
+
 -- 节日道具
 local function jieri()
     offset =
@@ -767,7 +828,7 @@ function marketSellTable(setting)
             table.insert(bag_table_use, bag_table[tonumber(str_duanaoce)])
         end
     end
-    return sell_table,bag_table_use
+    return sell_table, bag_table_use
 end
 
 -- 商会出售
@@ -869,8 +930,9 @@ function sell2User()
                         tap(661, 561)
                     end -- 有取消按钮点击取消
                 else
-                    tap(653, 423) -- 价格-10%
+                    fix_price() -- 调整价格
                     mSleep(1000)
+                    
                     tap(825, 555) -- 上架
 
                 end
