@@ -252,6 +252,58 @@ function UI.show()
                 }, {
                     ["type"] = "Label",
                     ["align"] = "left",
+                    ["text"] = "背包清理&上架",
+                    ["size"] = 16,
+                    ["width"] = -1,
+                    ["nowrap"] = 0,
+                    ["valign"] = "bottom"
+                }, {
+                    ["type"] = "Label",
+                    ["align"] = "left",
+                    ["text"] = "商会出售",
+                    ["size"] = 12,
+                    ["width"] = -1,
+                    ["nowrap"] = 0,
+                    ["valign"] = "bottom"
+                }, {
+                    ["type"] = "CheckBoxGroup",
+                    ["id"] = "sell_shanghui",
+                    ["list"] = "精铁,鬼谷子,黑宝石,太阳石,神秘石,舍利子,翡翠石,红纹石,月亮石,光芒石,昆仑玉,月华露,锻造册",
+                    ["select"] = "0@1@4@7@10@11@12",
+                    ["countperline"] = 3
+                }, {
+                    ["type"] = "Label",
+                    ["align"] = "left",
+                    ["text"] = "摆摊出售",
+                    ["size"] = 12,
+                    ["width"] = -1,
+                    ["nowrap"] = 0,
+                    ["valign"] = "bottom"
+                }, {
+                    ["type"] = "ComboBox",
+                    ["id"] = "price_baitan",
+                    ["list"] = "-50%,-40%,-30%,-20%,-10%,原价,10%,20%,30%,40%,50%",
+                    ["select"] = "5",
+                    ["width"] = 150,
+                    ["countperline"] = 3
+                }, {
+                    ["type"] = "Label",
+                    ["align"] = "left",
+                    ["text"] = "背包清理会根据实际使用或放入仓库",
+                    ["size"] = 12,
+                    ["width"] = -1,
+                    ["nowrap"] = 0,
+                    ["valign"] = "bottom"
+                }, {
+                    ["type"] = "Line",
+                    ["color"] = "51,51,255",
+                    ["align"] = "center",
+                    ["valign"] = "top",
+                    ["height"] = 5,
+                    ["width"] = 500
+                }, {
+                    ["type"] = "Label",
+                    ["align"] = "left",
                     ["text"] = "<-右滑账号配置        左滑练小号配置->",
                     ["size"] = 14,
                     ["width"] = -1,
@@ -461,7 +513,7 @@ function UI.analysis(uiValues)
     UISetting.taskOrder = uiValues.taskOrder
     -- 定时执行科举和三界
     UISetting.schedule = uiValues.schedule
-    
+
     -- 第二天零点重新执行
     UISetting.restart = uiValues.restart
 
@@ -485,6 +537,10 @@ function UI.analysis(uiValues)
 
     if uiValues.devMode == '0' then dev.status = 1 end -- 调试模式
     if uiValues.money == '0' then UISetting.money = 1 end -- 活力用来打工
+
 end
 
+function bag_analysis(uiValues)
+    
+end
 return UI
