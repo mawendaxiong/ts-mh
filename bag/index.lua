@@ -330,6 +330,14 @@ local function baitan_logo()
                            {orient = 2}, 500, 1)
 end
 
+-- 上架成功的提示
+local function success()
+    offset =
+        '168|59|0xedbf60,125|-148|0xe01500,145|-134|0xe01500,169|-136|0xe01500,194|-136|0xe01500'
+    return findColorsUntil(0x82532a, offset, 90, 358, 220, 781, 525,
+                           {orient = 2}, 500, 1)
+end
+
 local function doubleClick(resFunc, x, y)
     if resFunc ~= nil then r, t, x, y = resFunc() end
     tap(x, y)
@@ -341,7 +349,7 @@ end
 local function store(resFunc)
     while true do
         if bag() then break end
-        -- coroutine.yield('存放仓库异常', 'c2')
+        coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
 
@@ -364,7 +372,7 @@ local function store(resFunc)
 
     while true do
         if bag() then break end
-        -- coroutine.yield('存放仓库异常', 'c2')
+        coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
 end
@@ -372,7 +380,7 @@ end
 local function xiulian(resFunc)
     while true do
         if bag() then break end
-        -- coroutine.yield('存放仓库异常', 'c2')
+        coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
 
@@ -382,7 +390,7 @@ local function xiulian(resFunc)
         mSleep(1500)
         while true do
             if xiulianPage() then break end
-            -- coroutine.yield('修炼页面异常', 'c2')
+            coroutine.yield('修炼页面异常', 'c2')
             mSleep(1000)
         end
         tap(863, 562) -- 使用修炼丹or修炼果
@@ -393,7 +401,7 @@ local function xiulian(resFunc)
 
     while true do
         if bag() then break end
-        -- coroutine.yield('存放仓库异常', 'c2')
+        coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
 end
@@ -420,7 +428,7 @@ local function dropSth(resFunc)
 
     while true do
         if bag() then break end
-        -- coroutine.yield('存放仓库异常', 'c2')
+        coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
 
@@ -444,7 +452,7 @@ end
 function unlock_huaxiang()
     while true do
         if guiPage() then break end
-        -- coroutine.yield('','c2')
+        coroutine.yield('画像碎片页面异常','c2')
         mSleep(1000)
     end
 
@@ -459,7 +467,7 @@ function unlock_huaxiang()
 
     while true do
         if bag() then break end
-        -- coroutine.yield('存放仓库异常', 'c2')
+        coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
 end
