@@ -34,6 +34,12 @@ UISetting.g1 = 20
 UISetting.g2 = 20
 -- 打工消耗活力
 UISetting.money = 0
+-- 商会出售列表
+UISetting.shanghui_list = {}
+-- 背包整理列表
+UISetting.bag_list = {}
+-- 摆摊价格
+UISetting.price_baitan = {}
 
 -- 秘境次数统计
 uncharted.freq = 0

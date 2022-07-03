@@ -1,5 +1,10 @@
 require("TSLib")
 Common = require("Common.index")
+local container = require("Main.state")
+local mainStatus = container.mainStatus
+local taskRecord = container.taskRecord
+local UISetting = container.UISetting
+
 
 local can_store = true
 local bagFunc = {}
@@ -677,85 +682,84 @@ function find_store()
     can_store = false
 end
 
-function marketSellTable()
-    setting = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
+function marketSellTable(setting)
     sell_table = {}
     bag_table_use = {}
     for i = 1, #setting, 1 do
         num = setting[i]
-        if num == 0 then
+        if num == '0' then
             table.insert(sell_table, {
                 ["res"] = function() return jingtie_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_jingtie)])
-        elseif num == 1 then
+        elseif num == '1' then
             table.insert(sell_table, {
                 ["res"] = function() return guiguzi_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_guiguzi)])
-        elseif num == 2 then
+        elseif num == '2' then
             table.insert(sell_table, {
                 ["res"] = function() return heibaoshi_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_heibaoshi)])
-        elseif num == 3 then
+        elseif num == '3' then
             table.insert(sell_table, {
                 ["res"] = function() return taiyangshi_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_taiyangshi)])
-        elseif num == 4 then
+        elseif num == '4' then
             table.insert(sell_table, {
                 ["res"] = function() return shenmishi_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_shenmishi)])
-        elseif num == 5 then
+        elseif num == '5' then
             table.insert(sell_table, {
                 ["res"] = function() return shelizi_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_shelizi)])
-        elseif num == 6 then
+        elseif num == '6' then
             table.insert(sell_table, {
                 ["res"] = function() return feicuishi_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_feicuishi)])
-        elseif num == 7 then
+        elseif num == '7' then
             table.insert(sell_table, {
                 ["res"] = function() return hongwenshi_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_hongwenshi)])
-        elseif num == 8 then
+        elseif num == '8' then
             table.insert(sell_table, {
                 ["res"] = function() return yueliangshi_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_yueliangshi)])
-        elseif num == 9 then
+        elseif num == '9' then
             table.insert(sell_table, {
                 ["res"] = function() return guangmangshi_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_guangmangshi)])
-        elseif num == 10 then
+        elseif num == '10' then
             table.insert(sell_table, {
                 ["res"] = function() return kunlunyu_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_kunlunyu)])
-        elseif num == 11 then
+        elseif num == '11' then
             table.insert(sell_table, {
                 ["res"] = function() return yuehualu_market() end,
                 ["bagIndex"] = 1
             })
             table.insert(bag_table_use, bag_table[tonumber(str_yuehualu)])
-        elseif num == 12 then
+        elseif num == '12' then
             table.insert(sell_table, {
                 ["res"] = function() return duanzaoce_market() end,
                 ["bagIndex"] = 1
@@ -763,16 +767,16 @@ function marketSellTable()
             table.insert(bag_table_use, bag_table[tonumber(str_duanaoce)])
         end
     end
-    return sell_table
+    return sell_table,bag_table_use
 end
 
 -- 商会出售
 function sell()
-    t1 = marketSellTable()
+    -- t1 = marketSellTable()
     if empty() then return end -- 商会没有可出售的
     for i = 1, 10, 1 do -- 直接滑动10次
-        for i = 1, #t1, 1 do
-            obj = t1[i]
+        for i = 1, #UISetting.shanghui_list, 1 do
+            obj = UISetting.shanghui_list[i]
             while true do
                 r, t, x, y = obj.res()
                 if r then
@@ -902,7 +906,7 @@ local function cleanBag()
         local p2 = getColor(686, 265)
         local p3 = getColor(769, 337)
         local p4 = getColor(841, 416)
-        for i = 1, #bag_table, 1 do bag_table[i]() end
+        for i = 1, #UISetting.bag_list, 1 do UISetting.bag_list[i]() end
 
         if (p1 == point1 and p2 == point2 and p3 == point3 and p4 == point4) then -- 拉到底
             break
