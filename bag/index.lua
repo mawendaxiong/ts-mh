@@ -337,6 +337,13 @@ local function success()
     return findColorsUntil(0x82532a, offset, 90, 358, 220, 781, 525,
                            {orient = 2}, 500, 1)
 end
+-- 超时上架
+local function expire()
+    offset =
+        '34|5|0x70350d,20|11|0xecbe5f,191|4|0x6e330b,210|-1|0x6d320a,216|10|0x6c310a'
+    return findColorsUntil(0x6e330b, offset, 90, 566, 498, 906, 566,
+                           {orient = 2}, 500, 1)
+end
 
 local function doubleClick(resFunc, x, y)
     if resFunc ~= nil then r, t, x, y = resFunc() end
@@ -452,7 +459,7 @@ end
 function unlock_huaxiang()
     while true do
         if guiPage() then break end
-        coroutine.yield('画像碎片页面异常','c2')
+        coroutine.yield('画像碎片页面异常', 'c2')
         mSleep(1000)
     end
 
@@ -767,7 +774,6 @@ function sell()
     for i = 1, 10, 1 do -- 直接滑动10次
         for i = 1, #t1, 1 do
             obj = t1[i]
-            r, t, x, y = obj.res()
             while true do
                 r, t, x, y = obj.res()
                 if r then
@@ -789,15 +795,15 @@ function sell()
                     break
                 end
             end
+            if empty() then break end -- 商会没有可出售的
+
             mSleep(1000)
             tap(1, 1)
         end
-        if empty() then break end -- 商会没有可出售的
     end
 end
 
 function sell2User()
-    -- moveTo(824, 288, 824, 131, 2, 50)
 
     initX = 706
     initY = 171
@@ -808,15 +814,38 @@ function sell2User()
     for i = 1, 10, 1 do
         lastColor = nil
         while initX < 946 do
-            if not isColor(582, 473, 0xdfc2a0) then
-                toast('没位置上架了')
-                return
-            end -- 上架满了,无法上架了
+            if not isColor(582, 473, 0xdfc2a0) then -- 上架满了,无法上架了
+                -- 看看有没有上架超时的,然后取回
+                local initX_sale = 442
+                local initY_sale = 491
+                for i = 1, 8, 1 do -- 最多上架8个商品,检查有没有上架超时的
+                    if i % 2 == 0 then
+                        initX_sale = 442
+                        initY_sale = initY_sale - 90
+                    end -- 说明点完一行了,一行两个
+                    tap(initX_sale, initY_sale)
+                    mSleep(1000)
+                    if expire() then
+                        tap(653, 538) -- 点击取回
+                    elseif isColor(888, 79, 0xbf1500) then -- 有红色叉叉就关闭掉
+                        tap(888, 79) -- 关闭
+                    end
+                    mSleep(1500)
+                    initX_sale = initX_sale - 250 -- 往前
+                end
+                if not isColor(582, 473, 0xdfc2a0) then -- 清理完超时后再次确认
+                    toast('没位置上架了')
+                    return
+                end
+
+            end
+
             color = getColor(initX, initY)
             if color == 0xdfc2a0 then -- 说明没有东西可以上架了
                 toast('没东西上架了')
                 return
             end
+
             if color == lastColor then initX = initX + 80 end
             tap(initX, initY)
             mSleep(1000)
