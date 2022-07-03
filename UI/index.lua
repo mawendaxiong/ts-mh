@@ -544,9 +544,9 @@ function bag_analysis(uiValues)
     local shanghui_str = uiValues.sell_shanghui
     local shanghui_list = shanghui_str:split("@")
     local bagFunc = require("bag.index")
-    local list1,list2 = marketSellTable(shanghui_list)
+    local list1, list2 = marketSellTable(shanghui_list)
     UISetting.shanghui_list = list1
     UISetting.bag_list = list2
-    UISetting.price_baitan = uiValues.price_baitan
+    UISetting.price_baitan = tonumber(uiValues.price_baitan) - 5 -- 摆摊出售价格
 end
 return UI

@@ -288,13 +288,14 @@ local function fix_price()
             initX = 865
             initY = 424
         end
+        keepScreen(false)
+
         while true do
             if tuijianjiage() then break end
             tap(initX, initY)
             mSleep(1000)
         end
     end
-    keepScreen(false)
 
     local tap_times = UISetting.price_baitan
     if UISetting.price_baitan < 0 then -- 推荐价格以下,调整要按的按钮
@@ -869,15 +870,16 @@ end
 
 function sell2User()
 
-    initX = 706
-    initY = 171
+    local initX = 706
+    local initY = 171
 
     targetX = 0
     targetY = 0
     -- 从第一行找到第一个装备
     for i = 1, 10, 1 do
         lastColor = nil
-        while initX < 946 do
+        while initX <= 946 do
+            mSleep(1500)
             if not isColor(582, 473, 0xdfc2a0) then -- 上架满了,无法上架了
                 -- 看看有没有上架超时的,然后取回
                 local initX_sale = 442
@@ -910,14 +912,14 @@ function sell2User()
                 return
             end
 
-            if color == lastColor then initX = initX + 80 end
+            -- if color == lastColor then initX = initX + 80 end -- bug: 多个相同物品会跳格
             tap(initX, initY)
             mSleep(1000)
             if not baitanPage() then -- 说面点击了物品有变化
                 -- 普通出售
                 r, t, x, y = simple()
                 if not r then -- 不是普通物品出售
-                    initX = initX + 80
+                    initX = initX + 80 -- 指向向下一个物品
 
                     r, t, x, y = zhenpin()
                     if r then -- 珍品装备出售
@@ -932,7 +934,7 @@ function sell2User()
                 else
                     fix_price() -- 调整价格
                     mSleep(1000)
-                    
+
                     tap(825, 555) -- 上架
 
                 end
@@ -945,9 +947,11 @@ function sell2User()
                     tap(569, 497) -- 确定
                     mSleep(1000)
                 end
+            else
+                initX = initX + 80 -- 指向向下一个物品
             end
 
-            lastColor = color
+            -- lastColor = color
         end
         if i % 5 == 0 then moveTo(789, 513, 789, 121, 2, 50) end
 
