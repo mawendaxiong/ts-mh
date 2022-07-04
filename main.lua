@@ -164,32 +164,37 @@ local function execute()
 end
 local c1 = coroutine.create(execute)
 
-local function daemon()
-    if exception.n1 == nil then
-        exception.n1 = getColor(221, 255)
-        exception.n2 = getColor(992, 230)
-        exception.n3 = getColor(991, 464)
-        exception.n4 = getColor(239, 434)
+local function check_hold()
+    if #exception.cache_points == 0 then
+        for i = 1, #exception.check_points, 1 do
+            local xy_table = exception.check_points[i]
+            exception.cache_points[i] = getColor(xy_table[1], xy_table[2])
+        end
     else
+        local match_time = 0
+        for i = 1, #exception.check_points, 1 do
+            local xy_table = exception.check_points[i]
+            local color = getColor(xy_table[1], xy_table[2])
+            if color == exception.cache_points[i] then
+                match_time = match_time + 1
+            else
+                exception.cache_points[i] = color
+            end
 
-        n1 = getColor(221, 255)
-        n2 = getColor(992, 230)
-        n3 = getColor(991, 464)
-        n4 = getColor(239, 434)
-        if n1 == exception.n1 and n2 == exception.n2 and n3 == exception.n3 and
-            n4 == exception.n4 then
+        end
+
+        if match_time >= 7 then -- 超过7个点相同
             exception.freq = exception.freq - 1
             toast("重启游戏: " .. exception.freq, 1)
             mSleep(1000)
             if exception.freq <= 0 then closeApp("com.netease.my") end -- 页面卡太久了,关闭游戏
         else
-            exception.n1 = n1
-            exception.n2 = n2
-            exception.n3 = n3
-            exception.n4 = n4
             exception.freq = 20
         end
     end
+end
+local function daemon()
+    check_hold()
 
     if taskRecord.taskName == 'login' then -- 登录时出现异常
         if updateNotice() then
@@ -210,7 +215,7 @@ local function daemon()
     end
 
     local flag = appIsRunning("com.netease.my")
-    if flag == 0 or exception.freq <= 0 then -- 程序闪退
+    if flag == 0 then -- 程序闪退
         toast("闪退", 2)
         mSleep(2000)
         wLog(log.name, "[DATE] 闪退")
@@ -374,10 +379,10 @@ if initSuccess then
     wLog(log.name, "------------分割线------------");
     wLog(log.name, "[DATE] script start");
 
-    -- masterMain()
-    local bag = require("bag.ConstPage")
-    test = coroutine.create(function() Main.excuteLocal(bag.index(), 1) end)
-    while true do coroutine.resume(test) end
+    masterMain()
+    -- local bag = require("bag.ConstPage")
+    -- test = coroutine.create(function() Main.excuteLocal(bag.index(), 1) end)
+    -- while true do coroutine.resume(test) end
 
     if UISetting.schedule == '0' then -- 到了5点三界和科举
         toast('5pm')

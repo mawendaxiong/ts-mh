@@ -48,11 +48,10 @@ escort.freq = 0
 
 -- 页面卡住次数
 exception.freq = 20
--- 页面卡住检测四个点
-exception.n1 = nil
-exception.n2 = nil
-exception.n3 = nil
-exception.n4 = nil
+-- 四个点的记录
+exception.cache_points ={}
+-- 检测点的位置
+exception.check_points ={{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}}
 
 -- 捉鬼
 -- 捉鬼次数

@@ -406,6 +406,10 @@ function Sect.excute()
             -- 购买
             tap(892, 584)
             mSleep(1000)
+
+            if shopping() then
+                tap()
+            end
         elseif workshop() then
             Common.record("工坊购买")
 
@@ -415,6 +419,10 @@ function Sect.excute()
             -- 购买
             tap(892, 584)
             mSleep(1000)
+
+            if workshop() then
+                tap()
+            end
 
         elseif lingzhuangbei() then -- 领取福利
             while true do
