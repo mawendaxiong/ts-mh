@@ -23,6 +23,36 @@ local day = os.date('%d')
 
 init(1)
 
+-- x9联赛
+local function x9_match()
+    offset =
+        '31|28|0xb58d6a,-169|-6|0xb58d6a,-123|28|0xb58d6a,-66|129|0xeaac4e,-46|124|0xffffff,-27|133|0xffffff,-11|132|0xffffff'
+    return findMultiColorInRegionFuzzy(0xb58d6a, offset, 90, 434, 374, 698, 558,
+                                       {orient = 2})
+end
+-- 回归挑战
+local function huigui_tiaozhan()
+    offset =
+        '-218|-156|0xaf5309,-216|-145|0xc0641a,-24|-93|0xb58d6a,-48|-119|0xb58d6a,-6|-75|0xb58d6a,-83|-73|0xb58d6a'
+    return findMultiColorInRegionFuzzy(0xeebd5b, offset, 90, 321, 249, 664, 457,
+                                       {orient = 2})
+end
+-- 全新回归挑战
+local function quanxin_huigui_tiaozhan()
+    offset =
+        '-3|21|0xffffff,4|47|0xfffffe,4|48|0xfffffe,9|21|0xffffff,46|43|0xfff1b1,72|40|0xfff1b2,47|88|0xfff1ae,72|95|0xfff1ae'
+    return findMultiColorInRegionFuzzy(0xffffff, offset, 90, 524, 250, 630, 392,
+                                       {orient = 2})
+end
+-- 全民争霸赛
+local function quanmin_zhengbasai()
+    offset =
+        '66|-12|0xffdd66,132|1|0xffee77,152|8|0xffee88,177|-10|0xffdd66,207|15|0xffff99,209|14|0xffff99'
+    return findMultiColorInRegionFuzzy(0xffee77, offset, 90, 475, 319, 756, 375,
+                                       {orient = 2})
+end
+
+-------------------------
 -- 梦幻迷城弹出框
 local function menghuanmicheng()
     offset =
