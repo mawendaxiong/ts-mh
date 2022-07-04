@@ -183,7 +183,7 @@ local function check_hold()
 
         end
 
-        if match_time >= 7 then -- 超过7个点相同
+        if match_time >= 8 then -- 超过8个点相同
             exception.freq = exception.freq - 1
             toast("重启游戏: " .. exception.freq, 1)
             mSleep(1000)

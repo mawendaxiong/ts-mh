@@ -210,6 +210,10 @@ function Main.switchTaskPage(taskNum)
         taskName = "执行: 科举"
         local kejuPage = require("keju.ConstPage")
         page = kejuPage.index()
+    elseif taskNum == "9" then -- 整理背包
+        taskName = "执行: 整理背包"
+        local bag = require("bag.ConstPage")
+        page = bag.index()
     elseif taskNum == "w" then -- 使用活力
         taskName = "执行: 使用活力"
         local money = require("money.ConstPage")
