@@ -51,6 +51,13 @@ local function quanmin_zhengbasai()
     return findMultiColorInRegionFuzzy(0xffee77, offset, 90, 475, 319, 756, 375,
                                        {orient = 2})
 end
+-- 九转天阶
+local function jiuzhuan_tianjie()
+    offset =
+        '194|-125|0xfef591,28|-125|0xfef591,122|-75|0xdcebfa,24|1|0x6c310a,23|5|0x6c310a,84|-75|0xdbebfa'
+    return findMultiColorInRegionFuzzy(0xedbf60, offset, 90, 354, 363, 694, 531,
+                                       {orient = 2})
+end
 
 -------------------------
 -- 梦幻迷城弹出框

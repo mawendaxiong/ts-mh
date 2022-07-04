@@ -398,7 +398,7 @@ local function baitan_logo()
 end
 
 -- 上架成功的提示
-local function success()
+local function shangjia_success()
     offset =
         '168|59|0xedbf60,125|-148|0xe01500,145|-134|0xe01500,169|-136|0xe01500,194|-136|0xe01500'
     return findColorsUntil(0x82532a, offset, 90, 358, 220, 781, 525,
@@ -750,82 +750,82 @@ function marketSellTable(setting)
     for i = 1, #setting, 1 do
         num = setting[i]
         if num == '0' then
-            table.insert(sell_table, {
-                ["res"] = function() return jingtie_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 精铁')
+                return jingtie_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_jingtie)])
         elseif num == '1' then
-            table.insert(sell_table, {
-                ["res"] = function() return guiguzi_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 鬼谷子')
+                return guiguzi_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_guiguzi)])
         elseif num == '2' then
-            table.insert(sell_table, {
-                ["res"] = function() return heibaoshi_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 黑宝石')
+                return heibaoshi_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_heibaoshi)])
         elseif num == '3' then
-            table.insert(sell_table, {
-                ["res"] = function() return taiyangshi_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 太阳石')
+                return taiyangshi_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_taiyangshi)])
         elseif num == '4' then
-            table.insert(sell_table, {
-                ["res"] = function() return shenmishi_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 神秘石')
+                return shenmishi_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_shenmishi)])
         elseif num == '5' then
-            table.insert(sell_table, {
-                ["res"] = function() return shelizi_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 舍利子')
+                return shelizi_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_shelizi)])
         elseif num == '6' then
-            table.insert(sell_table, {
-                ["res"] = function() return feicuishi_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 翡翠石')
+                return feicuishi_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_feicuishi)])
         elseif num == '7' then
-            table.insert(sell_table, {
-                ["res"] = function() return hongwenshi_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 红纹石')
+                return hongwenshi_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_hongwenshi)])
         elseif num == '8' then
-            table.insert(sell_table, {
-                ["res"] = function() return yueliangshi_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 月亮石')
+                return yueliangshi_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_yueliangshi)])
         elseif num == '9' then
-            table.insert(sell_table, {
-                ["res"] = function() return guangmangshi_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 光芒石')
+                return guangmangshi_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_guangmangshi)])
         elseif num == '10' then
-            table.insert(sell_table, {
-                ["res"] = function() return kunlunyu_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 昆仑玉')
+                return kunlunyu_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_kunlunyu)])
         elseif num == '11' then
-            table.insert(sell_table, {
-                ["res"] = function() return yuehualu_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 月华露')
+                return yuehualu_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_yuehualu)])
         elseif num == '12' then
-            table.insert(sell_table, {
-                ["res"] = function() return duanzaoce_market() end,
-                ["bagIndex"] = 1
-            })
+            table.insert(sell_table, function()
+                Common.record('出售: 锻造册')
+                return duanzaoce_market()
+            end)
             table.insert(bag_table_use, bag_table[tonumber(str_duanaoce)])
         end
     end
@@ -834,13 +834,14 @@ end
 
 -- 商会出售
 function sell()
-    -- t1 = marketSellTable()
     if empty() then return end -- 商会没有可出售的
-    for i = 1, 10, 1 do -- 直接滑动10次
-        for i = 1, #UISetting.shanghui_list, 1 do
-            obj = UISetting.shanghui_list[i]
+    local not_match = 0
+
+    for i = 1, 2, 1 do -- 直接滑动10次
+        for j = 1, #UISetting.shanghui_list, 1 do
+            local resFunc = UISetting.shanghui_list[j]
             while true do
-                r, t, x, y = obj.res()
+                r, t, x, y = resFunc()
                 if r then
                     tap(x, y)
                     mSleep(1000)
@@ -860,7 +861,11 @@ function sell()
                     break
                 end
             end
-            if empty() then break end -- 商会没有可出售的
+            if empty() then
+                toast('没东西出售了', 1)
+                mSleep(1000)
+                break
+            end -- 商会没有可出售的
 
             mSleep(1000)
             tap(1, 1)
@@ -936,12 +941,11 @@ function sell2User()
                     mSleep(1000)
 
                     tap(825, 555) -- 上架
-
+                    mSleep(2000)
                 end
 
-                mSleep(2000)
-
-                if success() then
+                if shangjia_success() then
+                    Common.record('关闭上架成功提示')
                     tap(400, 437) -- 7天不提示
                     mSleep(1000)
                     tap(569, 497) -- 确定
