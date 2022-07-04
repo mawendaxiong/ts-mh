@@ -837,10 +837,16 @@ function sell()
     if empty() then return end -- 商会没有可出售的
     local not_match = 0
 
-    for i = 1, 2, 1 do -- 直接滑动10次
+    for i = 1, 2, 1 do -- todo 怎么识别列表的东西已经卖完了
         for j = 1, #UISetting.shanghui_list, 1 do
             local resFunc = UISetting.shanghui_list[j]
             while true do
+                if not shanghui_logo() then
+                    coroutine.yield('商会出售过程中页面异常', 'c2')
+                    mSleep(1000)
+                    goto continue
+                end
+
                 r, t, x, y = resFunc()
                 if r then
                     tap(x, y)
@@ -860,6 +866,7 @@ function sell()
                 else
                     break
                 end
+                ::continue::
             end
             if empty() then
                 toast('没东西出售了', 1)
@@ -880,10 +887,16 @@ function sell2User()
 
     targetX = 0
     targetY = 0
-    -- 从第一行找到第一个装备
+    -- 从第一行找到第一个物品
     for i = 1, 10, 1 do
         lastColor = nil
         while initX <= 946 do
+            if not baitan_logo() then
+                coroutine.yield('摆摊出售页面异常', 'c2')
+                mSleep(1000)
+                goto continue
+            end
+
             mSleep(1500)
             if not isColor(582, 473, 0xdfc2a0) then -- 上架满了,无法上架了
                 -- 看看有没有上架超时的,然后取回
@@ -956,6 +969,7 @@ function sell2User()
             end
 
             -- lastColor = color
+            ::continue::
         end
         if i % 5 == 0 then moveTo(789, 513, 789, 121, 2, 50) end
 
@@ -976,7 +990,17 @@ local function cleanBag()
         local p2 = getColor(686, 265)
         local p3 = getColor(769, 337)
         local p4 = getColor(841, 416)
-        for i = 1, #UISetting.bag_list, 1 do UISetting.bag_list[i]() end
+        
+        for i = 1, #UISetting.bag_list, 1 do
+            if not bag() then
+                coroutine.yield('整理背包出现异常', 'c2')
+                mSleep(1000)
+                goto continue
+            end
+
+            UISetting.bag_list[i]()
+
+        end
 
         if (p1 == point1 and p2 == point2 and p3 == point3 and p4 == point4) then -- 拉到底
             break
@@ -986,6 +1010,8 @@ local function cleanBag()
         point3 = p3
         point4 = p4
         moveTo(729, 358, 729, 217, 2, 50)
+        ::continue::
+
     end
 
     tap(980, 42) -- 关闭背包
