@@ -407,8 +407,9 @@ function Sect.excute()
             tap(892, 584)
             mSleep(1000)
 
-            if shopping() then
-                tap()
+            if shopping() then -- 有可能没买到,然后还是在摆摊页面,先关掉
+                tap(979,39) -- 关闭商城
+                mSleep(1000)
             end
         elseif workshop() then
             Common.record("工坊购买")
@@ -420,8 +421,9 @@ function Sect.excute()
             tap(892, 584)
             mSleep(1000)
 
-            if workshop() then
-                tap()
+            if workshop() then-- 有可能没买到,然后还是在工坊页面,先关掉
+                tap(1033,123) -- 关闭工坊
+                mSleep(1000)
             end
 
         elseif lingzhuangbei() then -- 领取福利

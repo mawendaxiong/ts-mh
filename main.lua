@@ -165,13 +165,13 @@ end
 local c1 = coroutine.create(execute)
 
 local function check_hold()
-    if #exception.cache_points == 0 then
+    if #exception.cache_points == 0 then -- 首次记录点的缓存
         for i = 1, #exception.check_points, 1 do
             local xy_table = exception.check_points[i]
             exception.cache_points[i] = getColor(xy_table[1], xy_table[2])
         end
     else
-        local match_time = 0
+        local match_time = 0 -- 记录点相同的次数
         for i = 1, #exception.check_points, 1 do
             local xy_table = exception.check_points[i]
             local color = getColor(xy_table[1], xy_table[2])
