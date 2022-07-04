@@ -180,7 +180,8 @@ function Common.checkBattle(rate, second)
     if rate == nil then rate = 1000 end
 
     if second == nil then second = 1 end
-    local offset = "-18|-1|0xdd8a4e,20|-7|0xd26b2d,-17|15|0xc59074,24|15|0xc04048"
+    local offset =
+        "-18|-1|0xdd8a4e,20|-7|0xd26b2d,-17|15|0xc59074,24|15|0xc04048"
 
     return findColorsUntil(0xde8a55, offset, 90, 1050, 526, 1128, 623,
                            {orient = 2}, rate, second)
@@ -255,13 +256,31 @@ function Common.inputText(str)
     mSleep(1000)
 end
 
+-- 全民争霸赛
+local function quanmin_zhengbasai()
+    offset =
+        '66|-12|0xffdd66,132|1|0xffee77,152|8|0xffee88,177|-10|0xffdd66,207|15|0xffff99,209|14|0xffff99'
+    return findMultiColorInRegionFuzzy(0xffee77, offset, 90, 475, 319, 756, 375,
+                                       {orient = 2})
+end
+-- x9联赛
+local function x9_match()
+    offset =
+        '31|28|0xb58d6a,-169|-6|0xb58d6a,-123|28|0xb58d6a,-66|129|0xeaac4e,-46|124|0xffffff,-27|133|0xffffff,-11|132|0xffffff'
+    return findMultiColorInRegionFuzzy(0xb58d6a, offset, 90, 434, 374, 698, 558,
+                                       {orient = 2})
+end
 -- 限时活动的窗口
 function Common.timeLimitedWindow()
-    multiColTap({
-        {306, 251, 0x242f81}, {760, 225, 0x363998}, {402, 354, 0x67c3c8},
-        {571, 274, 0xa90e16}, {836, 215, 0xc21200}
-    })
-    mSleep(1000)
+    if quanmin_zhengbasai() then -- 全民争霸赛
+        tap(1016, 27)
+        mSleep(1000)
+    end
+
+    if x9_match() then -- x9联赛
+        tap(958, 74)
+        mSleep(1000)
+    end
 end
 
 -- 组队的页面

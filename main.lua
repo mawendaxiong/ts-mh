@@ -22,7 +22,20 @@ local dev = false
 local day = os.date('%d')
 
 init(1)
-
+-- 三界热点,再次关闭
+local function zaici_queren_sanjie_redian()
+    offset =
+        '9|-2|0x6c310a,20|4|0x6c310a,28|3|0x6c310a,45|2|0x6c310a,11|-269|0x02ae00,73|-258|0x0cb008'
+    return findMultiColorInRegionFuzzy(0xedc161, offset, 90, 486, 149, 661, 440,
+                                       {orient = 2})
+end
+-- 三界热点
+local function sanjie_redian()
+    offset =
+        '12|0|0xffffff,12|11|0xffffff,0|11|0xffffff,-10|4|0xfed72d,24|4|0xffdc2b,6|21|0xfbca36'
+    return findMultiColorInRegionFuzzy(0xffffff, offset, 90, 540, 542, 596, 593,
+                                       {orient = 2})
+end
 -- x9联赛
 local function x9_match()
     offset =
