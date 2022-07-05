@@ -62,6 +62,13 @@ function gameLogo()
                            {orient = 2}, 500, 1)
 end
 
+local function input_account_passwd_page()
+    offset =
+        '-237|-9|0xfb4f4f,124|-103|0xd2d0d0,143|-103|0xd2d0d0,81|75|0xfb4f4f,115|81|0xfb4f4f,152|88|0xfb4f4f'
+    return findColorsUntil(0xfb4f4f, offset, 90, 272, 260, 878, 519,
+                           {orient = 2}, 500, 1)
+end
+
 -- 账号已退出和资源更新提醒
 function loginTip()
     offset =
@@ -86,6 +93,7 @@ function Login.restartGame()
 
     while true do
         if miniRedManLogo() then break end
+        if gameLogo() then break end -- 没有账号打开游戏就是这个logo
         tap(400, 600) -- 跳过动画
         mSleep(1000)
     end
@@ -97,6 +105,7 @@ end
 function Login.waitLoginPage()
     while true do
         if miniRedManLogo() then break end
+        if gameLogo() then break end -- 没有账号打开游戏就是这个logo
         coroutine.yield('启动游戏异常', 'c2')
         mSleep(1000)
     end
@@ -221,23 +230,14 @@ function Login.inputAccountPasswd()
     tap(491, 407)
     mSleep(1000)
 
-    -- local now = getNetTime()
-    -- while true do
-    --     -- 10秒钟都没有出现退出登录
-    --     if getNetTime() - now >= 10 then
-    --         break
-    --     elseif loginTip() then
-    --         -- 关闭退出登录提醒
-    --         tap(568, 377)
-    --         mSleep(1000)
-    --         break
-    --     elseif updateNotice() then
-    --         -- 关闭更新公告
-    --         tap(648, 691)
-    --         mSleep(1000)
-    --     end
-    --     mSleep(1000)
-    -- end
+    if input_account_passwd_page() then -- 账号密码错误
+        wLog(log.name,
+             "[DATE] 账号密码错误,账号: " ..
+                 UISetting.currentAccount.account .. ' 密码: ' ..
+                 UISetting.currentAccount.passwd)
+        taskRecord.taskStr = '' -- 清空任务执行列表,执行下一个账号
+        return -2
+    end
 
     while true do
         mSleep(3000)

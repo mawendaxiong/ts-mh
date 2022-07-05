@@ -246,23 +246,7 @@ end
 local function daemon()
     check_hold()
 
-    if taskRecord.taskName == 'login' then -- 登录时出现异常
-        if updateNotice() then
-            -- 关闭更新公告
-            tap(648, 691)
-            mSleep(1000)
-            return
-        end
 
-        if loginTip() then
-            -- 点击确定
-            tap(568, 377)
-            mSleep(1000)
-            return
-        end
-
-        return
-    end
 
     local flag = appIsRunning("com.netease.my")
     if flag == 0 then -- 程序闪退
@@ -281,6 +265,24 @@ local function daemon()
 
         exception.freq = 20 -- 异常次数清零
         -- 结束辅助协程
+        return
+    end
+
+    if taskRecord.taskName == 'login' then -- 登录时出现异常
+        if updateNotice() then
+            -- 关闭更新公告
+            tap(648, 691)
+            mSleep(1000)
+            return
+        end
+
+        if loginTip() then
+            -- 点击确定
+            tap(568, 377)
+            mSleep(1000)
+            return
+        end
+
         return
     end
 
