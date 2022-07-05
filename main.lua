@@ -272,7 +272,7 @@ local function daemon()
     if taskRecord.taskName == 'login' then -- 登录时出现异常
         if updateNotice() then
             -- 关闭更新公告
-            tap(648, 691)
+            tap(651,588)
             mSleep(1000)
             return
         end

@@ -278,7 +278,6 @@ local function fix_price()
     local initX = 0
     local initY = 0
 
-    keepScreen(true)
     if not tuijianjiage() then -- 如果不是在原价,先调整到原价
 
         if up_tuijianjiage() then
@@ -288,7 +287,6 @@ local function fix_price()
             initX = 865
             initY = 424
         end
-        keepScreen(false)
 
         while true do
             if tuijianjiage() then break end
@@ -748,7 +746,10 @@ function marketSellTable(setting)
     sell_table = {}
     bag_table_use = {}
     for i = 1, #setting, 1 do
-        num = setting[i]
+        local num = setting[i]
+        toast('num: ' .. num, 1)
+        mSleep(1000)
+
         if num == '0' then
             table.insert(sell_table, function()
                 Common.record('出售: 精铁')
@@ -827,7 +828,7 @@ function marketSellTable(setting)
                 return duanzaoce_market()
             end)
             table.insert(bag_table_use, bag_table[tonumber(str_duanaoce)])
-        elseif num == '12' then
+        elseif num == '13' then
             table.insert(sell_table, function()
                 Common.record('出售: 制造书')
                 return zhizaoshu_market()
@@ -894,7 +895,7 @@ function sell2User()
     targetY = 0
     -- 从第一行找到第一个物品
     for i = 1, 10, 1 do
-        lastColor = nil
+        local lastColor = nil
         local color_match = 0
         while initX <= 946 do
             if not baitan_logo() then
@@ -930,19 +931,22 @@ function sell2User()
 
             end
 
-            color = getColor(initX, initY)
+            local color = getColor(initX, initY)
             if color == 0xdfc2a0 then -- 说明没有东西可以上架了
                 toast('没东西上架了')
                 return
             end
 
-            if color == lastColor then
+            if color == lastColor then -- bug: 多个相同物品会跳格
+                toast('match...', 1)
+                mSleep(1000)
                 color_match = color_match + 1
-                if color_match >= 3 then
+                if color_match >= 2 then
                     initX = initX + 80
                     color_match = 0
+                    goto continue
                 end
-            end -- bug: 多个相同物品会跳格
+            end
             tap(initX, initY)
             mSleep(1000)
             if not baitanPage() then -- 说面点击了物品有变化
@@ -967,6 +971,8 @@ function sell2User()
 
                     tap(825, 555) -- 上架
                     mSleep(2000)
+
+                    lastColor = nil
                 end
 
                 if shangjia_success1() then
@@ -980,7 +986,7 @@ function sell2User()
                 initX = initX + 80 -- 指向向下一个物品
             end
 
-            -- lastColor = color
+            lastColor = color
             ::continue::
         end
         if i % 5 == 0 then moveTo(789, 513, 789, 121, 2, 50) end
