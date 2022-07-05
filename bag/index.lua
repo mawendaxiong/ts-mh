@@ -165,7 +165,7 @@ end
 
 ---------------------------以下是商会------------------------------
 -- 制造书(商会)
-function zhizaoshu()
+local function zhizaoshu_market()
     offset =
         '49|0|0xb58d6a,30|72|0x5d422c,30|77|0x5d422d,36|77|0x5c412b,6|75|0x634832,6|83|0x644a34,0|81|0x765e49,0|71|0x765e49'
     return findColorsUntil(0xb58d6a, offset, 90, 151, 140, 982, 546,
@@ -827,6 +827,11 @@ function marketSellTable(setting)
                 return duanzaoce_market()
             end)
             table.insert(bag_table_use, bag_table[tonumber(str_duanaoce)])
+        elseif num == '12' then
+            table.insert(sell_table, function()
+                Common.record('出售: 制造书')
+                return zhizaoshu_market()
+            end)
         end
     end
     return sell_table, bag_table_use
@@ -990,7 +995,7 @@ local function cleanBag()
         local p2 = getColor(686, 265)
         local p3 = getColor(769, 337)
         local p4 = getColor(841, 416)
-        
+
         for i = 1, #UISetting.bag_list, 1 do
             if not bag() then
                 coroutine.yield('整理背包出现异常', 'c2')
