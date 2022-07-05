@@ -92,12 +92,14 @@ function Login.restartGame()
     mSleep(2000)
     runApp("com.netease.my")
 
-    while true do
-        if miniRedManLogo() then break end
-        if gameLogo() then break end -- 没有账号打开游戏就是这个logo
-        tap(400, 600) -- 跳过动画
-        mSleep(1000)
-    end
+    -- while true do
+    --     if miniRedManLogo() or gameLogo() then break end
+    --     -- if gameLogo() then break end -- 没有账号打开游戏就是这个logo
+
+    --     tap(400, 600) -- 跳过动画
+    --     toast('startting....')
+    --     mSleep(1000)
+    -- end
 
     return 0
 end
@@ -105,8 +107,15 @@ end
 -- 等登录页面
 function Login.waitLoginPage()
     while true do
-        if miniRedManLogo() then break end
-        if gameLogo() then break end -- 没有账号打开游戏就是这个logo
+        keepScreen(true)
+        local r1 = miniRedManLogo()
+        local r2 = gameLogo()
+        keepScreen(false)
+
+        if r1 or r2 then break end
+        -- if miniRedManLogo() then break end
+        -- if gameLogo() then break end -- 没有账号打开游戏就是这个logo
+        tap(400, 600) -- 跳过动画
         coroutine.yield('启动游戏异常', 'c2')
         mSleep(1000)
     end

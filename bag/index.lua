@@ -398,7 +398,7 @@ local function baitan_logo()
 end
 
 -- 上架成功的提示
-local function shangjia_success()
+local function shangjia_success1()
     offset =
         '168|59|0xedbf60,125|-148|0xe01500,145|-134|0xe01500,169|-136|0xe01500,194|-136|0xe01500'
     return findColorsUntil(0x82532a, offset, 90, 358, 220, 781, 525,
@@ -895,6 +895,7 @@ function sell2User()
     -- 从第一行找到第一个物品
     for i = 1, 10, 1 do
         lastColor = nil
+        local color_match = 0
         while initX <= 946 do
             if not baitan_logo() then
                 coroutine.yield('摆摊出售页面异常', 'c2')
@@ -935,7 +936,13 @@ function sell2User()
                 return
             end
 
-            -- if color == lastColor then initX = initX + 80 end -- bug: 多个相同物品会跳格
+            if color == lastColor then
+                color_match = color_match + 1
+                if color_match >= 3 then
+                    initX = initX + 80
+                    color_match = 0
+                end
+            end -- bug: 多个相同物品会跳格
             tap(initX, initY)
             mSleep(1000)
             if not baitanPage() then -- 说面点击了物品有变化
@@ -962,7 +969,7 @@ function sell2User()
                     mSleep(2000)
                 end
 
-                if shangjia_success() then
+                if shangjia_success1() then
                     Common.record('关闭上架成功提示')
                     tap(400, 437) -- 7天不提示
                     mSleep(1000)
@@ -1155,5 +1162,7 @@ function bagFunc.clear_bag()
 
     return -2
 end
+
+function bagFunc.crashCallack() return 1 end
 
 return bagFunc

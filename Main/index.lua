@@ -159,9 +159,9 @@ function Main.login()
 
     -- 生成任务列表
     if taskRecord.currentStep == -1 then generateRandomTaskList() end
-    loginPage = require("denglu.ConstPage")
+    local loginPage = require("denglu.ConstPage")
 
-    page = loginPage.index()
+    local page = loginPage.index()
 
     -- 记录当前执行
     taskRecord.currentPage = page

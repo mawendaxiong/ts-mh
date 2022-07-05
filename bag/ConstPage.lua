@@ -9,13 +9,12 @@ bagFunc = require("bag.index")
 page = {}
 
 function page.index()
-    renwuban.new("baotu")
 
     page = {
         ["-1"] = {
             ["now"] = "-1",
             ["name"] = "闪退补偿",
-            ["class"] = bag,
+            ["class"] = bagFunc,
             ["method"] = "crashCallack"
         },
         ["1"] = {
