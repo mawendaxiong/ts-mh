@@ -2,6 +2,7 @@ require("TSLib")
 
 Common = require("Common.index")
 TaskBoard = require("renwuban.index")
+timer = require("Common.timer")
 local container = require("Main.state")
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
@@ -230,12 +231,19 @@ function Login.inputAccountPasswd()
     tap(491, 407)
     mSleep(1000)
 
+    -- 6秒后再看
+    timer.start(6)
+    while true do
+        if timer.check() then break end
+        mSleep(1000)
+    end
+
     if input_account_passwd_page() then -- 账号密码错误
         wLog(log.name,
              "[DATE] 账号密码错误,账号: " ..
                  UISetting.currentAccount.account .. ' 密码: ' ..
                  UISetting.currentAccount.passwd)
-        taskRecord.taskStr = '' -- 清空任务执行列表,执行下一个账号
+        taskRecord.currentTaskIndex = #taskRecord.taskStr + 1 -- 执行下一个账号
         return -2
     end
 

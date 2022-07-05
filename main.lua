@@ -237,7 +237,10 @@ local function check_hold()
             exception.freq = exception.freq - 1
             toast("重启游戏: " .. exception.freq, 1)
             mSleep(1000)
-            if exception.freq <= 0 then closeApp("com.netease.my") end -- 页面卡太久了,关闭游戏
+            if exception.freq <= 0 then -- 页面卡太久了,关闭游戏
+                closeApp("com.netease.my")
+                mSleep(2000)
+            end
         else
             exception.freq = 20
         end
@@ -245,8 +248,6 @@ local function check_hold()
 end
 local function daemon()
     check_hold()
-
-
 
     local flag = appIsRunning("com.netease.my")
     if flag == 0 then -- 程序闪退
@@ -331,8 +332,6 @@ local function daemon()
     end
 
     now = os.date("%H")
-    toast("now: " .. now, 1)
-    mSleep(1000)
     if now == "00" then -- 到零点了
         newDay = os.date("%d")
         if tonumber(newDay) > tonumber(day) and UISetting.restart == '0' then -- 说明垮了一天了
