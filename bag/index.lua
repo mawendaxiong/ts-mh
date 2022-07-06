@@ -747,8 +747,6 @@ function marketSellTable(setting)
     bag_table_use = {}
     for i = 1, #setting, 1 do
         local num = setting[i]
-        toast('num: ' .. num, 1)
-        mSleep(1000)
 
         if num == '0' then
             table.insert(sell_table, function()
@@ -891,8 +889,6 @@ function sell2User()
     local initX = 706
     local initY = 171
 
-    targetX = 0
-    targetY = 0
     -- 从第一行找到第一个物品
     for i = 1, 10, 1 do
         local lastColor = nil
@@ -947,7 +943,7 @@ function sell2User()
                     goto continue
                 end
             end
-            
+
             tap(initX, initY)
             mSleep(1000)
             if not baitanPage() then -- 说面点击了物品有变化

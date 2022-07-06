@@ -353,9 +353,9 @@ end
 -- 九转天阶
 local function jiuzhuan_tianjie()
     offset =
-        '194|-125|0xfef591,28|-125|0xfef591,122|-75|0xdcebfa,24|1|0x6c310a,23|5|0x6c310a,84|-75|0xdbebfa'
-    return findMultiColorInRegionFuzzy(0xedbf60, offset, 90, 354, 363, 694, 531,
-                                       {orient = 2})
+        '-1|-36|0x8c3d0e,-41|-20|0xefdb8c,13|31|0xefdb8c,10|-73|0xefdb8c,154|-218|0xffffff'
+    return findColorsUntil(0x682703, offset, 90, 787, 122, 1016, 472,
+                           {orient = 2}, 500, 1)
 end
 -- 三界热点,再次确认
 local function zaici_queren_sanjie_redian()

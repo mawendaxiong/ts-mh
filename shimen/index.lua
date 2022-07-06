@@ -339,6 +339,14 @@ end
 function Sect.excute()
 
     Common.blockCheckMainPage('师门任务执行前页面异常')
+    while true do -- 执行前先把右下角道具清空,防止出现其他画面
+        if useProp() then
+            tap(1029, 349) -- 关闭右下角道具
+            mSleep(2000)
+        else
+            break
+        end
+    end
 
     while true do
         mSleep(1000)
@@ -408,7 +416,7 @@ function Sect.excute()
             mSleep(1000)
 
             if shopping() then -- 有可能没买到,然后还是在摆摊页面,先关掉
-                tap(979,39) -- 关闭商城
+                tap(979, 39) -- 关闭商城
                 mSleep(1000)
             end
         elseif workshop() then
@@ -421,8 +429,8 @@ function Sect.excute()
             tap(892, 584)
             mSleep(1000)
 
-            if workshop() then-- 有可能没买到,然后还是在工坊页面,先关掉
-                tap(1033,123) -- 关闭工坊
+            if workshop() then -- 有可能没买到,然后还是在工坊页面,先关掉
+                tap(1033, 123) -- 关闭工坊
                 mSleep(1000)
             end
 
@@ -453,7 +461,6 @@ function Sect.excute()
             while useProp() do -- 把门派任务获得的道具使用光
                 -- 点击使用道具
                 tap(967, 511)
-                mSleep(2000)
                 mSleep(1000)
             end
 
