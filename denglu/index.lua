@@ -388,7 +388,7 @@ function Login.closeWindow()
             mSleep(1500)
         end
         if jiuzhuan_tianjie() then -- 九转天阶
-            tap(450, 508)
+            tap(990,146)
             mSleep(1500)
         end
         if sanjie_redian() then -- 三界热点
