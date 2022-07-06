@@ -114,6 +114,13 @@ local function workshop()
                            500, 1)
 end
 
+local function no_money()
+    offset =
+        '-239|-3|0x764a2c,-230|-1|0x764a2c,-233|3|0x764a2c,-209|0|0x764a2c,-216|3|0x764a2c,-188|2|0x764a2c,-173|0|0x764a2c'
+    return findColorsUntil(0xc01500, offset, 90, 513, 186, 799, 229,
+                           {orient = 2}, 500, 1)
+end
+
 -- 移动右侧任务栏并查找师门任务
 local function moveAndFindRightTask()
     return Common.move(function()
@@ -419,6 +426,18 @@ function Sect.excute()
                 tap(979, 39) -- 关闭商城
                 mSleep(1000)
             end
+
+            if no_money() then -- 没钱了
+                tap(762, 211) -- 关闭提示
+                mSleep(1500)
+
+                tap(979, 39) -- 关闭商城
+                mSleep(1000)
+
+                Common.blockCheckMainPage(
+                    '不够钱买摆摊道具做师门提前结束')
+                return -2
+            end
         elseif workshop() then
             Common.record("工坊购买")
 
@@ -434,6 +453,17 @@ function Sect.excute()
                 mSleep(1000)
             end
 
+            if no_money() then -- 没钱了
+                tap(762, 211) -- 关闭提示
+                mSleep(1500)
+
+                tap(1033, 123) -- 关闭工坊
+                mSleep(1500)
+
+                Common.blockCheckMainPage(
+                    '不够钱买工坊做师门提前结束')
+                return -2
+            end
         elseif lingzhuangbei() then -- 领取福利
             while true do
                 if isColor(874, 276, 0xedbf60) then
