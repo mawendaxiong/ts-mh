@@ -947,6 +947,7 @@ function sell2User()
                     goto continue
                 end
             end
+            
             tap(initX, initY)
             mSleep(1000)
             if not baitanPage() then -- 说面点击了物品有变化
@@ -972,7 +973,6 @@ function sell2User()
                     tap(825, 555) -- 上架
                     mSleep(2000)
 
-                    lastColor = nil
                 end
 
                 if shangjia_success1() then
