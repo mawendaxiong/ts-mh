@@ -228,8 +228,8 @@ function Common.userDialog(rate, second, type)
     if type == 1 then
         -- 普通对话框
         local offset2 =
-            '111|0|0xdec698,225|0|0xddc697,247|17|0xe7d89b,-24|17|0xe7d89b,39|0|0xdec698'
-        return findColorsUntil(0xdec698, offset2, 90, 0, 447, 1133, 635,
+            '-239|2|0x222323,-254|13|0xe8dd9c,18|14|0xe8e09b,-224|-6|0xddc697,-170|-6|0xdfc798,-23|-6|0xdec698'
+        return findColorsUntil(0x222323, offset2, 90, 33, 582, 329, 619,
                                {orient = 2}, 500, 1)
 
     else
