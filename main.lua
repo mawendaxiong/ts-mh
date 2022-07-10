@@ -10,7 +10,7 @@ local UISetting = container.UISetting
 local exception = container.exception
 local log = container.log
 local devStatus = container.dev
-
+-- 1
 initSuccess = false
 finish = false
 waitUpdate = false
