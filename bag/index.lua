@@ -577,6 +577,7 @@ bag_table = {
                 doubleClick(nil, x, y)
                 mSleep(1000)
                 unlock_huaxiang()
+                mSleep(1000)
             else
                 break
             end
@@ -1158,6 +1159,10 @@ function bagFunc.clear_bag()
         coroutine.yield('打开背包后页面异常', 'c2')
         mSleep(1000)
     end
+    
+    tap(871,572) -- 先点击一下整理背包
+    mSleep(1000)
+
     cleanBag() -- 清空背包
 
     Common.blockCheckMainPage('清空背包后页面异常')
