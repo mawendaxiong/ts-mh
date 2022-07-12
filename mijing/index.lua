@@ -1,8 +1,8 @@
-require("TSLib")
-
-Common = require("Common.index")
-TaskBoard = require("renwuban.index")
-local container = require("Main.state")
+require('TSLib')
+require('mijing.components')
+Common = require('Common.index')
+TaskBoard = require('renwuban.index')
+local container = require('Main.state')
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
@@ -10,60 +10,11 @@ local unchartedState = container.uncharted
 
 Uncharted = {}
 
--- 新的一周提示
-local function newWeekSection()
-    offset = '47|2|0x6e2b00,93|0|0x6e2b00,209|133|0xfdefe9,205|155|0xf95c7c'
-    return findColorsUntil(0x6e2b00, offset, 90, 675, 94, 990, 412,
-                           {orient = 2}, 500, 1)
-end
-
-local function openButton()
-    offset =
-        "8|0|0x553923,28|1|0x553923,48|1|0xf2d6af,59|6|0x553923,72|5|0x553923,87|-10|0x563a24"
-    return findColorsUntil(0x553923, offset, 90, 813, 82, 1135, 491,
-                           {orient = 2}, 500, 1)
-end
-
--- 右边 [秘境降妖]
-local function task()
-    offset =
-        "21|4|0xffff00,38|15|0xf9f901,57|3|0xffff00,76|8|0xffff00,71|17|0xffff00"
-    return findColorsUntil(0xffff00, offset, 90, 898, 197, 1134, 284,
-                           {orient = 2}, 500, 1)
-end
-
--- 右侧 [地图]按钮
-local function unchartedMap()
-    offset = "0|16|0xeccf7b,25|3|0xf9edba,32|18|0xeacb74,44|16|0xeccf7b"
-    return findColorsUntil(0xfbf3c7, offset, 90, 897, 246, 1132, 329,
-                           {orient = 2}, 500, 1)
-end
-
--- 失败
-local function fail()
-    offset = "22|18|0xc2e0f4,144|41|0xa1c1db,-89|19|0x404040,245|-6|0x9a2833"
-    return findColorsUntil(0xd4e8f7, offset, 90, 307, 111, 805, 291,
-                           {orient = 2}, 500, 1)
-end
-
--- 选择秘境关卡的页面
-local function mijingPage()
-    offset =
-        '-482|34|0xa67f61,-496|-53|0xf2c35b,-441|-29|0xfef4bb,-340|-51|0xf5c157'
-    return findColorsUntil(0xb91f28, offset, 90, 63, 3, 1092, 164, {orient = 2},
-                           500, 1)
-end
-
--- 进入了秘境的页面
-local function mijingInnerPage()
-    offset = '19|-1|0xcb7823,-8|11|0xff2322,17|19|0x822a0d,-648|160|0x7ebb41'
-    return findColorsUntil(0xf6e3d4, offset, 90, 1, 1, 768, 240, {orient = 2},
-                           500, 1)
-end
-
 function Uncharted.findTask()
     while true do
-        if TaskBoard.checkTaskBoard() then break end
+        if TaskBoard.checkTaskBoard() then
+            break
+        end
         coroutine.yield('查找秘境任务异常', 'c2')
         mSleep(1000)
     end
@@ -79,7 +30,9 @@ function Uncharted.findTask()
     end
 
     while true do
-        if Common.userDialog() then break end -- 到达逍遥游
+        if Common.userDialog() then
+            break
+        end -- 到达逍遥游
         coroutine.yield('去逍遥游路上', 'c2')
         mSleep(1000)
     end
@@ -91,7 +44,9 @@ end
 -- 等云乐游
 function Uncharted.waitNPC()
     while true do
-        if Common.userDialog() then break end
+        if Common.userDialog() then
+            break
+        end
         coroutine.yield('等云游乐异常', 'c2')
         mSleep(1000)
     end
@@ -118,7 +73,9 @@ function Uncharted.waitNPC()
     end
 
     while true do
-        if mijingPage() then break end -- [保证页面是秘境选择关卡的页面]
+        if mijingPage() then
+            break
+        end -- [保证页面是秘境选择关卡的页面]
         coroutine.yield('显示秘境关卡页面异常', 'c2')
         mSleep(1000)
     end
@@ -129,19 +86,30 @@ end
 -- 秘境选择关卡
 function Uncharted.getInto()
     while true do
-        if mijingPage() then break end
+        if mijingPage() then
+            break
+        end
         coroutine.yield('秘境选择关卡页面异常', 'c2')
         mSleep(1000)
     end
 
-    Common.move(nil, function() moveTo(410, 146, 913, 146, 50, 1000) end,
-                function()
-        local p1 = getColor(377, 347)
-        local p2 = getColor(586, 483)
-        local p3 = getColor(885, 326)
-        local p4 = getColor(914, 504)
-        return p1, p2, p3, p4
-    end, nil, function() return mijingPage() end)
+    Common.move(
+        nil,
+        function()
+            moveTo(410, 146, 913, 146, 50, 1000)
+        end,
+        function()
+            local p1 = getColor(377, 347)
+            local p2 = getColor(586, 483)
+            local p3 = getColor(885, 326)
+            local p4 = getColor(914, 504)
+            return p1, p2, p3, p4
+        end,
+        nil,
+        function()
+            return mijingPage()
+        end
+    )
 
     -- 点击猛如虎,69秘境
     tap(295, 308)
@@ -152,7 +120,9 @@ function Uncharted.getInto()
     mSleep(1000)
 
     while true do
-        if mijingInnerPage() then break end -- [保证在秘境内部]
+        if mijingInnerPage() then
+            break
+        end -- [保证在秘境内部]
         coroutine.yield('进入秘境内部异常', 'c2')
         mSleep(1000)
     end
@@ -163,7 +133,9 @@ end
 -- 计算次数
 function Uncharted.count()
     while true do
-        if mijingInnerPage() then break end -- 在秘境里面
+        if mijingInnerPage() then
+            break
+        end -- 在秘境里面
         coroutine.yield('秘境被弹窗挡住了', 'c2')
         mSleep(1000)
     end
@@ -177,7 +149,7 @@ function Uncharted.count()
         if Common.checkBattle(200, 1) then -- 正在战斗
             if not isCount then
                 unchartedState.freq = unchartedState.freq + 1
-                Common.record("秘境: " .. unchartedState.freq)
+                Common.record('秘境: ' .. unchartedState.freq)
                 if unchartedState.freq == 15 then
                     -- 结束
                     break
@@ -189,21 +161,23 @@ function Uncharted.count()
         else
             isCount = false
             pauseTime = pauseTime - 1
-            Common.record("倒计时: " .. pauseTime)
+            Common.record('倒计时: ' .. pauseTime)
 
             if isColor(894, 354, 0xf3d6b3, 90) then -- 需要点进入战斗
-                Common.record("点击进入战斗")
+                Common.record('点击进入战斗')
 
                 -- 点击进入战斗
                 tap(894, 354)
                 mSleep(1000)
             elseif fail() then -- 战斗失败
-                Common.record("战斗失败")
+                Common.record('战斗失败')
 
                 break
             elseif pauseTime == 0 then
                 while true do
-                    if mijingInnerPage() then break end -- 秘境里的页面
+                    if mijingInnerPage() then
+                        break
+                    end -- 秘境里的页面
                     coroutine.yield('秘境停住了', 'c2')
                     mSleep(1000)
                 end
@@ -218,7 +192,6 @@ function Uncharted.count()
                 coroutine.yield('秘境出现弹窗', 'c2')
             end
         end
-
     end
 
     while true do
@@ -241,9 +214,9 @@ end
 -- 闪退补偿
 function Uncharted.crashCallack()
     crashNode = taskRecord.crashNode
-    toast("crash num: " .. crashNode["now"], 3)
+    toast('crash num: ' .. crashNode['now'], 3)
     mSleep(3000)
-    crashStep = tonumber(crashNode["now"])
+    crashStep = tonumber(crashNode['now'])
 
     if crashStep <= 4 then
         return 1
@@ -257,9 +230,10 @@ function Uncharted.crashCallack()
         end
     elseif crashStep == 6 then
         while true do
-            if mijingInnerPage() then break end -- 可能在战斗,等到页面是在秘境里面
+            if mijingInnerPage() then
+                break
+            end -- 可能在战斗,等到页面是在秘境里面
             mSleep(500)
-
         end
         tap(555, 555) -- 点击地板防止进入下一关
         mSleep(500)
