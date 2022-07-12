@@ -57,3 +57,32 @@ function updateNotice()
     local offset = '347|-532|0xcd0000,340|-539|0xbf0000,261|-533|0xd58943,-406|-534|0xd68a43'
     return findColorsUntil(0xebb252, offset, 90, 79, 13, 1038, 638, {orient = 2}, 500, 1)
 end
+
+-- 回归挑战
+function huigui_tiaozhan()
+    local offset = '-218|-156|0xaf5309,-216|-145|0xc0641a,-24|-93|0xb58d6a,-48|-119|0xb58d6a,-6|-75|0xb58d6a,-83|-73|0xb58d6a'
+    return findColorsUntil(0xeebd5b, offset, 90, 321, 249, 664, 457, {orient = 2}, 500, 1)
+end
+-- 全新回归挑战
+function quanxin_huigui_tiaozhan()
+    local offset =
+        '-3|21|0xffffff,4|47|0xfffffe,4|48|0xfffffe,9|21|0xffffff,46|43|0xfff1b1,72|40|0xfff1b2,47|88|0xfff1ae,72|95|0xfff1ae'
+    return findColorsUntil(0xffffff, offset, 90, 524, 250, 630, 392, {orient = 2}, 500, 1)
+end
+
+-- 九转天阶
+function jiuzhuan_tianjie()
+    local offset = '-1|-36|0x8c3d0e,-41|-20|0xefdb8c,13|31|0xefdb8c,10|-73|0xefdb8c,154|-218|0xffffff'
+    return findColorsUntil(0x682703, offset, 90, 787, 122, 1016, 472, {orient = 2}, 500, 1)
+end
+-- 三界热点,再次确认
+function zaici_queren_sanjie_redian()
+    local offset = '9|-2|0x6c310a,20|4|0x6c310a,28|3|0x6c310a,45|2|0x6c310a,11|-269|0x02ae00,73|-258|0x0cb008'
+    return findColorsUntil(0xedc161, offset, 90, 486, 149, 661, 440, {orient = 2}, 500, 1)
+end
+
+-- 三界热点
+function sanjie_redian()
+    local offset = '12|0|0xffffff,12|11|0xffffff,0|11|0xffffff,-10|4|0xfed72d,24|4|0xffdc2b,6|21|0xfbca36'
+    return findColorsUntil(0xffffff, offset, 90, 540, 542, 596, 593, {orient = 2}, 500, 1)
+end

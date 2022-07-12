@@ -3,11 +3,11 @@
 ]]
 require("TSLib")
 
-sanjie = require("sanjie.index")
-renwuban = require("renwuban.index")
-Common = require("Common.index")
+local sanjie = require("sanjie.index")
+local renwuban = require("renwuban.index")
+local Common = require("Common.index")
 
-page = {}
+local page = {}
 function page.index()
     renwuban.new("sanjie")
     page = {

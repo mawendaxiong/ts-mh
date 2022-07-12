@@ -2,11 +2,11 @@
 秘境
 ]] require("TSLib")
 
-renwuban = require("renwuban.index")
-mijing = require("mijing.index")
-Common = require("Common.index")
+local renwuban = require("renwuban.index")
+local mijing = require("mijing.index")
+local Common = require("Common.index")
 
-page = {}
+local page = {}
 
 function page.index()
     renwuban.new("mijing")

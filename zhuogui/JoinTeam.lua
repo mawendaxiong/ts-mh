@@ -1,8 +1,8 @@
 require('TSLib')
 require('zhuogui.components')
-Common = require('Common.index')
-TaskBoard = require('renwuban.index')
-timer = require('Common.timer')
+local Common = require('Common.index')
+local TaskBoard = require('renwuban.index')
+local timer = require('Common.timer')
 local container = require('Main.state')
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
@@ -174,7 +174,7 @@ function Ghost.checkGhostNum()
 
     if globalGhost['ghostNum'] < UISetting.g2 then
         Common.commonOpenGroup()
-        ret, tim, x, y = Common.quitTeam()
+        local ret, tim, x, y = Common.quitTeam()
         if ret then
             -- 退出队伍
             tap(x, y)
@@ -217,7 +217,7 @@ function Ghost.findTaskOnTaskBoard()
 end
 
 local function crashAfter()
-    ret = Common.checkMainPage()
+    local ret = Common.checkMainPage()
     if ret then
         Common.commonOpenGroup()
         return 4
@@ -232,10 +232,10 @@ local function crashAfter()
 end
 
 function Ghost.crashCallack()
-    crashNode = taskRecord.crashNode
+    local crashNode = taskRecord.crashNode
     toast('crash num: ' .. crashNode['now'], 3)
     mSleep(3000)
-    crashStep = tonumber(crashNode['now'])
+    local crashStep = tonumber(crashNode['now'])
 
     if crashStep <= 3 then
         return 1

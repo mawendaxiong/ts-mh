@@ -2,15 +2,15 @@
 捉鬼
 ]] require("TSLib")
 
-renwuban = require("renwuban.index")
-Common = require("Common.index")
+local renwuban = require("renwuban.index")
+local Common = require("Common.index")
 -- 带队捉鬼
-daidui = require("zhuogui.LeadTeam")
+local daidui = require("zhuogui.LeadTeam")
 -- 混队捉鬼
-hundui = require("zhuogui.JoinTeam")
+local hundui = require("zhuogui.JoinTeam")
 
 
-page = {}
+local page = {}
 
 function page.joinTeam()
     renwuban.new("zhuogui")

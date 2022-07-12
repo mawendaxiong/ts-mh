@@ -3,11 +3,11 @@
 ]] require("TSLib")
 
 -- TaskBoard = require("TaskBoard.index")
-Common = require("Common.index")
+local Common = require("Common.index")
 
-guaguale = require("guaguale.index")
+local guaguale = require("guaguale.index")
 
-page = {}
+local page = {}
 function page.index()
     page = {
         ["-1"] = {

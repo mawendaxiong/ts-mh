@@ -1,8 +1,8 @@
 require('TSLib')
 require('baotu.components')
-Common = require('Common.index')
-timer = require('Common.timer')
-TaskBoard = require('renwuban.index')
+local Common = require('Common.index')
+local timer = require('Common.timer')
+local TaskBoard = require('renwuban.index')
 local container = require('Main.state')
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
@@ -125,7 +125,7 @@ end
 
 -- 等待打完宝图
 function Treasure.waitBattle()
-    waitingTime = 30
+    local waitingTime = 30
     while true do
         if Common.checkBattle() then -- 正在战斗
             waitingTime = 30
@@ -138,7 +138,7 @@ function Treasure.waitBattle()
                 Common.record('倒计时: ' .. waitingTime)
 
                 if waitingTime <= 20 then -- 有时候打宝图会莫名停住,防止停住了
-                    r, t, x, y = rightTask()
+                    local r, t, x, y = rightTask()
                     if r then
                         tap(x, y)
                     end
@@ -188,7 +188,7 @@ function Treasure.findMap()
         mSleep(1000)
     end
 
-    ret, tim, x, y = treasureMap()
+    local ret, tim, x, y = treasureMap()
     if ret then
         -- 点击宝图
         tap(x, y)
@@ -253,11 +253,11 @@ end
 function Treasure.excute()
     Common.blockCheckMainPage('挖宝页面使用宝图异常')
 
-    waitingTime = 40
+    local waitingTime = 40
     while true do
         if Common.checkMainPage() then -- 在主页
             -- 右下角的使用宝图
-            ret, tim, x, y = useTreasureMap()
+            local ret, tim, x, y = useTreasureMap()
             -- 没有使用宝图
             if not ret then
                 waitingTime = waitingTime - 1
@@ -321,10 +321,10 @@ function Treasure.findTaskOnTaskBoard()
 end
 
 function Treasure.crashCallack()
-    crashNode = taskRecord.crashNode
+    local crashNode = taskRecord.crashNode
     toast('crash num: ' .. crashNode['now'], 3)
     mSleep(3000)
-    crashStep = tonumber(crashNode['now'])
+    local crashStep = tonumber(crashNode['now'])
 
     if crashStep < 6 then
         return 1

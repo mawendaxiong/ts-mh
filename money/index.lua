@@ -1,9 +1,9 @@
 require('TSLib')
 require('money.components')
-Common = require('Common.index')
-TaskBoard = require('renwuban.index')
+local Common = require('Common.index')
+local TaskBoard = require('renwuban.index')
 
-money = {}
+local money = {}
 
 function money.openUserTab()
     Common.blockCheckMainPage('打开任务属性异常')

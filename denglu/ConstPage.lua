@@ -2,11 +2,11 @@
 登录
 ]] require("TSLib")
 
-denglu = require("denglu.index")
+local denglu = require("denglu.index")
 -- TaskBoard = require("TaskBoard.index")
-Common = require("Common.index")
+local Common = require("Common.index")
 
-page = {}
+local page = {}
 
 function page.index()
     page = {

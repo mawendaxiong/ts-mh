@@ -1,9 +1,9 @@
 require('TSLib')
 require('lianxiaohao.components')
-Common = require('Common.index')
+local Common = require('Common.index')
 local timer = require('Common.timer')
-TaskBoard = require('renwuban.index')
-Main = require('Main.index')
+local TaskBoard = require('renwuban.index')
+local Main = require('Main.index')
 local container = require('Main.state')
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
@@ -11,7 +11,7 @@ local UISetting = container.UISetting
 local log = container.log
 local globalGhost = container.globalGhost
 
-lxh = {}
+local lxh = {}
 
 -- 佩戴领取回来的装备
 local function chuanzhuangbei()
@@ -28,11 +28,11 @@ local function chuanzhuangbei()
     tap(883, 577)
     mSleep(2000)
 
-    initX = 612
-    initY = 178
+    local initX = 612
+    local initY = 178
 
-    targetX = 0
-    targetY = 0
+    local targetX = 0
+    local targetY = 0
     -- 从第一行找到第一个装备
     for region = 1, 5 do
         tap(initX, initY)
@@ -40,7 +40,7 @@ local function chuanzhuangbei()
 
         -- 穿戴装备
         r, t, targetX, targetY = zhuangbeiButton()
-        if targetX ~= -1 then
+        if r then
             tap(targetX, targetY)
             break
         end

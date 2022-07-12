@@ -1,12 +1,12 @@
-taskRecord = {}
-UISetting = {}
-mainStatus = {}
-uncharted = {}
-escort = {}
-exception = {}
-globalGhost = {}
-log = {}
-dev = {}
+local taskRecord = {}
+local UISetting = {}
+local mainStatus = {}
+local uncharted = {}
+local escort = {}
+local exception = {}
+local globalGhost = {}
+local log = {}
+local dev = {}
 
 mainStatus.isCrash = -1
 
@@ -39,7 +39,7 @@ UISetting.shanghui_list = {}
 -- 背包整理列表
 UISetting.bag_list = {}
 -- 摆摊价格
-UISetting.price_baitan = {}
+UISetting.price_baitan = -1
 
 -- 秘境次数统计
 uncharted.freq = 0
@@ -63,9 +63,7 @@ globalGhost.ghostNum = 0
 -- 练小号时的检查等级
 globalGhost.checkLevel = nil
 
-now = os.date("%Y-%m-%d %X")
-
-log.name = "mh-debug-" .. now
+log.name = "mh-debug-" .. os.date("%Y-%m-%d %X")
 
 dev.status = 0
 

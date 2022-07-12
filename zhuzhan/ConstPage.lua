@@ -3,11 +3,10 @@
 ]]
 require("TSLib")
 
-zz = require("zhuzhan.index")
--- TaskBoard = require("TaskBoard.index")
-Common = require("Common.index")
+local zz = require("zhuzhan.index")
+local Common = require("Common.index")
 
-page = {}
+local page = {}
 
 function page.index()
     page = {

@@ -3,11 +3,11 @@
 ]]
 require("TSLib")
 
-zb = require("zhuangbei.index")
+local zb = require("zhuangbei.index")
 -- TaskBoard = require("TaskBoard.index")
-Common = require("Common.index")
+local Common = require("Common.index")
 
-page = {}
+local page = {}
 
 function page.index()
     page = {

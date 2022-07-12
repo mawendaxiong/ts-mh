@@ -51,12 +51,19 @@ end
 
 local function doubleClick(resFunc, x, y)
     if resFunc ~= nil then
-        r, t, x, y = resFunc()
+        local r, t, tx, ty = resFunc()
+        if r then
+            tap(tx, ty)
+            mSleep(100)
+            tap(tx, ty)
+            mSleep(1000)
+        end
+    else
+        tap(x, y)
+        mSleep(100)
+        tap(x, y)
+        mSleep(1000)
     end
-    tap(x, y)
-    mSleep(100)
-    tap(x, y)
-    mSleep(1000)
 end
 
 local function store(resFunc)
@@ -105,7 +112,7 @@ local function xiulian(resFunc)
         mSleep(1000)
     end
 
-    r, t, x, y = resFunc()
+    local r, t, x, y = resFunc()
     if r then
         doubleClick(nil, x, y)
         mSleep(1500)
@@ -140,7 +147,7 @@ local function dropSth(resFunc)
         mSleep(1000)
     end
 
-    r, t, x, y = resFunc()
+    local r, t, x, y = resFunc()
     if r then
         tap(x, y) -- 选中物品
         mSleep(1000)
@@ -162,7 +169,7 @@ local function dropSth(resFunc)
     end
 end
 
-function unlock_huaxiang()
+local function unlock_huaxiang()
     while true do
         if guiPage() then
             break
@@ -214,7 +221,7 @@ local str_jieri = '21'
 local str_yuehualu = '22'
 local str_duanaoce = '23'
 
-bag_table = {
+local bag_table = {
     function()
         toast('画像碎片', 1)
         mSleep(1000)
@@ -350,16 +357,16 @@ function find_store()
     end
     tap(394, 93) -- 打开仓库选择页面
 
-    r, t, x, y = first_store()
+    local r, t, x, y = first_store()
     tap(x, y) -- 打开第一个仓库
 
     -- 记录五个格子的颜色,用于识别是不是扫完一遍仓库了
-    p1 = getColor(173, 177)
-    p2 = getColor(254, 260)
-    p3 = getColor(327, 338)
-    p4 = getColor(426, 417)
-    p5 = getColor(495, 511)
-    sameTime = 1
+    local p1 = getColor(173, 177)
+    local p2 = getColor(254, 260)
+    local p3 = getColor(327, 338)
+    local p4 = getColor(426, 417)
+    local p5 = getColor(495, 511)
+    local sameTime = 1
 
     while sameTime <= 3 do
         if empty_store() then
@@ -367,11 +374,11 @@ function find_store()
             return
         end
         tap(271, 588) -- 下一个仓库
-        new_p1 = getColor(173, 177)
-        new_p2 = getColor(254, 260)
-        new_p3 = getColor(327, 338)
-        new_p4 = getColor(426, 417)
-        new_p5 = getColor(495, 511)
+        local new_p1 = getColor(173, 177)
+        local new_p2 = getColor(254, 260)
+        local new_p3 = getColor(327, 338)
+        local new_p4 = getColor(426, 417)
+        local new_p5 = getColor(495, 511)
         if new_p1 == p1 and new_p2 == p2 and new_p3 == p3 and new_p4 == p4 and new_p5 == p5 then
             sameTime = sameTime + 1
         end -- 5个点颜色一直,认为是回到了首页,防止是碰巧,相同3次才结束
@@ -380,8 +387,8 @@ function find_store()
 end
 
 function marketSellTable(setting)
-    sell_table = {}
-    bag_table_use = {}
+    local sell_table = {}
+    local bag_table_use = {}
     for i = 1, #setting, 1 do
         local num = setting[i]
 
@@ -532,7 +539,7 @@ function sell()
                     goto continue
                 end
 
-                r, t, x, y = resFunc()
+                local r, t, x, y = resFunc()
                 if r then
                     tap(x, y)
                     mSleep(1000)
@@ -626,7 +633,7 @@ function sell2User()
             mSleep(1000)
             if not baitanPage() then -- 说面点击了物品有变化
                 -- 普通出售
-                r, t, x, y = simple()
+                local r, t, x, y = simple()
                 if not r then -- 不是普通物品出售
                     initX = initX + 80 -- 指向向下一个物品
 

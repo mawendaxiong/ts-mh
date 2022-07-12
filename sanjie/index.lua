@@ -1,16 +1,16 @@
 require('TSLib')
 require('sanjie.components')
-Common = require('Common.index')
-TaskBoard = require('renwuban.index')
+local Common = require('Common.index')
+local TaskBoard = require('renwuban.index')
 
-sanjie = {}
+local sanjie = {}
 
 -- 检查时间是否到达下午5点
 function sanjie.checkTime()
     -- 获取当前时间
-    nowTime = getNetTime()
+    local nowTime = getNetTime()
     -- 获取当前的小时
-    nowHour = os.date('%H', nowTime)
+    local nowHour = os.date('%H', nowTime)
     -- 还没到11点,结束
     if tonumber(nowHour) < 11 then
         return -2
@@ -28,7 +28,7 @@ function sanjie.findTaskOnTaskBoard()
         coroutine.yield('三界奇缘查找任务异常', 'c2')
         mSleep(1000)
     end
-    ret = TaskBoard.findTask()
+    local ret = TaskBoard.findTask()
 
     -- 没有找到任务,那就是已经打完了
     if ret == -1 then

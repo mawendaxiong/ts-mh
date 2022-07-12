@@ -52,7 +52,7 @@ function Uncharted.waitNPC()
     end
 
     while true do
-        ret, tim, x, y = openButton()
+        local ret, tim, x, y = openButton()
         if ret then
             tap(x, y) -- 点击进入
             mSleep(2000)
@@ -143,8 +143,8 @@ function Uncharted.count()
     tap(1020, 233) -- 点击秘境任务,开始通关
     mSleep(1000)
 
-    pauseTime = 30
-    isCount = false
+    local pauseTime = 30
+    local isCount = false
     while true do
         if Common.checkBattle(200, 1) then -- 正在战斗
             if not isCount then
@@ -213,10 +213,10 @@ end
 
 -- 闪退补偿
 function Uncharted.crashCallack()
-    crashNode = taskRecord.crashNode
+    local crashNode = taskRecord.crashNode
     toast('crash num: ' .. crashNode['now'], 3)
     mSleep(3000)
-    crashStep = tonumber(crashNode['now'])
+    local crashStep = tonumber(crashNode['now'])
 
     if crashStep <= 4 then
         return 1

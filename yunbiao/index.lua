@@ -3,7 +3,7 @@ require('yunbiao.components')
 Common = require('Common.index')
 TaskBoard = require('renwuban.index')
 local container = require('Main.state')
-local escortInfo = container.escort
+local escort = container.escort
 Escort = {}
 
 -- 任务板找任务
@@ -60,7 +60,6 @@ function Escort.excute()
         mSleep(1000)
     end
 
-    local freq = escortInfo.freq -- 统计运镖次数
     while true do
         local ret, tim, x, y = escortButton() -- 运镖按钮
         if ret then
@@ -79,13 +78,13 @@ function Escort.excute()
                 -- 点击确认
                 tap(x, y)
                 mSleep(1000)
-                escortInfo.freq = freq + 1
-                Common.record('运镖: ' .. escortInfo.freq)
+                escort.freq = escort.freq + 1
+                Common.record('运镖: ' .. escort.freq)
             end
-        elseif freq == 3 then -- 运镖三次了
+        elseif escort.freq == 3 then -- 运镖三次了
             Common.blockCheckMainPage('运镖结束时页面异常')
 
-            escortInfo.freq = 0 -- 清零,下一账号从0开始
+            escort.freq = 0 -- 清零,下一账号从0开始
             return -2
         elseif not yunbiaozhong() then -- 运镖中
             coroutine.yield('运镖中可能弹出了弹窗', 'c2')

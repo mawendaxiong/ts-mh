@@ -1,16 +1,16 @@
 require('TSLib')
 require('keju.components')
-Common = require('Common.index')
-TaskBoard = require('renwuban.index')
+local Common = require('Common.index')
+local TaskBoard = require('renwuban.index')
 
-keju = {}
+local keju = {}
 
 -- 检查时间是否到达下午5点
 function keju.checkTime()
     -- 获取当前时间
-    nowTime = getNetTime()
+    local nowTime = getNetTime()
     -- 获取当前的小时
-    nowHour = os.date('%H', nowTime)
+    local nowHour = os.date('%H', nowTime)
     -- 还没到下午5点,结束
     if tonumber(nowHour) < 17 then
         return -2
@@ -29,7 +29,7 @@ function keju.findTaskOnTaskBoard()
         mSleep(1000)
     end
 
-    ret = TaskBoard.findTask()
+    local ret = TaskBoard.findTask()
 
     -- 没有找到任务,那就是已经打完了
     if ret == -1 then

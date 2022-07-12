@@ -2,11 +2,11 @@
 运镖
 ]] require("TSLib")
 
-yunbiao = require("yunbiao.index")
-renwuban = require("renwuban.index")
-Common = require("Common.index")
+local yunbiao = require("yunbiao.index")
+local renwuban = require("renwuban.index")
+local Common = require("Common.index")
 
-page = {}
+local page = {}
 function page.index()
     renwuban.new("yunbiao")
     page = {

@@ -2,10 +2,10 @@
 使用体力
 ]] require("TSLib")
 
-money = require("money.index")
-Common = require("Common.index")
+local money = require("money.index")
+local Common = require("Common.index")
 
-page = {}
+local page = {}
 
 function page.index()
     page = {

@@ -2,7 +2,7 @@ require('TSLib')
 require('zhuzhan.components')
 Common = require('Common.index')
 
-zhuzhan = {}
+local zhuzhan = {}
 
 -- 打开助战
 function zhuzhan.open()
@@ -15,7 +15,7 @@ function zhuzhan.open()
     end
 
     -- 打开助战
-    r, t, x, y = logo()
+    local r, t, x, y = logo()
     if not r then
         Common.record('未开放助战功能')
         return -2
@@ -47,7 +47,7 @@ function zhuzhan.adjust()
     tap(962, 119)
 
     while (true) do
-        r, t, x, y = addLogo()
+        local r, t, x, y = addLogo()
         if r then
             tap(x, y)
             mSleep(2000)

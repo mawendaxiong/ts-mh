@@ -61,7 +61,7 @@ function generateRandomTaskList(dev)
 
             if zeroIndex ~= nil and oneIndex ~= nil then
                 -- 插入运镖
-                table.insert(result, "6")
+                taskOrder = taskOrder .. "6"
             end
             -- 开发模式下不加入刮刮乐
             if not dev then

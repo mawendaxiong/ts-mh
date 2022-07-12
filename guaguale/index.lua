@@ -64,7 +64,7 @@ end
 
 -- 刮奖
 function Lottery.Scratch()
-    start = 332
+    local start = 332
     while true do
         if not guagualePage() then
             coroutine.yield('刮奖页面异常', 'c2')

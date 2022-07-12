@@ -268,12 +268,12 @@ end
 
 -- 全民争霸赛
 local function quanmin_zhengbasai()
-    offset = '66|-12|0xffdd66,132|1|0xffee77,152|8|0xffee88,177|-10|0xffdd66,207|15|0xffff99,209|14|0xffff99'
+    local offset = '66|-12|0xffdd66,132|1|0xffee77,152|8|0xffee88,177|-10|0xffdd66,207|15|0xffff99,209|14|0xffff99'
     return findMultiColorInRegionFuzzy(0xffee77, offset, 90, 475, 319, 756, 375, {orient = 2})
 end
 -- x9联赛
 local function x9_match()
-    offset =
+    local offset =
         '31|28|0xb58d6a,-169|-6|0xb58d6a,-123|28|0xb58d6a,-66|129|0xeaac4e,-46|124|0xffffff,-27|133|0xffffff,-11|132|0xffffff'
     return findMultiColorInRegionFuzzy(0xb58d6a, offset, 90, 434, 374, 698, 558, {orient = 2})
 end

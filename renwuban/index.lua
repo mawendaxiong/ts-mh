@@ -5,7 +5,7 @@ Common = require("Common.index")
 TaskBoard = {}
 
 function TaskBoard.checkTaskBoard()
-    offset =
+    local offset =
         '-711|542|0x0eb00b,-696|544|0xa4712b,-667|549|0xa37029,-603|545|0xa37029,-36|546|0xa37029,-96|548|0xad7e3d'
     return findColorsUntil(0xce0000, offset, 90, 66, 9, 1067, 619, {orient = 2},
                            1000, 2)
@@ -62,7 +62,7 @@ function TaskBoard.new(targetTask) TaskBoard.task = targetTask end
 function TaskBoard.open()
     Common.blockCheckMainPage('打开任务板时被挡住了')
 
-    ret = multiColTap({
+    local ret = multiColTap({
         {36, 115, 0xe5d45b}, {315, 28, 0xd79a50}, {327, 31, 0xdab291},
         {313, 41, 0x91471d}
     })
@@ -110,7 +110,7 @@ function TaskBoard.findTask(step)
 
     resetTaskBoard()
 
-    ret = Common.move(function()
+    local ret = Common.move(function()
         x, y = findMultiColorInRegionFuzzy(taskObject.all.color,
                                            taskObject.all.posandcolors, 90, 291,
                                            81, 1015, 440)

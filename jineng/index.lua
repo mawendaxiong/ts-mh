@@ -1,14 +1,14 @@
 require('TSLib')
 require('jineng.components')
-Common = require('Common.index')
+local Common = require('Common.index')
 
-jineng = {}
+local jineng = {}
 
 -- 打开技能
 function jineng.open()
     Common.blockCheckMainPage('打开技能板时页面异常')
 
-    r, t, x, y = logo()
+    local r, t, x, y = logo()
     -- 展开选项
     if not r then
         tap(1101, 597)
@@ -49,7 +49,7 @@ function jineng.sj()
     mSleep(1500)
 
     -- 随机次数点击一键升级
-    r = math.random(2, 4)
+    local r = math.random(2, 4)
     for var = 1, r do
         tap(881, 569)
         mSleep(1000)

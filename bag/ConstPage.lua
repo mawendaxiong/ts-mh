@@ -2,11 +2,11 @@
 宝图
 ]] require("TSLib")
 
-renwuban = require("renwuban.index")
-Common = require("Common.index")
-bagFunc = require("bag.index")
+local renwuban = require("renwuban.index")
+local Common = require("Common.index")
+local bagFunc = require("bag.index")
 
-page = {}
+local page = {}
 
 function page.index()
 

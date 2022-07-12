@@ -2,11 +2,11 @@
 助战
 ]] require("TSLib")
 
-jn = require("jineng.index")
+local jn = require("jineng.index")
 -- TaskBoard = require("TaskBoard.index")
-Common = require("Common.index")
+local Common = require("Common.index")
 
-page = {}
+local page = {}
 
 function page.index()
     page = {

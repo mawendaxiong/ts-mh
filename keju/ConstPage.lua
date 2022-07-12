@@ -3,11 +3,11 @@
 ]]
 require("TSLib")
 
-keju = require("keju.index")
-renwuban = require("renwuban.index")
-Common = require("Common.index")
+local keju = require("keju.index")
+local renwuban = require("renwuban.index")
+local Common = require("Common.index")
 
-page = {}
+local page = {}
 function page.index()
     renwuban.new("keju")
     page = {

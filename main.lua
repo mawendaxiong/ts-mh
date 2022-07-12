@@ -404,12 +404,12 @@ local function masterMain()
         if nil == after then after = '无' end
         wLog(log.name, "daemon :" .. tips .. " | 后续执行 :" .. after)
 
-        -- 程序出现了异常导致携程出错，但是账号没有执行完的
-        if coroutine.status(c1) == "dead" and UISetting.currentAccountIndex <= #UISetting.accountList then
-            -- 游戏关闭掉，按闪退处理
-            closeApp("com.netease.my")
-            c1 = coroutine.create(execute)
-        end
+        -- -- 程序出现了异常导致携程出错，但是账号没有执行完的
+        -- if coroutine.status(c1) == "dead" and UISetting.currentAccountIndex <= #UISetting.accountList then
+        --     -- 游戏关闭掉，按闪退处理
+        --     closeApp("com.netease.my")
+        --     c1 = coroutine.create(execute)
+        -- end
 
         if ret == 'c2' then
             local c2 = coroutine.create(daemon)
