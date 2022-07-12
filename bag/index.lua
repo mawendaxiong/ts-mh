@@ -1137,7 +1137,7 @@ function bagFunc.close_market()
 
     return 0
 end
-
+    
 function bagFunc.open_bag()
     Common.blockCheckMainPage('打开背包异常')
 
@@ -1159,7 +1159,7 @@ function bagFunc.clear_bag()
         coroutine.yield('打开背包后页面异常', 'c2')
         mSleep(1000)
     end
-    
+
     tap(871,572) -- 先点击一下整理背包
     mSleep(1000)
 
