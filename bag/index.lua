@@ -65,6 +65,41 @@ local function doubleClick(resFunc, x, y)
         mSleep(1000)
     end
 end
+local function find_store()
+    if empty_store() then
+        can_store = true
+        return
+    end
+    tap(394, 93) -- 打开仓库选择页面
+
+    local r, t, x, y = first_store()
+    tap(x, y) -- 打开第一个仓库
+
+    -- 记录五个格子的颜色,用于识别是不是扫完一遍仓库了
+    local p1 = getColor(173, 177)
+    local p2 = getColor(254, 260)
+    local p3 = getColor(327, 338)
+    local p4 = getColor(426, 417)
+    local p5 = getColor(495, 511)
+    local sameTime = 1
+
+    while sameTime <= 3 do
+        if empty_store() then
+            can_store = true
+            return
+        end
+        tap(271, 588) -- 下一个仓库
+        local new_p1 = getColor(173, 177)
+        local new_p2 = getColor(254, 260)
+        local new_p3 = getColor(327, 338)
+        local new_p4 = getColor(426, 417)
+        local new_p5 = getColor(495, 511)
+        if new_p1 == p1 and new_p2 == p2 and new_p3 == p3 and new_p4 == p4 and new_p5 == p5 then
+            sameTime = sameTime + 1
+        end -- 5个点颜色一直,认为是回到了首页,防止是碰巧,相同3次才结束
+    end
+    can_store = false
+end
 
 local function store(resFunc)
     while true do
@@ -350,42 +385,6 @@ local bag_table = {
     end -- 节日道具(丢弃)
 }
 
-function find_store()
-    if empty_store() then
-        can_store = true
-        return
-    end
-    tap(394, 93) -- 打开仓库选择页面
-
-    local r, t, x, y = first_store()
-    tap(x, y) -- 打开第一个仓库
-
-    -- 记录五个格子的颜色,用于识别是不是扫完一遍仓库了
-    local p1 = getColor(173, 177)
-    local p2 = getColor(254, 260)
-    local p3 = getColor(327, 338)
-    local p4 = getColor(426, 417)
-    local p5 = getColor(495, 511)
-    local sameTime = 1
-
-    while sameTime <= 3 do
-        if empty_store() then
-            can_store = true
-            return
-        end
-        tap(271, 588) -- 下一个仓库
-        local new_p1 = getColor(173, 177)
-        local new_p2 = getColor(254, 260)
-        local new_p3 = getColor(327, 338)
-        local new_p4 = getColor(426, 417)
-        local new_p5 = getColor(495, 511)
-        if new_p1 == p1 and new_p2 == p2 and new_p3 == p3 and new_p4 == p4 and new_p5 == p5 then
-            sameTime = sameTime + 1
-        end -- 5个点颜色一直,认为是回到了首页,防止是碰巧,相同3次才结束
-    end
-    can_store = false
-end
-
 function marketSellTable(setting)
     local sell_table = {}
     local bag_table_use = {}
@@ -523,7 +522,7 @@ function marketSellTable(setting)
 end
 
 -- 商会出售
-function sell()
+local function sell()
     if empty() then
         return
     end -- 商会没有可出售的
@@ -571,7 +570,7 @@ function sell()
     end
 end
 
-function sell2User()
+local function sell2User()
     local initX = 706
     local initY = 171
 

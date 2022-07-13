@@ -94,36 +94,36 @@ function no_money()
 end
 
 -- 首页的任务tab
-local function taskTab()
+function taskTab()
     local offset = '16|-1|0xeaf1bc,16|12|0xb47872,-1|28|0x002a7b,23|24|0xad8329'
     return findColorsUntil(0xd2e6ae, offset, 90, 902, 86, 1029, 161, {orient = 2}, 500, 1)
 end
 
 -- 购买宠物
-local function buyPet()
+function buyPet()
     local offset = '-255|16|0x9e5f30,94|-531|0xce0000,-507|19|0x8d5d2c'
     return findColorsUntil(0xebb252, offset, 90, 116, 28, 1029, 617, {orient = 2}, 500, 1)
 end
 
 -- 福利-领装备
-local function lingzhuangbei()
+function lingzhuangbei()
     local offset = '32|-3|0x6c310a,55|-2|0x6c310a,85|6|0x6c310a,74|5|0xe9ab54,-17|5|0xe8a953'
     return findColorsUntil(0x6c310a, offset, 90, 169, 93, 353, 585, {orient = 2}, 500, 1)
 end
 
 -- 检查是不是在选择任务的界面
-local function checkChoosePage()
+function checkChoosePage()
     local offset = '6|6|0xef3d47,48|-362|0xffe7b8,59|-365|0xc5311b,7|-18|0xff5362'
     return findColorsUntil(0xa84407, offset, 90, 876, 81, 1015, 538, {orient = 2}, 500, 1)
 end
 
 -- 推荐师傅
-local function shifutuijian()
+function shifutuijian()
     local offset = '32|-11|0x91c6ff,14|94|0xeeffe5,-14|64|0x301312,-47|95|0xa31d11,-91|83|0x76b93c'
     return findColorsUntil(0x62e2bd, offset, 90, 172, 405, 424, 575, {orient = 2}, 500, 2)
 end
 
-local function shangjiaochongwu()
+function shangjiaochongwu()
     local offset = '-77|425|0xecbe5f,-478|415|0x8d5d2c,-339|417|0x8d5d2c,-258|422|0x8d5d2c,-234|415|0x8d5d2c'
     return findColorsUntil(0xbf1500, offset, 90, 283, 73, 858, 561, {orient = 2}, 500, 2)
 end

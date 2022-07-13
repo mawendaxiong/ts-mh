@@ -26,7 +26,8 @@
         "showUI",
         "strSplit",
         "lua_exit",
-        "fwShowWnd"
+        "fwShowWnd",
+        "init"
     ],
     "touchsprite-extension.accessKey": "kO80qYIHiq1Xh2iXAOg1kTRCEfcfvkunh2sXUiumZdmtcjmvD4XnzHRDxdJXA1dD"
 }

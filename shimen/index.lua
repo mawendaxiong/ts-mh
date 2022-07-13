@@ -12,7 +12,7 @@ Sect = {}
 local function moveAndFindRightTask()
     return Common.move(
         function()
-            ret, tim, x, y = rightTask()
+            local ret, tim, x, y = rightTask()
             if ret then
                 tap(x, y)
                 mSleep(1000)
@@ -88,7 +88,7 @@ function Sect.chooseTask()
     end
     -- 勾上了自动选择
     if autoChoose() then
-        ret, tim, x, y = startTask() -- [去完成]字样的按钮
+        local ret, tim, x, y = startTask() -- [去完成]字样的按钮
         if ret then -- 今天首次领取任务
             tap(x, y)
             mSleep(2000)
@@ -123,7 +123,7 @@ function Sect.chooseTask()
         tap(474, 486) -- 勾上自动选择
         mSleep(500)
         -- 选择第一个任务
-        ret, tim, x, y = unselectTask()
+        local ret, tim, x, y = unselectTask()
         if ret then
             tap(x, y)
             mSleep(1000)
@@ -151,7 +151,7 @@ function Sect.waitMaster()
 
     -- 师傅对话框中的师门任务选项
     while true do
-        ret, tim, x, y = chooseTask()
+        local ret, tim, x, y = chooseTask()
         if ret then
             tap(x, y)
             mSleep(1000)
@@ -176,7 +176,7 @@ function Sect.findRightTask()
 
     -- 先关闭右下角的物品快捷使用,以防挡住任务
     while true do
-        ret, tim, x, y = Common.redCancle2()
+        local ret, tim, x, y = Common.redCancle2()
         if not ret then
             break
         end
@@ -224,7 +224,7 @@ function Sect.excute()
                 Common.record('对话')
                 mSleep(1000)
                 -- 点击第一个选项
-                ret, tim, x, y = dialogSelection()
+                local ret, tim, x, y = dialogSelection()
                 mSleep(1000)
                 if ret then -- 有选项的对话框
                     tap(x, y)
@@ -242,7 +242,7 @@ function Sect.excute()
             elseif taskTab() then -- 点击右边师门任务
                 mSleep(3000)
                 -- 点击师门任务
-                ret, tim, x, y = rightTask()
+                local ret, tim, x, y = rightTask()
                 if ret then
                     Common.record('点击任务')
                     tap(x, y)
@@ -369,10 +369,10 @@ end
 
 -- 闪退补偿
 function Sect.crashCallack()
-    crashNode = taskRecord.crashNode
+    local crashNode = taskRecord.crashNode
     toast('crash num: ' .. crashNode['now'], 3)
     mSleep(3000)
-    crashStep = tonumber(crashNode['now'])
+    local crashStep = tonumber(crashNode['now'])
     if crashStep < 6 then
         return 1
     elseif crashStep == 6 then
