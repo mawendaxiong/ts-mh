@@ -12,15 +12,13 @@ local log = container.log
 local devStatus = container.dev
 -- 1
 local initSuccess = false
-local finish = false
 local waitUpdate = false
--- 等待晚上5点
-local wait5pm = false
 -- 调试模式
 local dev = false
 -- 一个月的第几天,用来判断脚本是不是跨日执行了
 local day = os.date('%d')
 
+local unknow_error = false
 init(1)
 
 -------------------------
@@ -190,17 +188,21 @@ local function daemon()
         mSleep(2000)
         wLog(log.name, '[DATE] 闪退')
 
-        -- 标识闪退,登录不用重新输入密码
-        mainStatus.isCrash = 1
+        c1 = coroutine.create(execute) -- 复位协程,走闪退的逻辑
 
-        -- 复位协程,走闪退的逻辑
-        c1 = coroutine.create(execute)
+        exception.freq = 20 -- 异常次数重置
+        if unknow_error then
+            wLog(log.name, '[DATE] 未知错误，账号: ' .. UISetting.currentAccount.account)
+            -- 执行下一个账号
+            UISetting.currentAccountIndex = UISetting.currentAccountIndex + 1
+            taskRecord.currentTaskIndex = 0
+        else
+            -- 标识闪退,登录不用重新输入密码
+            mainStatus.isCrash = 1
+            taskRecord.crashPage = taskRecord.currentPage
+            taskRecord.crashNode = taskRecord.currentNode
+        end
 
-        taskRecord.crashPage = taskRecord.currentPage
-        taskRecord.crashNode = taskRecord.currentNode
-
-        exception.freq = 20 -- 异常次数清零
-        -- 结束辅助协程
         return
     end
 
@@ -340,12 +342,16 @@ local function masterMain()
         end
         wLog(log.name, 'daemon :' .. tips .. ' | 后续执行 :' .. after)
 
-        -- -- 程序出现了异常导致携程出错，但是账号没有执行完的
-        -- if coroutine.status(c1) == "dead" and UISetting.currentAccountIndex <= #UISetting.accountList then
-        --     -- 游戏关闭掉，按闪退处理
-        --     closeApp("com.netease.my")
-        --     c1 = coroutine.create(execute)
-        -- end
+        -- 程序出现了异常导致携程出错，但是账号没有执行完的
+        if
+            coroutine.status(c1) == 'dead' and UISetting.currentAccountIndex <= #UISetting.accountList and
+                taskRecord.currentTaskIndex < #taskRecord.taskStr
+         then
+            -- 游戏关闭掉，按闪退处理
+            closeApp('com.netease.my')
+            -- 未知错误
+            unknow_error = true
+        end
 
         if ret == 'c2' then
             local c2 = coroutine.create(daemon)
@@ -356,6 +362,8 @@ local function masterMain()
             local wait_update = coroutine.create(wait2Update)
             coroutine.resume(wait_update)
         end
+
+        ::continue::
     end
 end
 
