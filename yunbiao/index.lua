@@ -4,6 +4,7 @@ Common = require('Common.index')
 TaskBoard = require('renwuban.index')
 local container = require('Main.state')
 local escort = container.escort
+local log = container.log
 Escort = {}
 
 -- 任务板找任务
@@ -37,19 +38,6 @@ function Escort.findTaskOnTaskBoard()
     return 0
 end
 
--- 等待郑镖头
-function Escort.waitLeader()
-    if not Common.userDialog(1000, 10) then -- 没出现郑镖头对话框
-        coroutine.yield('郑镖头对话框可能被弹窗挡住了', 'c2')
-        if not Common.userDialog() then
-            return 2
-        end -- 二次确认,还是没有就从打开任务板开始
-    end
-
-    -- 执行下一步
-    return 0
-end
-
 -- 执行运镖
 function Escort.excute()
     while true do
@@ -70,6 +58,7 @@ function Escort.excute()
                 Common.record('活跃不足50,执行下一个任务')
 
                 Common.blockCheckMainPage('运镖结束时页面页面异常')
+                wLog(log.name, '[DATE] 活跃不足50,无法运镖')
                 return -2 -- 活跃不足50,直接结束
             end
 
@@ -80,11 +69,14 @@ function Escort.excute()
                 mSleep(1000)
                 escort.freq = escort.freq + 1
                 Common.record('运镖: ' .. escort.freq)
+                wLog(log.name, '[DATE] 第 ' .. escort.freq .. ' 次运镖')
             end
         elseif escort.freq == 3 then -- 运镖三次了
             Common.blockCheckMainPage('运镖结束时页面异常')
 
             escort.freq = 0 -- 清零,下一账号从0开始
+            wLog(log.name, '[DATE] 3次运镖结束')
+            wLog(log.name, '[DATE] 确认运镖是否清零: ' .. escort.freq)
             return -2
         elseif not yunbiaozhong() then -- 运镖中
             coroutine.yield('运镖中可能弹出了弹窗', 'c2')

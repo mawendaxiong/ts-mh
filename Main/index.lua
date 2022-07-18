@@ -1,7 +1,7 @@
-require("TSLib")
+require('TSLib')
 
-Common = require("Common.index")
-local container = require("Main.state")
+Common = require('Common.index')
+local container = require('Main.state')
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
@@ -10,11 +10,13 @@ local log = container.log
 Main = {}
 
 local function randomTask()
-    local replace = ""
+    local replace = ''
     local task = {2, 3, 4, 5, 6, 7}
     local index = #task
     while true do
-        if index == 0 then break end
+        if index == 0 then
+            break
+        end
         local randomIndex = math.random(1, index)
         local v = task[randomIndex]
         replace = replace .. v
@@ -26,49 +28,49 @@ end
 
 -- 生成随机任务列表
 function generateRandomTaskList(dev)
-    if dev == nil then dev = false end
+    if dev == nil then
+        dev = false
+    end
     local taskOrder = UISetting.taskOrder
 
     -- 练小号只执行登录和练小号功能
     if UISetting.lianxiaohao == 1 then
         if UISetting.lianxiaohaoType == 0 then -- 建号
-            taskOrder = "x"
+            taskOrder = 'x'
         elseif UISetting.lianxiaohaoType == 1 then -- 不建号
-            taskOrder = "y"
+            taskOrder = 'y'
         end
-
     else
-        if taskOrder == "schedule" then -- 每天5点定时执行科举三界
-            taskOrder = "78"
+        if taskOrder == 'schedule' then -- 每天5点定时执行科举三界
+            taskOrder = '78'
         else -- 普通日常任务
-            local zeroIndex = string.find(taskOrder, "a")
-            local oneIndex = string.find(taskOrder, "b")
+            local zeroIndex = string.find(taskOrder, 'a')
+            local oneIndex = string.find(taskOrder, 'b')
 
             -- 包含0和1,以0为准
             if zeroIndex ~= nil and oneIndex ~= nil then
-                taskOrder = string.gsub(taskOrder, "b", "")
+                taskOrder = string.gsub(taskOrder, 'b', '')
             end
 
             if oneIndex ~= nil then
                 local str = randomTask()
-                taskOrder = string.gsub(taskOrder, "b", str)
+                taskOrder = string.gsub(taskOrder, 'b', str)
             end
 
             if zeroIndex ~= nil then
                 local str = randomTask()
-                taskOrder = string.gsub(taskOrder, "a", str)
+                taskOrder = string.gsub(taskOrder, 'a', str)
             end
 
             if zeroIndex ~= nil and oneIndex ~= nil then
                 -- 插入运镖
-                taskOrder = taskOrder .. "6"
+                taskOrder = taskOrder .. '6'
             end
             -- 开发模式下不加入刮刮乐
             if not dev then
                 -- 插入刮刮乐
-                taskOrder = "z" .. taskOrder
+                taskOrder = 'z' .. taskOrder
             end
-
         end
 
         if UISetting.money == 1 then
@@ -81,14 +83,13 @@ end
 
 function excute()
     while taskRecord.nextNode ~= nil do
-        local class = taskRecord.currentNode["class"]
-        local method = taskRecord.currentNode["method"]
-        local step = taskRecord.currentNode["now"]
+        local class = taskRecord.currentNode['class']
+        local method = taskRecord.currentNode['method']
+        local step = taskRecord.currentNode['now']
 
-        Common.record("step: " .. step .. " " .. taskRecord.currentNode["name"])
+        Common.record('step: ' .. step .. ' ' .. taskRecord.currentNode['name'])
         -- 打印日志
-        wLog(log.name,
-             "[DATE] step: " .. step .. " " .. taskRecord.currentNode["name"]);
+        wLog(log.name, '[DATE] step: ' .. step .. ' ' .. taskRecord.currentNode['name'])
 
         mSleep(1000)
         local ret, after = class[method]()
@@ -100,22 +101,18 @@ function excute()
                 afterMsg = afterNode['name']
 
                 taskRecord.currentNode = afterNode
-                taskRecord.nextNode =
-                    taskRecord.currentPage[taskRecord.currentNode["next"]]
+                taskRecord.nextNode = taskRecord.currentPage[taskRecord.currentNode['next']]
             end
-            coroutine.yield(taskRecord.taskName .. "|" .. method, "c2", afterMsg)
-
+            coroutine.yield(taskRecord.taskName .. '|' .. method, 'c2', afterMsg)
         elseif ret == 0 then -- 直接执行next
             taskRecord.currentNode = taskRecord.nextNode
-            taskRecord.nextNode =
-                taskRecord.currentPage[taskRecord.currentNode["next"]]
+            taskRecord.nextNode = taskRecord.currentPage[taskRecord.currentNode['next']]
         elseif ret == -2 then -- 一系类任务执行完毕
-            wLog(log.name, "[DATE] " .. taskRecord.taskName .. ' end!')
+            wLog(log.name, '[DATE] ' .. taskRecord.taskName .. ' end!')
             break
         else -- 执行指定跳转的步骤
-            taskRecord.currentNode = taskRecord.currentPage["" .. ret]
-            taskRecord.nextNode =
-                taskRecord.currentPage[taskRecord.currentNode["next"]]
+            taskRecord.currentNode = taskRecord.currentPage['' .. ret]
+            taskRecord.nextNode = taskRecord.currentPage[taskRecord.currentNode['next']]
         end
     end
 end
@@ -142,7 +139,7 @@ function Main.checkStuck()
             checkTime = checkTime + 1
             if checkTime == 6 then
                 -- 关闭app,触发闪退线程的监测
-                closeApp("com.netease.my")
+                closeApp('com.netease.my')
                 break
             end
             point1 = p1
@@ -158,98 +155,102 @@ function Main.login()
     taskRecord.taskName = 'login'
 
     -- 生成任务列表
-    if taskRecord.currentStep == -1 then generateRandomTaskList() end
-    local loginPage = require("denglu.ConstPage")
+    if taskRecord.currentStep == -1 then
+        generateRandomTaskList()
+    end
+    local loginPage = require('denglu.ConstPage')
 
     local page = loginPage.index()
 
     -- 记录当前执行
     taskRecord.currentPage = page
-    taskRecord.currentNode = page["1"]
-    taskRecord.nextNode = page[taskRecord.currentNode["next"]]
+    taskRecord.currentNode = page['1']
+    taskRecord.nextNode = page[taskRecord.currentNode['next']]
     excute()
 
-    wLog(log.name, "[DATE] 当前执行: 登录");
-
+    wLog(log.name, '[DATE] 当前执行: 登录')
 end
 
 function Main.switchTaskPage(taskNum)
     local page = nil
     local taskName = ''
-    wLog(log.name, "------------分割线------------");
-    wLog(log.name, "------------分割线------------");
-    if taskNum == "1" then -- 师门
-        taskName = "执行: 师门"
-        local sectPage = require("shimen.ConstPage")
+    wLog(log.name, '------------分割线------------')
+    wLog(log.name, '------------分割线------------')
+    if taskNum == '1' then -- 师门
+        taskName = '执行: 师门'
+        local sectPage = require('shimen.ConstPage')
         page = sectPage.index()
-    elseif taskNum == "2" then -- 秘境
-        taskName = "执行: 秘境"
-        local unchartedPage = require("mijing.ConstPage")
+    elseif taskNum == '2' then -- 秘境
+        taskName = '执行: 秘境'
+        local unchartedPage = require('mijing.ConstPage')
         page = unchartedPage.index()
-    elseif taskNum == "3" then -- 宝图
-        taskName = "执行: 宝图"
-        local treasurePage = require("baotu.ConstPage")
+    elseif taskNum == '3' then -- 宝图
+        taskName = '执行: 宝图'
+        local treasurePage = require('baotu.ConstPage')
         page = treasurePage.index()
-    elseif taskNum == "4" then -- 混队捉鬼
-        taskName = "执行: 混队捉鬼"
-        local ghostPage = require("zhuogui.ConstPage")
+    elseif taskNum == '4' then -- 混队捉鬼
+        taskName = '执行: 混队捉鬼'
+        local ghostPage = require('zhuogui.ConstPage')
         page = ghostPage.joinTeam()
-    elseif taskNum == "5" then -- 带队捉鬼
-        taskName = "执行: 带队捉鬼"
-        local ghostPage = require("zhuogui.ConstPage")
+    elseif taskNum == '5' then -- 带队捉鬼
+        taskName = '执行: 带队捉鬼'
+        local ghostPage = require('zhuogui.ConstPage')
         page = ghostPage.leadTeam()
-    elseif taskNum == "6" then -- 运镖
-        taskName = "执行: 运镖"
-        local escortPage = require("yunbiao.ConstPage")
+    elseif taskNum == '6' then -- 运镖
+        taskName = '执行: 运镖'
+        local escortPage = require('yunbiao.ConstPage')
         page = escortPage.index()
-    elseif taskNum == "7" then -- 三界奇缘
-        taskName = "执行: 三界"
-        local sanjiePage = require("sanjie.ConstPage")
+    elseif taskNum == '7' then -- 三界奇缘
+        taskName = '执行: 三界'
+        local sanjiePage = require('sanjie.ConstPage')
         page = sanjiePage.index()
-    elseif taskNum == "8" then -- 科举
-        taskName = "执行: 科举"
-        local kejuPage = require("keju.ConstPage")
+    elseif taskNum == '8' then -- 科举
+        taskName = '执行: 科举'
+        local kejuPage = require('keju.ConstPage')
         page = kejuPage.index()
-    elseif taskNum == "9" then -- 整理背包
-        taskName = "执行: 整理背包"
-        local bag = require("bag.ConstPage")
+    elseif taskNum == '9' then -- 整理背包
+        taskName = '执行: 整理背包'
+        local bag = require('bag.ConstPage')
         page = bag.index()
-    elseif taskNum == "w" then -- 使用活力
-        taskName = "执行: 使用活力"
-        local money = require("money.ConstPage")
+    elseif taskNum == 'w' then -- 使用活力
+        taskName = '执行: 使用活力'
+        local money = require('money.ConstPage')
         page = money.index()
-    elseif taskNum == "x" then -- 建号练小号
-        taskName = "执行: 练小号"
-        local lianxiaohaoPage = require("lianxiaohao.ConstPage")
+    elseif taskNum == 'x' then -- 建号练小号
+        taskName = '执行: 练小号'
+        local lianxiaohaoPage = require('lianxiaohao.ConstPage')
         page = lianxiaohaoPage.index()
-    elseif taskNum == "y" then -- 不建号练小号
-        taskName = "执行: 练小号"
-        local lianxiaohaoPage = require("lianxiaohao.ConstPage")
+    elseif taskNum == 'y' then -- 不建号练小号
+        taskName = '执行: 练小号'
+        local lianxiaohaoPage = require('lianxiaohao.ConstPage')
         page = lianxiaohaoPage.simple()
-    elseif taskNum == "z" then -- 刮刮乐
-        taskName = "执行: 刮刮乐"
-        local lotteryPage = require("guaguale.ConstPage")
+    elseif taskNum == 'z' then -- 刮刮乐
+        taskName = '执行: 刮刮乐'
+        local lotteryPage = require('guaguale.ConstPage')
         page = lotteryPage.index()
     end
     taskRecord.taskName = taskName
     Common.record(taskName)
     -- 打印日志
-    wLog(log.name, "[DATE] 当前" .. taskName);
+    wLog(log.name, '[DATE] 当前' .. taskName)
+    if nil == page then
+        wLog(log.name, '[DATE] page为空, ' .. taskName)
+    end
     return page
 end
 
 function Main.excuteLocal(page, step)
-    local node = page["" .. step]
-    local nextNode = page[node["next"]]
+    local node = page['' .. step]
+    local nextNode = page[node['next']]
 
     while nextNode ~= nil do
-        local class = node["class"]
-        local method = node["method"]
-        step = node["now"]
+        local class = node['class']
+        local method = node['method']
+        step = node['now']
 
-        Common.record("step: " .. step .. " " .. node["name"])
+        Common.record('step: ' .. step .. ' ' .. node['name'])
         -- 打印日志
-        wLog(log.name, "[DATE] step: " .. step .. " " .. node["name"])
+        wLog(log.name, '[DATE] step: ' .. step .. ' ' .. node['name'])
 
         local ret = class[method]()
 
@@ -261,17 +262,17 @@ function Main.excuteLocal(page, step)
                 afterMsg = afterNode['name']
 
                 node = afterNode
-                node = page[node["next"]]
+                node = page[node['next']]
             end
-            coroutine.yield(node["name"] .. "|" .. method, "c2", afterMsg)
+            coroutine.yield(node['name'] .. '|' .. method, 'c2', afterMsg)
         elseif ret == 0 then -- 直接执行next
             node = nextNode
-            nextNode = page[node["next"]]
+            nextNode = page[node['next']]
         elseif ret == -2 then -- 一系类任务执行完毕
             break
         else -- 执行指定跳转的步骤
-            node = page["" .. ret]
-            nextNode = page[node["next"]]
+            node = page['' .. ret]
+            nextNode = page[node['next']]
         end
     end
 end

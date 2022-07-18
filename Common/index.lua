@@ -101,7 +101,7 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction, 
         end
 
         moveFunction()
-        mSleep(1000)
+        mSleep(2000)
 
         keepScreen(true)
         local p1, p2, p3, p4 = pointFunction()

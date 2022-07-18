@@ -72,8 +72,6 @@ local function init()
 
     -- 当前正在执行的任务
     taskRecord.currentTaskIndex = 1
-    -- 当前任务正在执行的步骤
-    taskRecord.currentStep = -1
     taskRecord.taskStr = ''
 
     -- 当前正在执行任务的账号
@@ -104,9 +102,6 @@ local function execute()
         end
 
         if mainStatus.isCrash == 1 then
-            toast('crash!!!', 2)
-            mSleep(2000)
-
             -- 复位
             mainStatus.isCrash = -1
 
@@ -130,12 +125,23 @@ local function execute()
             local taskNum = string.sub(taskRecord.taskStr, taskIndex, taskIndex)
             taskRecord.currentPage = Main.switchTaskPage(taskNum)
 
+            if nil == taskRecord.currentPage then
+                wLog(log.name, '[DATE] 返回page为空')
+            end
+
             if taskRecord.currentStep == -1 then -- 没有记录的任务步骤,就从1开始
+                wLog(log.name, '[DATE] 从头开始')
                 taskRecord.currentNode = taskRecord.currentPage['1']
             else -- 有记录的任务步骤,就从记录的步骤开始
+                wLog(log.name, '[DATE] 指定步骤开始')
                 taskRecord.currentNode = taskRecord.currentPage['' .. taskRecord.currentStep]
                 taskRecord.currentStep = -1
             end
+
+            if nil == taskRecord.currentNode then
+                wLog(log.name, '[DATE] currentNode为空')
+            end
+
             taskRecord.nextNode = taskRecord.currentPage[taskRecord.currentNode['next']]
 
             -- 执行任务
@@ -344,8 +350,8 @@ local function masterMain()
 
         -- 程序出现了异常导致携程出错，但是账号没有执行完的
         if
-            coroutine.status(c1) == 'dead' and UISetting.currentAccountIndex <= #UISetting.accountList and
-                taskRecord.currentTaskIndex < #taskRecord.taskStr
+            coroutine.status(c1) == 'dead' and (UISetting.currentAccountIndex <= #UISetting.accountList or
+                taskRecord.currentTaskIndex < #taskRecord.taskStr)
          then
             -- 游戏关闭掉，按闪退处理
             closeApp('com.netease.my')
@@ -363,7 +369,6 @@ local function masterMain()
             coroutine.resume(wait_update)
         end
 
-        ::continue::
     end
 end
 
