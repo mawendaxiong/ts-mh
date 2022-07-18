@@ -60,6 +60,18 @@ function UI.show()
                 },
                 {
                     ['type'] = 'CheckBoxGroup',
+                    ['id'] = 'fenghao',
+                    ['list'] = '该代码导致封号与脚本无关',
+                    ['countperline'] = '1'
+                },
+                {
+                    ['type'] = 'CheckBoxGroup',
+                    ['id'] = 'xuexi',
+                    ['list'] = '该代码仅供学习代码，法律问题概不负责',
+                    ['countperline'] = '1'
+                },
+                {
+                    ['type'] = 'CheckBoxGroup',
                     ['id'] = 'devMode',
                     ['list'] = '调试模式(不启动游戏|不处理闪退)',
                     ['countperline'] = '1'
@@ -549,6 +561,17 @@ local function bag_analysis(uiValues)
 end
 
 function UI.analysis(uiValues)
+    if uiValues.fenghao ~= '0' then
+        toast('请勾选封号与脚本无关', 3)
+        mSleep(3000)
+        lua_exit() -- 退出
+    end
+    if uiValues.xuexi ~= '0' then
+        toast('请勾选代码仅供学习代码用', 3)
+        mSleep(3000)
+        lua_exit() -- 退出
+    end
+    
     -- 账号信息
     local accountStr = uiValues.mailInfo
 
@@ -600,6 +623,5 @@ function UI.analysis(uiValues)
     end -- 活力用来打工
     bag_analysis(uiValues) -- 解析背包参数
 end
-
 
 return UI

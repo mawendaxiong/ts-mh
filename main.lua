@@ -19,7 +19,6 @@ local dev = false
 local day = os.date('%d')
 
 local unknow_error = false
-init(1)
 
 -------------------------
 -- 梦幻迷城弹出框
@@ -67,7 +66,7 @@ local function shifutuijian()
     return findColorsUntil(0x62e2bd, offset, 90, 172, 405, 424, 575, {orient = 2}, 500, 2)
 end
 
-local function init()
+local function initProp()
     mainStatus.isCrash = -1
 
     -- 当前正在执行的任务
@@ -372,7 +371,8 @@ local function masterMain()
     end
 end
 
-init()
+initProp()
+init(1)
 
 if devStatus.status == 1 then
     dev = true
