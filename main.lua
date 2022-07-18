@@ -82,6 +82,8 @@ local function initProp()
         return
     end
     UI.analysis(uiValues)
+    -- 设置屏幕方向，home键在右边
+    init(1)
 
     fwShowWnd('recordBoard', 0, 394, 155, 456, 0)
     initSuccess = true
@@ -372,7 +374,6 @@ local function masterMain()
 end
 
 initProp()
-init(1)
 
 if devStatus.status == 1 then
     dev = true
