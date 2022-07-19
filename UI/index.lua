@@ -104,7 +104,7 @@ function UI.show()
                 },
                 {
                     ['type'] = 'Label',
-                    ['text'] = '手机账号账号',
+                    ['text'] = '手机账号账号(暂未适配)',
                     ['size'] = 15,
                     ['valign'] = 'bottom'
                 },
