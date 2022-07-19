@@ -82,6 +82,8 @@ local function initProp()
         return
     end
     UI.analysis(uiValues)
+    -- 设置屏幕方向，home键在右边
+    init(1)
 
     fwShowWnd('recordBoard', 0, 394, 155, 456, 0)
     initSuccess = true
@@ -242,8 +244,6 @@ local function daemon()
             -- 关闭掉弹窗
             tap(x, y)
             mSleep(1000)
-            -- 记录当前正在执行的任务
-            taskRecord.currentStep = taskRecord.currentNode['now']
             return
         end
     end
@@ -255,9 +255,6 @@ local function daemon()
         -- 关闭师傅推荐
         tap(901, 135)
         mSleep(1000)
-
-        -- 记录当前正在执行的任务
-        taskRecord.currentStep = taskRecord.currentNode['now']
         return
     end
 
@@ -268,8 +265,6 @@ local function daemon()
         -- 关闭梦幻迷城的弹出框
         tap(x, y)
         mSleep(1000)
-        -- 记录当前正在执行的任务
-        taskRecord.currentStep = taskRecord.currentNode['now']
         return
     end
 
@@ -372,7 +367,6 @@ local function masterMain()
 end
 
 initProp()
-init(1)
 
 if devStatus.status == 1 then
     dev = true
