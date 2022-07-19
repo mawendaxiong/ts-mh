@@ -8,3 +8,12 @@ end
 local r, t, x, y = rightTask()
 toast(x .. ',' .. y)
 -- tap(x,y)
+--[[
+    change master to
+    master_host='192.168.64.7',
+    master_port=3307,
+    master_user='repl',
+    master_password='test',
+    MASTER_LOG_FILE='be081277d8df-bin.000003',
+    MASTER_LOG_POS=4117;
+]]

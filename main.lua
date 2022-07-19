@@ -244,8 +244,6 @@ local function daemon()
             -- 关闭掉弹窗
             tap(x, y)
             mSleep(1000)
-            -- 记录当前正在执行的任务
-            taskRecord.currentStep = taskRecord.currentNode['now']
             return
         end
     end
@@ -257,9 +255,6 @@ local function daemon()
         -- 关闭师傅推荐
         tap(901, 135)
         mSleep(1000)
-
-        -- 记录当前正在执行的任务
-        taskRecord.currentStep = taskRecord.currentNode['now']
         return
     end
 
@@ -270,8 +265,6 @@ local function daemon()
         -- 关闭梦幻迷城的弹出框
         tap(x, y)
         mSleep(1000)
-        -- 记录当前正在执行的任务
-        taskRecord.currentStep = taskRecord.currentNode['now']
         return
     end
 
