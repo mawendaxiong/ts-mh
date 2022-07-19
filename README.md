@@ -12,7 +12,7 @@
 # 查看执行轨迹&bug
 2. log路径为`/var/mobile/Media/T/log`,log名称例如:`mh-debug-2022-05-16 11:33:29`
 # 待修复问题
-1. 偶尔出现`currentNode为nil`的问题(`严重`)
+1. ~~偶尔出现`currentNode为nil`的问题~~(`待验证`)
 2. 晚上12点无法重新执行脚本
 3. 屎山代码整理
 
