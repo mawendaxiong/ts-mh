@@ -85,6 +85,18 @@ function UI.show()
                     ['valign'] = 'bottom'
                 },
                 {
+                    ['type'] = 'Label',
+                    ['text'] = '格式:邮箱-密码-区服-角色数量(角色数量目前仅支持1,一行一个账号,记得回车)',
+                    ['size'] = 10,
+                    ['valign'] = 'bottom'
+                },
+                {
+                    ['type'] = 'Label',
+                    ['text'] = '例子:123@163.com-123-时空之隙-1',
+                    ['size'] = 12,
+                    ['valign'] = 'bottom'
+                },
+                {
                     ['type'] = 'TextArea',
                     ['id'] = 'mailInfo',
                     ['size'] = 12,
