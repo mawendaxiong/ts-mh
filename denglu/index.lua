@@ -273,11 +273,10 @@ function Login.closeWindow()
     mSleep(3000)
 
     while true do
-        local ret, tim, x, y = Common.checkMainPage()
-        if ret then
+        if Common.checkMainPage() then
             return -2
         end
-        
+
         if huigui_tiaozhan() then -- 回归挑战
             tap(992, 48)
         elseif quanxin_huigui_tiaozhan() then -- 全新回归挑战
