@@ -5,6 +5,7 @@ local container = require('Main.state')
 local mainStatus = container.mainStatus
 local taskRecord = container.taskRecord
 local UISetting = container.UISetting
+local log = container.log
 
 Sect = {}
 
@@ -230,6 +231,9 @@ function Sect.excute()
                     tap(x, y)
                     mSleep(1000)
                 else -- 有对话,没有选项
+                    Common.record('识别没有对话框')
+                    wLog(log.name, '[DATE] 师门对话框没有选项')
+
                     tap(500, 400) -- 清除对话
                     mSleep(1000)
                 end
