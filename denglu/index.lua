@@ -277,27 +277,19 @@ function Login.closeWindow()
         if ret then
             return -2
         end
+        
         if huigui_tiaozhan() then -- 回归挑战
             tap(992, 48)
-            mSleep(1500)
-        end
-
-        if quanxin_huigui_tiaozhan() then -- 全新回归挑战
+        elseif quanxin_huigui_tiaozhan() then -- 全新回归挑战
             tap(989, 55)
-            mSleep(1500)
-        end
-        if jiuzhuan_tianjie() then -- 九转天阶
+        elseif jiuzhuan_tianjie() then -- 九转天阶
             tap(990, 146)
-            mSleep(1500)
-        end
-        if sanjie_redian() then -- 三界热点
+        elseif sanjie_redian() then -- 三界热点
             tap(650, 563)
-            mSleep(1500)
-        end
-        if zaici_queren_sanjie_redian() then -- 三界热点
+        elseif zaici_queren_sanjie_redian() then -- 三界热点
             tap(567, 426)
-            mSleep(1500)
         end
+        mSleep(1500)
 
         Common.timeLimitedWindow()
         Common.closeWindow()
