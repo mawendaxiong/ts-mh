@@ -60,7 +60,8 @@ end
 
 -- 回归挑战
 function huigui_tiaozhan()
-    local offset = '-218|-156|0xaf5309,-216|-145|0xc0641a,-24|-93|0xb58d6a,-48|-119|0xb58d6a,-6|-75|0xb58d6a,-83|-73|0xb58d6a'
+    local offset =
+        '-218|-156|0xaf5309,-216|-145|0xc0641a,-24|-93|0xb58d6a,-48|-119|0xb58d6a,-6|-75|0xb58d6a,-83|-73|0xb58d6a'
     return findColorsUntil(0xeebd5b, offset, 90, 321, 249, 664, 457, {orient = 2}, 500, 1)
 end
 -- 全新回归挑战
@@ -83,6 +84,7 @@ end
 
 -- 三界热点
 function sanjie_redian()
-    local offset = '12|0|0xffffff,12|11|0xffffff,0|11|0xffffff,-10|4|0xfed72d,24|4|0xffdc2b,6|21|0xfbca36'
-    return findColorsUntil(0xffffff, offset, 90, 540, 542, 596, 593, {orient = 2}, 500, 1)
+    local offset =
+        '-20|1|0xffd57c,-52|1|0xffd57c,-71|1|0xffd57c,-140|-26|0xffffc9,-100|-27|0xffffcd,-51|-27|0xffffcd,-17|-22|0xffffb6'
+    return findColorsUntil(0xffd67f, offset, 90, 475, 5, 660, 54, {orient = 2}, 500, 1)
 end
