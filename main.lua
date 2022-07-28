@@ -21,6 +21,11 @@ local day = os.date('%d')
 local unknow_error = false
 
 -------------------------
+-- 限时折扣
+function xianshizhekou()
+    local offset = '-237|-27|0xd1321f,-276|-28|0xffcf15,-308|-29|0xffd117,-410|-20|0xfeb914,-307|-33|0xffda24'
+    return findColorsUntil(0xbc824e, offset, 90, 386, 82, 939, 185, {orient = 2}, 500, 1)
+end
 -- 梦幻迷城弹出框
 local function menghuanmicheng()
     local offset = '-143|-4|0xb07a55,-167|3|0xb77f58,-239|0|0xb37247,-287|70|0x02ae00,-240|74|0x02ae00'
@@ -248,6 +253,12 @@ local function daemon()
         end
     end
 
+    if xianshizhekou() then -- 限时折扣
+        tap(914, 154)
+        mSleep(1000)
+        return
+    end
+
     -- 推荐师傅
     local r, t, x, y = shifutuijian()
     if r then
@@ -344,8 +355,9 @@ local function masterMain()
 
         -- 程序出现了异常导致携程出错，但是账号没有执行完的
         if
-            coroutine.status(c1) == 'dead' and (UISetting.currentAccountIndex <= #UISetting.accountList or
-                taskRecord.currentTaskIndex < #taskRecord.taskStr)
+            coroutine.status(c1) == 'dead' and
+                (UISetting.currentAccountIndex <= #UISetting.accountList or
+                    taskRecord.currentTaskIndex < #taskRecord.taskStr)
          then
             -- 游戏关闭掉，按闪退处理
             closeApp('com.netease.my')
@@ -362,7 +374,6 @@ local function masterMain()
             local wait_update = coroutine.create(wait2Update)
             coroutine.resume(wait_update)
         end
-
     end
 end
 
