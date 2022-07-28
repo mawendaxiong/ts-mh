@@ -79,9 +79,7 @@ function page.index()
             ["class"] = bagFunc,
             ["method"] = "clear_bag",
             ["next"] = "1"
-        },
-        ["path"] = "baotu.ConstPage",
-        ["func"] = "index"
+        }
     }
     return page
 end

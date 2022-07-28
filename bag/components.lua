@@ -66,14 +66,14 @@ end
 
 -- 修炼果
 function xiulianguo_bag()
-    local offset = '21|-15|0xcc7700,-3|-23|0xffffee,-11|-3|0xcc7700'
-    return findColorsUntil(0xcc7706, offset, 90, 149, 131, 991, 534, {orient = 2}, 500, 1)
+    local offset = '22|9|0xbb6600,34|-3|0xb58d6a,1|0|0xffffee'
+    return findColorsUntil(0xffffee, offset, 90, 149, 131, 991, 534, {orient = 2}, 500, 1)
 end
 
 -- 聚灵仙饮
 function juling_bag()
-    local offset = '14|-4|0xffff17,28|3|0xff9911,23|-19|0xffffff'
-    return findColorsUntil(0x44aad7, offset, 90, 561, 137, 970, 534, {orient = 2}, 500, 1)
+    local offset = '-19|-4|0xb58d6a,18|-28|0xffffff,29|-28|0xb58d6a'
+    return findColorsUntil(0x66bbdd, offset, 90, 561, 137, 970, 534, {orient = 2}, 500, 1)
 end
 
 -- 鬼谷子
@@ -248,8 +248,8 @@ end
 
 -- 修炼页面 (九转金丹 和 修炼果)
 function xiulianPage()
-    local offset = '29|345|0x553923,32|344|0x553923,30|364|0x553923,39|365|0x553923,41|371|0x553923,37|361|0x553923'
-    return findColorsUntil(0xce0000, offset, 100, 941, 20, 1068, 571, {orient = 2}, 500, 1)
+    local offset = '3|-1|0x553923,-29|-345|0xcd0000,12|20|0x553923'
+    return findColorsUntil(0x553923, offset, 90, 945, 15, 1060, 451, {orient = 2}, 500, 1)
 end
 
 -- 捉鬼碎片页面

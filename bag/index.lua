@@ -178,7 +178,7 @@ local function dropSth(resFunc)
         if bag() then
             break
         end
-        -- coroutine.yield('存放仓库异常', 'c2')
+        coroutine.yield('丢弃物品前异常', 'c2')
         mSleep(1000)
     end
 
@@ -188,18 +188,22 @@ local function dropSth(resFunc)
         mSleep(1000)
 
         r, t, x, y = drop()
-        tap(x, y) -- 丢弃
-        mSleep(1000)
+        if r then
+            tap(x, y) -- 丢弃
+            mSleep(1000)
 
-        tap(665, 373) -- 确认丢弃
-        mSleep(1000)
+            tap(665, 373) -- 确认丢弃
+            mSleep(1000)
+        else
+            tap(1085, 489) -- 清除掉打开物品的窗口
+        end
     end
 
     while true do
         if bag() then
             break
         end
-        coroutine.yield('存放仓库异常', 'c2')
+        coroutine.yield('丢弃物品后异常', 'c2')
         mSleep(1000)
     end
 end
@@ -232,33 +236,145 @@ local function unlock_huaxiang()
         mSleep(1000)
     end
 end
-local str_jingtie = '1'
-local str_guiguzi = '2'
-local str_heibaoshi = '3'
-local str_taiyangshi = '4'
-local str_shelizi = '5'
-local str_yueliangshi = '6'
-local str_hongwenshi = '7'
-local str_shenmishi = '8'
-local str_feicuishi = '9'
-local str_guangmangshi = '10'
-local str_kunlunyu = '11'
-local str_qinglongshi = '12'
-local str_baihushi = '13'
-local str_zhuqueshi = '14'
-local str_xuanwushi = '15'
-local str_jiuzhuan = '16'
-local str_xiulianguo = '17'
-local str_juling = '18'
-local str_xinmobaozhu = '19'
-local str_canjuan = '20'
-local str_jieri = '21'
-local str_yuehualu = '22'
-local str_duanaoce = '23'
+local str_jingtie = 1
+local str_guiguzi = 2
+local str_heibaoshi = 3
+local str_taiyangshi = 4
+local str_shelizi = 5
+local str_yueliangshi = 6
+local str_hongwenshi = 7
+local str_shenmishi = 8
+local str_feicuishi = 9
+local str_guangmangshi = 10
+local str_kunlunyu = 11
+local str_qinglongshi = 12
+local str_baihushi = 13
+local str_zhuqueshi = 14
+local str_xuanwushi = 15
+local str_jiuzhuan = 16
+local str_xiulianguo = 17
+local str_juling = 18
+local str_xinmobaozhu = 19
+local str_canjuan = 20
+local str_jieri = 21
+local str_yuehualu = 22
+local str_duanaoce = 23
 
 local bag_table = {
     function()
-        toast('画像碎片', 1)
+        Common.record('精铁')
+        mSleep(1000)
+        store(jingtie_bag)
+    end, -- 精铁(存储)
+    function()
+        Common.record('鬼谷子')
+        mSleep(1000)
+        store(guiguzi_bag)
+    end, -- 鬼谷子(存储)
+    function()
+        Common.record('黑宝石')
+        mSleep(1000)
+        store(heibaoshi_bag)
+    end, -- 黑宝石(存储)
+    function()
+        Common.record('太阳石')
+        mSleep(1000)
+        store(taiyangshi_bag)
+    end, -- 太阳石(存储)
+    function()
+        Common.record('神秘石')
+        mSleep(1000)
+        store(shenmieshi_bag)
+    end, -- 神秘石(存储)
+    function()
+        Common.record('舍利子')
+        mSleep(1000)
+        store(shelizi_bag)
+    end, -- 舍利子(存储)
+    function()
+        Common.record('翡翠石')
+        mSleep(1000)
+        store(feicuishi_bag)
+    end, -- 翡翠石(存储)
+    function()
+        Common.record('红纹石')
+        mSleep(1000)
+        store(hongwenshi_bag)
+    end, -- 红纹石(存储)
+    function()
+        Common.record('月亮石')
+        mSleep(1000)
+        store(yueliangshi_bag)
+    end, -- 月亮石(存储)
+    function()
+        Common.record('光芒石')
+        mSleep(1000)
+        store(guangmangshi_bag)
+    end, -- 光芒石(存储)
+    function()
+        Common.record('昆仑玉')
+        mSleep(1000)
+        store(kunlunyu_bag)
+    end, -- 昆仑玉(存储)
+    function()
+        Common.record('青龙石')
+        mSleep(1000)
+        store(qinglongshi)
+    end, -- 青龙石(存储)
+    function()
+        Common.record('白虎石')
+        mSleep(1000)
+        store(baihushi)
+    end, -- 白虎石(存储)
+    function()
+        Common.record('玄武石')
+        mSleep(1000)
+        store(xuanwushi)
+    end, -- 玄武石(存储)
+    function()
+        Common.record('朱雀石')
+        mSleep(1000)
+        store(zhuqueshi)
+    end, -- 朱雀石(存储)
+    function()
+        Common.record('九转金丹')
+        mSleep(1000)
+        xiulian(jiuzhuan_bag)
+    end, -- 九转金丹(修炼)
+    function()
+        Common.record('修炼果')
+        mSleep(1000)
+        xiulian(xiulianguo_bag)
+    end, -- 修炼果(修炼)
+    function()
+        Common.record('聚灵仙露')
+        mSleep(1000)
+        doubleClick(juling_bag)
+    end, -- 聚灵仙露(使用)
+    function()
+        Common.record('心魔宝珠')
+        mSleep(1000)
+        doubleClick(xinmobaozhu)
+    end, -- 心魔宝珠(使用)
+    function()
+        Common.record('阵法残卷')
+        mSleep(1000)
+        while true do
+            if canjuan() then
+                dropSth(canjuan)
+            else
+                break
+            end
+            mSleep(1000)
+        end
+    end, -- 阵法残卷(使用)
+    function()
+        Common.record('节日道具')
+        mSleep(1000)
+        dropSth(jieri)
+    end, -- 节日道具(丢弃)
+    function()
+        Common.record('画像碎片')
         mSleep(1000)
         while true do
             local r, t, x, y = guiguaihuaxiang_bag()
@@ -271,124 +387,13 @@ local bag_table = {
                 break
             end
         end
-    end, -- 捉鬼碎片
-    function()
-        toast('精铁', 1)
-        mSleep(1000)
-        store(jingtie_bag)
-    end, -- 精铁(存储)
-    function()
-        toast('鬼谷子', 1)
-        mSleep(1000)
-        store(guiguzi_bag)
-    end, -- 鬼谷子(存储)
-    function()
-        toast('黑宝石', 1)
-        mSleep(1000)
-        store(heibaoshi_bag)
-    end, -- 黑宝石(存储)
-    function()
-        toast('太阳石', 1)
-        mSleep(1000)
-        store(taiyangshi_bag)
-    end, -- 太阳石(存储)
-    function()
-        toast('神秘石', 1)
-        mSleep(1000)
-        store(shenmieshi_bag)
-    end, -- 神秘石(存储)
-    function()
-        toast('舍利子', 1)
-        mSleep(1000)
-        store(shelizi_bag)
-    end, -- 舍利子(存储)
-    function()
-        toast('翡翠石', 1)
-        mSleep(1000)
-        store(feicuishi_bag)
-    end, -- 翡翠石(存储)
-    function()
-        toast('红纹石', 1)
-        mSleep(1000)
-        store(hongwenshi_bag)
-    end, -- 红纹石(存储)
-    function()
-        toast('月亮石', 1)
-        mSleep(1000)
-        store(yueliangshi_bag)
-    end, -- 月亮石(存储)
-    function()
-        toast('光芒石', 1)
-        mSleep(1000)
-        store(guangmangshi_bag)
-    end, -- 光芒石(存储)
-    function()
-        toast('昆仑玉', 1)
-        mSleep(1000)
-        store(kunlunyu_bag)
-    end, -- 昆仑玉(存储)
-    function()
-        toast('青龙石', 1)
-        mSleep(1000)
-        store(qinglongshi)
-    end, -- 青龙石(存储)
-    function()
-        toast('白虎石', 1)
-        mSleep(1000)
-        store(baihushi)
-    end, -- 白虎石(存储)
-    function()
-        toast('玄武石', 1)
-        mSleep(1000)
-        store(xuanwushi)
-    end, -- 玄武石(存储)
-    function()
-        toast('朱雀石', 1)
-        mSleep(1000)
-        store(zhuqueshi)
-    end, -- 朱雀石(存储)
-    function()
-        toast('九转金丹', 1)
-        mSleep(1000)
-        xiulian(jiuzhuan_bag)
-    end, -- 九转金丹(修炼)
-    function()
-        toast('修炼果', 1)
-        mSleep(1000)
-        xiulian(xiulianguo_bag)
-    end, -- 修炼果(修炼)
-    function()
-        toast('聚灵仙露', 1)
-        mSleep(1000)
-        doubleClick(juling_bag)
-    end, -- 聚灵仙露(使用)
-    function()
-        toast('心魔宝珠', 1)
-        mSleep(1000)
-        doubleClick(xinmobaozhu)
-    end, -- 心魔宝珠(使用)
-    function()
-        toast('阵法残卷', 1)
-        mSleep(1000)
-        while true do
-            -- if canjuan() then doubleClick(canjuan) end
-            if canjuan() then
-                dropSth(canjuan)
-            end
-            mSleep(1000)
-        end
-    end, -- 阵法残卷(使用)
-    function()
-        toast('节日道具', 1)
-        mSleep(1000)
-        dropSth(jieri)
-    end -- 节日道具(丢弃)
+    end -- 捉鬼碎片
 }
 
 function marketSellTable(setting)
     local sell_table = {}
-    local bag_table_use = {}
-    for i = 1, #setting, 1 do
+    local bag_table_use = bag_table
+    for i = #setting, 1, -1 do
         local num = setting[i]
 
         if num == '0' then
@@ -399,7 +404,7 @@ function marketSellTable(setting)
                     return jingtie_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_jingtie)])
+            table.remove(bag_table_use, str_jingtie)
         elseif num == '1' then
             table.insert(
                 sell_table,
@@ -408,7 +413,7 @@ function marketSellTable(setting)
                     return guiguzi_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_guiguzi)])
+            table.remove(bag_table_use, str_guiguzi)
         elseif num == '2' then
             table.insert(
                 sell_table,
@@ -417,7 +422,7 @@ function marketSellTable(setting)
                     return heibaoshi_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_heibaoshi)])
+            table.remove(bag_table_use, str_heibaoshi)
         elseif num == '3' then
             table.insert(
                 sell_table,
@@ -426,7 +431,7 @@ function marketSellTable(setting)
                     return taiyangshi_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_taiyangshi)])
+            table.remove(bag_table_use, str_taiyangshi)
         elseif num == '4' then
             table.insert(
                 sell_table,
@@ -435,7 +440,7 @@ function marketSellTable(setting)
                     return shenmishi_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_shenmishi)])
+            table.remove(bag_table_use, str_shenmishi)
         elseif num == '5' then
             table.insert(
                 sell_table,
@@ -444,7 +449,7 @@ function marketSellTable(setting)
                     return shelizi_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_shelizi)])
+            table.remove(bag_table_use, str_shelizi)
         elseif num == '6' then
             table.insert(
                 sell_table,
@@ -453,7 +458,7 @@ function marketSellTable(setting)
                     return feicuishi_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_feicuishi)])
+            table.remove(bag_table_use, str_feicuishi)
         elseif num == '7' then
             table.insert(
                 sell_table,
@@ -462,7 +467,7 @@ function marketSellTable(setting)
                     return hongwenshi_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_hongwenshi)])
+            table.remove(bag_table_use, str_hongwenshi)
         elseif num == '8' then
             table.insert(
                 sell_table,
@@ -471,7 +476,7 @@ function marketSellTable(setting)
                     return yueliangshi_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_yueliangshi)])
+            table.remove(bag_table_use, str_yueliangshi)
         elseif num == '9' then
             table.insert(
                 sell_table,
@@ -480,7 +485,7 @@ function marketSellTable(setting)
                     return guangmangshi_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_guangmangshi)])
+            table.remove(bag_table_use, str_guangmangshi)
         elseif num == '10' then
             table.insert(
                 sell_table,
@@ -489,7 +494,7 @@ function marketSellTable(setting)
                     return kunlunyu_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_kunlunyu)])
+            table.remove(bag_table_use, str_kunlunyu)
         elseif num == '11' then
             table.insert(
                 sell_table,
@@ -498,7 +503,7 @@ function marketSellTable(setting)
                     return yuehualu_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_yuehualu)])
+            table.remove(bag_table_use, str_yuehualu)
         elseif num == '12' then
             table.insert(
                 sell_table,
@@ -507,7 +512,6 @@ function marketSellTable(setting)
                     return duanzaoce_market()
                 end
             )
-            table.insert(bag_table_use, bag_table[tonumber(str_duanaoce)])
         elseif num == '13' then
             table.insert(
                 sell_table,
