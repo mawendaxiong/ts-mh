@@ -9,12 +9,6 @@ local function changanLocation()
     return findColorsUntil(0xb74519, offset, 90, 0, 0, 1135, 639, {orient = 2}, 1000, 5)
 end
 
--- 顶部互动logo
-local function huodongLogo()
-    local offset = '18|6|0xa9622c,153|4|0xac2946,207|-2|0x35d3a8,227|3|0x0a5ea5'
-    return findColorsUntil(0x64120f, offset, 90, 201, 0, 631, 72, {orient = 2}, 500, 1)
-end
-
 -- 红色交叉,例如福利右上角
 local function redCancle(rate, second)
     if rate == nil then
@@ -62,6 +56,12 @@ function Common.checkMainPage(rate, second)
 
     local offset = '-5|9|0x87c24d,2|18|0x5a9a19,-9|22|0xff897d,11|33|0x893807'
     return findColorsUntil(0xa3e17b, offset, 90, 4, 93, 72, 318, {orient = 2}, rate, second)
+end
+
+-- 主页面活动logo
+local function huodong_logo()
+    local offset = '-4|21|0x701209,17|16|0xb46e32,29|21|0xa16d4b,7|17|0xd19a58'
+    return findColorsUntil(0x531219, offset, 90, 252, 0, 385, 69, {orient = 2}, 500, 1)
 end
 
 -- 关闭弹窗
@@ -142,6 +142,10 @@ function Common.b2a(step)
     end
 
     Common.blockCheckMainPage('回长安页面异常')
+
+    if huodong_logo() then
+        return 0
+    end
 
     -- 打开地图
     tap(35, 35)
