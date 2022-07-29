@@ -240,11 +240,11 @@ local str_jingtie = 1
 local str_guiguzi = 2
 local str_heibaoshi = 3
 local str_taiyangshi = 4
-local str_shelizi = 5
-local str_yueliangshi = 6
-local str_hongwenshi = 7
-local str_shenmishi = 8
-local str_feicuishi = 9
+local str_shenmishi = 5
+local str_shelizi = 6
+local str_feicuishi = 7
+local str_hongwenshi = 8
+local str_yueliangshi = 9
 local str_guangmangshi = 10
 local str_kunlunyu = 11
 local str_qinglongshi = 12
@@ -265,97 +265,97 @@ local bag_table = {
         Common.record('精铁')
         mSleep(1000)
         store(jingtie_bag)
-    end, -- 精铁(存储)
+    end, -- 精铁(存储) 1
     function()
         Common.record('鬼谷子')
         mSleep(1000)
         store(guiguzi_bag)
-    end, -- 鬼谷子(存储)
+    end, -- 鬼谷子(存储) 2
     function()
         Common.record('黑宝石')
         mSleep(1000)
         store(heibaoshi_bag)
-    end, -- 黑宝石(存储)
+    end, -- 黑宝石(存储) 3
     function()
         Common.record('太阳石')
         mSleep(1000)
         store(taiyangshi_bag)
-    end, -- 太阳石(存储)
+    end, -- 太阳石(存储) 4
     function()
         Common.record('神秘石')
         mSleep(1000)
         store(shenmieshi_bag)
-    end, -- 神秘石(存储)
+    end, -- 神秘石(存储) 5
     function()
         Common.record('舍利子')
         mSleep(1000)
         store(shelizi_bag)
-    end, -- 舍利子(存储)
+    end, -- 舍利子(存储) 6
     function()
         Common.record('翡翠石')
         mSleep(1000)
         store(feicuishi_bag)
-    end, -- 翡翠石(存储)
+    end, -- 翡翠石(存储) 7
     function()
         Common.record('红纹石')
         mSleep(1000)
         store(hongwenshi_bag)
-    end, -- 红纹石(存储)
+    end, -- 红纹石(存储) 8
     function()
         Common.record('月亮石')
         mSleep(1000)
         store(yueliangshi_bag)
-    end, -- 月亮石(存储)
+    end, -- 月亮石(存储) 9
     function()
         Common.record('光芒石')
         mSleep(1000)
         store(guangmangshi_bag)
-    end, -- 光芒石(存储)
+    end, -- 光芒石(存储) 10
     function()
         Common.record('昆仑玉')
         mSleep(1000)
         store(kunlunyu_bag)
-    end, -- 昆仑玉(存储)
+    end, -- 昆仑玉(存储) 11 
     function()
         Common.record('青龙石')
         mSleep(1000)
         store(qinglongshi)
-    end, -- 青龙石(存储)
+    end, -- 青龙石(存储) 12
     function()
         Common.record('白虎石')
         mSleep(1000)
         store(baihushi)
-    end, -- 白虎石(存储)
+    end, -- 白虎石(存储) 13
     function()
         Common.record('玄武石')
         mSleep(1000)
         store(xuanwushi)
-    end, -- 玄武石(存储)
+    end, -- 玄武石(存储) 14
     function()
         Common.record('朱雀石')
         mSleep(1000)
         store(zhuqueshi)
-    end, -- 朱雀石(存储)
+    end, -- 朱雀石(存储) 15
     function()
         Common.record('九转金丹')
         mSleep(1000)
         xiulian(jiuzhuan_bag)
-    end, -- 九转金丹(修炼)
+    end, -- 九转金丹(修炼) 16
     function()
         Common.record('修炼果')
         mSleep(1000)
         xiulian(xiulianguo_bag)
-    end, -- 修炼果(修炼)
+    end, -- 修炼果(修炼) 17
     function()
         Common.record('聚灵仙露')
         mSleep(1000)
         doubleClick(juling_bag)
-    end, -- 聚灵仙露(使用)
+    end, -- 聚灵仙露(使用) 18
     function()
         Common.record('心魔宝珠')
         mSleep(1000)
         doubleClick(xinmobaozhu)
-    end, -- 心魔宝珠(使用)
+    end, -- 心魔宝珠(使用) 19
     function()
         Common.record('阵法残卷')
         mSleep(1000)
@@ -367,12 +367,12 @@ local bag_table = {
             end
             mSleep(1000)
         end
-    end, -- 阵法残卷(使用)
+    end, -- 阵法残卷(使用) 20
     function()
         Common.record('节日道具')
         mSleep(1000)
         dropSth(jieri)
-    end, -- 节日道具(丢弃)
+    end, -- 节日道具(丢弃) 21
     function()
         Common.record('画像碎片')
         mSleep(1000)
@@ -503,7 +503,7 @@ function marketSellTable(setting)
                     return yuehualu_market()
                 end
             )
-            table.remove(bag_table_use, str_yuehualu)
+            -- table.remove(bag_table_use, str_yuehualu)
         elseif num == '12' then
             table.insert(
                 sell_table,
