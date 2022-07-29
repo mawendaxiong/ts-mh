@@ -17,7 +17,6 @@ end
 
 -- 运镖中的地图
 function yunbiaozhong()
-    local offset =
-        '-7|0|0xfbe8c3,0|7|0xf7ddb9,1|16|0xe39505,-13|-1|0xf3b00b,0|-13|0xfac125,13|0|0xf0ac0a,-6|13|0xf5b909'
-    return findColorsUntil(0xf1c868, offset, 90, 103, 17, 1044, 618, {orient = 2}, 500, 2)
+    local offset = '69|0|0xffffff,79|-2|0xffffff,96|-6|0xffffff,99|-2|0xffffff,121|-9|0xffffff,-39|-8|0x814222'
+    return findColorsUntil(0xffffff, offset, 90, 91, 1, 313, 27, {orient = 2}, 500, 1)
 end
