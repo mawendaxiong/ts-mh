@@ -89,7 +89,7 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction, 
     local result = nil
 
     while true do
-        if breakFunction ~= nil then
+        if breakFunction ~= nil then -- 不滑动先找一下
             if breakFunction() then
                 result = 0
                 break
@@ -100,12 +100,14 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction, 
             coroutine.yield('Common.move 移动中出现异常', 'c2')
         end
 
-        moveFunction()
+        if resetFunction ~= nil then -- 第一次找不到先重置
+            resetFunction()
+        end
+
+        moveFunction() -- 移动
         mSleep(2000)
 
-        keepScreen(true)
-        local p1, p2, p3, p4 = pointFunction()
-        keepScreen(false)
+        local p1, p2, p3, p4 = pointFunction() -- 记录点位
 
         -- 拉到底了
         if (p1 == point1 and p2 == point2 and p3 == point3 and p4 == point4) then
