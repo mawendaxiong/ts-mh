@@ -83,6 +83,7 @@ local function find_store()
     local p5 = getColor(495, 511)
     local sameTime = 1
 
+    Common.record('寻找有位置的仓库...')
     while sameTime <= 3 do
         if empty_store() then
             can_store = true
@@ -96,7 +97,7 @@ local function find_store()
         local new_p5 = getColor(495, 511)
         if new_p1 == p1 and new_p2 == p2 and new_p3 == p3 and new_p4 == p4 and new_p5 == p5 then
             sameTime = sameTime + 1
-        end -- 5个点颜色一直,认为是回到了首页,防止是碰巧,相同3次才结束
+        end -- 5个点颜色一致,认为是回到了首页,防止是碰巧,相同3次才结束
     end
     can_store = false
 end
@@ -121,7 +122,11 @@ local function store(resFunc)
             mSleep(1500)
             find_store()
 
-            doubleClick(nil, x, y)
+            if can_store then
+                doubleClick(nil, x, y)
+            end
+
+            
             tap(1021, 171) -- 回到背包,继续下个物品
             mSleep(1000)
         else
