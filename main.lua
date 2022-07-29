@@ -101,7 +101,7 @@ local function execute()
 
         UISetting.currentAccount = UISetting.accountList[accountIndex]
         wLog(log.name, '[DATE] 开始执行账号账号: ' .. UISetting.currentAccount.account)
-        
+
         if not dev then
             Main.login()
         else
@@ -184,6 +184,7 @@ local function check_hold()
             toast('重启游戏: ' .. exception.freq, 1)
             mSleep(1000)
             if exception.freq <= 0 then -- 页面卡太久了,关闭游戏
+                wLog(log.name, '[DATE] 页面卡住,重新打开游戏')
                 closeApp('com.netease.my')
                 mSleep(2000)
             end
@@ -352,7 +353,7 @@ local function masterMain()
         if nil == after then
             after = '无'
         end
-        wLog(log.name, 'daemon :' .. tips .. ' | 后续执行 :' .. after)
+        wLog(log.name, '[DATE] daemon :' .. tips .. ' | 后续执行 :' .. after)
 
         -- 程序出现了异常导致携程出错，但是账号没有执行完的
         if
