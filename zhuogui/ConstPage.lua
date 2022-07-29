@@ -24,7 +24,7 @@ function page.joinTeam()
         },
         ["1"] = {
             ["now"] = "1",
-            ["name"] = "回长安",
+            ["name"] = "检查页面",
             ["class"] = Common,
             ["method"] = "b2a",
             ["next"] = "2"
@@ -81,7 +81,7 @@ function page.leadTeam()
         },
         ["1"] = {
             ["now"] = "1",
-            ["name"] = "回长安",
+            ["name"] = "检查页面",
             ["class"] = Common,
             ["method"] = "b2a",
             ["next"] = "2"

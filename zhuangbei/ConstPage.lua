@@ -12,7 +12,7 @@ local page = {}
 function page.index()
     page = {
         ["-1"] = {["now"] = "-1", ["name"] = "闪退补偿", ["class"] = zb, ["method"] = "crashCallack"},
-        ["1"] = {["now"] = "1", ["name"] = "回长安", ["class"] = Common, ["method"] = "b2a", ["next"] = "2"},
+        ["1"] = {["now"] = "1", ["name"] = "检查页面", ["class"] = Common, ["method"] = "b2a", ["next"] = "2"},
         ["2"] = {
             ["now"] = "2",
             ["name"] = "打开背包",

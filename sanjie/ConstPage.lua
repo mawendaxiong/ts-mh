@@ -13,7 +13,7 @@ function page.index()
     page = {
         ["-1"] = {["now"] = "-1", ["name"] = "闪退补偿", ["class"] = sanjie, ["method"] = "crashCallack"},
         ["1"] = {["now"] = "1", ["name"] = "检查时间", ["class"] = sanjie, ["method"] = "checkTime", ["next"] = "2"},
-        ["2"] = {["now"] = "2", ["name"] = "回长安", ["class"] = Common, ["method"] = "b2a", ["next"] = "3"},
+        ["2"] = {["now"] = "2", ["name"] = "检查页面", ["class"] = Common, ["method"] = "b2a", ["next"] = "3"},
         ["3"] = {["now"] = "3", ["name"] = "打开活动面板", ["class"] = renwuban, ["method"] = "open", ["next"] = "4"},
         ["4"] = {
             ["now"] = "4",
