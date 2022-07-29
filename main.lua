@@ -100,7 +100,8 @@ local function execute()
         UISetting.currentAccountIndex = accountIndex
 
         UISetting.currentAccount = UISetting.accountList[accountIndex]
-
+        wLog(log.name, '[DATE] 开始执行账号账号: ' .. UISetting.currentAccount.account)
+        
         if not dev then
             Main.login()
         else
