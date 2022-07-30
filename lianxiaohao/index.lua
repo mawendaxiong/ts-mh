@@ -513,6 +513,25 @@ local methodContainer = {
         end
     },
     {
+        -- 战斗失败可能会跳出助战页面
+        ['func'] = function()
+            return '助战页面', zhuzhanPage()
+        end,
+        ['after'] = function()
+            while true do
+                if zhuzhanPage() then
+                    break
+                end
+                coroutine.yield('助战页面异常', 'c2')
+                mSleep(1000)
+            end
+
+            wLog(log.name, '[DATE] 调整助战...')
+            local zhuzhanPage = require('zhuzhan.ConstPage')
+            Main.excuteLocal(zhuzhanPage.index(), 3)
+        end
+    },
+    {
         -- 跳过对话
         ['func'] = function()
             return '跳过对话', Common.userDialog(nil, nil, 2)
@@ -659,7 +678,7 @@ local methodContainer = {
         end,
         ['remove'] = 0
     },
-    {
+    --[[ {
         -- 战斗失败可能会跳出助战页面
         ['func'] = function()
             return '助战页面', zhuzhanPage()
@@ -677,7 +696,7 @@ local methodContainer = {
             local zhuzhanPage = require('zhuzhan.ConstPage')
             Main.excuteLocal(zhuzhanPage.index(), 3)
         end
-    },
+    }, ]]
     {
         -- 宠物引导
         ['func'] = function()
