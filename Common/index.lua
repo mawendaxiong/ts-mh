@@ -87,6 +87,7 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction, 
 
     local retryTime = 1
     local result = nil
+    local firstReset = false
 
     while true do
         if breakFunction ~= nil then -- 不滑动先找一下
@@ -100,9 +101,13 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction, 
             coroutine.yield('Common.move 移动中出现异常', 'c2')
         end
 
-        if resetFunction ~= nil then -- 第一次找不到先重置
-            resetFunction()
+        if !firstReset then -- 第一次找不到先重置
+            if resetFunction ~= nil then 
+                resetFunction()
+            end
+            firstReset= true
         end
+        
 
         moveFunction() -- 移动
         mSleep(2000)
