@@ -50,9 +50,12 @@ local function fix_price()
 end
 
 local function doubleClick(resFunc, x, y)
+    local isOperate = 0
     if resFunc ~= nil then
         local r, t, tx, ty = resFunc()
         if r then
+            isOperate = 1
+
             tap(tx, ty)
             mSleep(100)
             tap(tx, ty)
@@ -64,7 +67,9 @@ local function doubleClick(resFunc, x, y)
         tap(x, y)
         mSleep(1000)
     end
+    return isOperate
 end
+
 local function find_store()
     if empty_store() then
         can_store = true
@@ -115,9 +120,12 @@ local function store(resFunc)
         return
     end -- 因为是扫描全仓库,如果有一个确定了无法存储,其他的也无需存储了,节省时间
 
+    local isOperate = 0
     while true do
         local r, t, x, y = resFunc()
         if r then
+            isOperate = 1
+
             tap(1037, 284) -- 打开仓库
             mSleep(1500)
             find_store()
@@ -126,7 +134,6 @@ local function store(resFunc)
                 doubleClick(nil, x, y)
             end
 
-            
             tap(1021, 171) -- 回到背包,继续下个物品
             mSleep(1000)
         else
@@ -141,6 +148,7 @@ local function store(resFunc)
         coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
+    return isOperate
 end
 
 local function xiulian(resFunc)
@@ -152,8 +160,11 @@ local function xiulian(resFunc)
         mSleep(1000)
     end
 
+    local isOperate = 0
     local r, t, x, y = resFunc()
     if r then
+        isOperate = 1
+
         doubleClick(nil, x, y)
         mSleep(1500)
         while true do
@@ -176,6 +187,8 @@ local function xiulian(resFunc)
         coroutine.yield('存放仓库异常', 'c2')
         mSleep(1000)
     end
+
+    return isOperate
 end
 
 local function dropSth(resFunc)
@@ -187,8 +200,10 @@ local function dropSth(resFunc)
         mSleep(1000)
     end
 
+    local isOperate = 0
     local r, t, x, y = resFunc()
     if r then
+        isOperate = 1
         tap(x, y) -- 选中物品
         mSleep(1000)
 
@@ -211,6 +226,8 @@ local function dropSth(resFunc)
         coroutine.yield('丢弃物品后异常', 'c2')
         mSleep(1000)
     end
+
+    return isOperate
 end
 
 local function unlock_huaxiang()
@@ -320,58 +337,60 @@ local bag_table = {
         Common.record('昆仑玉')
         mSleep(1000)
         store(kunlunyu_bag)
-    end, -- 昆仑玉(存储) 11 
+    end, -- 昆仑玉(存储) 11
     function()
         Common.record('青龙石')
         mSleep(1000)
-        store(qinglongshi)
+        return store(qinglongshi)
     end, -- 青龙石(存储) 12
     function()
         Common.record('白虎石')
         mSleep(1000)
-        store(baihushi)
+        return store(baihushi)
     end, -- 白虎石(存储) 13
     function()
         Common.record('玄武石')
         mSleep(1000)
-        store(xuanwushi)
+        return store(xuanwushi)
     end, -- 玄武石(存储) 14
     function()
         Common.record('朱雀石')
         mSleep(1000)
-        store(zhuqueshi)
+        return store(zhuqueshi)
     end, -- 朱雀石(存储) 15
     function()
         Common.record('九转金丹')
         mSleep(1000)
-        xiulian(jiuzhuan_bag)
+        return xiulian(jiuzhuan_bag)
     end, -- 九转金丹(修炼) 16
     function()
         Common.record('修炼果')
         mSleep(1000)
-        xiulian(xiulianguo_bag)
+        return xiulian(xiulianguo_bag)
     end, -- 修炼果(修炼) 17
     function()
         Common.record('聚灵仙露')
         mSleep(1000)
-        doubleClick(juling_bag)
+        return doubleClick(juling_bag)
     end, -- 聚灵仙露(使用) 18
     function()
         Common.record('心魔宝珠')
         mSleep(1000)
-        doubleClick(xinmobaozhu)
+        return doubleClick(xinmobaozhu)
     end, -- 心魔宝珠(使用) 19
     function()
         Common.record('阵法残卷')
         mSleep(1000)
+        local ret = 0
         while true do
             if canjuan() then
-                dropSth(canjuan)
+                ret = dropSth(canjuan)
             else
                 break
             end
             mSleep(1000)
         end
+        return ret
     end, -- 阵法残卷(使用) 20
     function()
         Common.record('节日道具')
@@ -501,6 +520,7 @@ function marketSellTable(setting)
             )
             table.remove(bag_table_use, str_kunlunyu)
         elseif num == '11' then
+            -- table.remove(bag_table_use, str_yuehualu)
             table.insert(
                 sell_table,
                 function()
@@ -508,7 +528,6 @@ function marketSellTable(setting)
                     return yuehualu_market()
                 end
             )
-            -- table.remove(bag_table_use, str_yuehualu)
         elseif num == '12' then
             table.insert(
                 sell_table,
@@ -698,6 +717,7 @@ local function cleanBag()
         local p3 = getColor(769, 337)
         local p4 = getColor(841, 416)
 
+        local removeTable = {} -- 记录清理过的物品
         for i = 1, #UISetting.bag_list, 1 do
             if not bag() then
                 coroutine.yield('整理背包出现异常', 'c2')
@@ -705,7 +725,16 @@ local function cleanBag()
                 goto continue
             end
 
-            UISetting.bag_list[i]()
+            local ret = UISetting.bag_list[i]()
+            if ret == 1 then
+                table.insert(removeTable, i)
+            end
+        end
+
+        if #removeTable > 0 then -- 清理掉已经整理过的物品函数
+            for i = #removeTable, 1, -1 do
+                table.remove(UISetting.bag_list,removeTable[i])
+            end
         end
 
         if (p1 == point1 and p2 == point2 and p3 == point3 and p4 == point4) then -- 拉到底
