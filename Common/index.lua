@@ -101,7 +101,7 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction, 
             coroutine.yield('Common.move 移动中出现异常', 'c2')
         end
 
-        if !firstReset then -- 第一次找不到先重置
+        if not firstReset then -- 第一次找不到先重置
             if resetFunction ~= nil then 
                 resetFunction()
             end
