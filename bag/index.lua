@@ -715,7 +715,7 @@ local function cleanBag()
         point2 = p2
         point3 = p3
         point4 = p4
-        moveTo(729, 358, 729, 217, 2, 50)
+        moveTo(729, 499, 729, 153, 2, 50)
         ::continue::
     end
 
