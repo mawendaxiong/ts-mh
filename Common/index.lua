@@ -318,6 +318,7 @@ end
 -- 阻塞检查主页面,因为很多地方用,所以包装起来复用
 function Common.blockCheckMainPage(tip)
     Common.blockCheck(Common.checkMainPage, tip)
+    mSleep(500)
 end
 
 -- 阻塞检查页面

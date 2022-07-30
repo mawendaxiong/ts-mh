@@ -757,7 +757,8 @@ function bagFunc.openMall()
     Common.blockCheckMainPage('打开商城异常')
 
     tap(34, 195) -- 打开商城
-
+    mSleep(1000)
+    
     while true do
         if baitanPage() then
             break

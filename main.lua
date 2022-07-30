@@ -363,6 +363,7 @@ local function masterMain()
             after = '无'
         end
         wLog(log.name, '[DATE] daemon :' .. tips .. ' | 后续执行 :' .. after)
+        toast(tips,1)
 
         -- 程序出现了异常导致携程出错，但是账号没有执行完的
         if
