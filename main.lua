@@ -242,6 +242,8 @@ local function daemon()
     local x, y = commonTip()
 
     if x ~= -1 then -- 弹出 确认 取消 的对话框
+        wLog(log.name, '[DATE] 弹出 确认取消对话框')
+
         local x1, y1 = mijingTip() -- 秘境
         local x2, y2 = yunbiaoTip() -- 运镖
 
@@ -256,14 +258,17 @@ local function daemon()
     end
 
     if xianshizhekou() then -- 限时折扣
+        wLog(log.name, '[DATE] 弹出 限时折扣')
+
         tap(914, 154)
         mSleep(1000)
         return
     end
 
-    -- 推荐师傅
-    local r, t, x, y = shifutuijian()
-    if r then
+    
+    if shifutuijian() then -- 推荐师傅
+        wLog(log.name, '[DATE] 弹出 推荐师傅')
+
         Common.record('关闭师傅推荐')
         -- 关闭师傅推荐
         tap(901, 135)
@@ -274,6 +279,8 @@ local function daemon()
     -- 检测梦幻迷城弹窗
     x, y = menghuanmicheng()
     if x ~= -1 then
+        wLog(log.name, '[DATE] 弹出 梦幻迷城')
+
         Common.record('关闭迷城')
         -- 关闭梦幻迷城的弹出框
         tap(x, y)
@@ -295,6 +302,8 @@ local function daemon()
     -- 游戏关服更新
     local r, t, x, y = serverShutDown()
     if r then
+        wLog(log.name, '[DATE] 弹出 游戏要更新了')
+
         -- 确定
         tap(x, y)
         -- 表示等待更新
