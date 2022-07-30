@@ -78,6 +78,8 @@ function Escort.excute()
             wLog(log.name, '[DATE] 3次运镖结束')
             wLog(log.name, '[DATE] 确认运镖是否清零: ' .. escort.freq)
             return -2
+        elseif not Common.userDialog() and Common.checkMainPage() then
+            return -2
         elseif not yunbiaozhong() then -- 运镖中
             coroutine.yield('运镖中可能弹出了弹窗', 'c2')
             -- 没有运镖且不在主页
