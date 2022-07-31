@@ -63,7 +63,7 @@ function Treasure.findTask()
         mSleep(1000)
     end
 
-    local ret, tim, x, y = rightTask()
+    local ret, tim, x, y = baotu_rightTask()
     -- 找到任务
     if ret then
         tap(x, y)
@@ -79,7 +79,7 @@ function Treasure.findTask()
     ret =
         Common.move(
         function()
-            ret, tim, x, y = rightTask()
+            ret, tim, x, y = baotu_rightTask()
             if ret then
                 tap(x, y)
                 mSleep(1000)
@@ -138,7 +138,7 @@ function Treasure.waitBattle()
                 Common.record('倒计时: ' .. waitingTime)
 
                 if waitingTime <= 20 then -- 有时候打宝图会莫名停住,防止停住了
-                    local r, t, x, y = rightTask()
+                    local r, t, x, y = baotu_rightTask()
                     if r then
                         tap(x, y)
                     end

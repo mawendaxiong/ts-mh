@@ -13,7 +13,7 @@ Sect = {}
 local function moveAndFindRightTask()
     return Common.move(
         function()
-            local ret, tim, x, y = rightTask()
+            local ret, tim, x, y = shimen_rightTask()
             if ret then
                 tap(x, y)
                 mSleep(1000)
@@ -246,7 +246,7 @@ function Sect.excute()
             elseif taskTab() then -- 点击右边师门任务
                 mSleep(3000)
                 -- 点击师门任务
-                local ret, tim, x, y = rightTask()
+                local ret, tim, x, y = shimen_rightTask()
                 if ret then
                     Common.record('点击任务')
                     tap(x, y)
@@ -296,7 +296,8 @@ function Sect.excute()
 
                 tap(979, 39) -- 关闭商城
                 mSleep(1000)
-
+                
+                wLog(log.name, '[DATE] 不够钱买摆摊道具,结束师门')
                 Common.blockCheckMainPage('不够钱买摆摊道具做师门提前结束')
                 return -2
             end
@@ -322,6 +323,7 @@ function Sect.excute()
                 tap(1033, 123) -- 关闭工坊
                 mSleep(1500)
 
+                wLog(log.name, '[DATE] 不够钱买工坊,结束师门')
                 Common.blockCheckMainPage('不够钱买工坊做师门提前结束')
                 return -2
             end

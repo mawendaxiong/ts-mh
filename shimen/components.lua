@@ -45,7 +45,16 @@ function chooseTask()
     return findColorsUntil(0xf8e6c5, offset, 90, 804, 6, 1107, 610, {orient = 2}, 500, 1)
 end
 
-function rightTask()
+-- function rightTask()
+--     toast('识别师门任务',1)
+--     mSleep(500)
+--     local offset = '12|5|0xfcf31c,17|5|0xfaf11d,32|1|0xfcf31c,32|9|0xfcf31c'
+--     return findColorsUntil(0xfcf31c, offset, 90, 912, 151, 1134, 463, {orient = 2}, 500, 2)
+-- end
+
+function shimen_rightTask()
+    toast('识别师门任务',1)
+    mSleep(500)
     local offset = '12|5|0xfcf31c,17|5|0xfaf11d,32|1|0xfcf31c,32|9|0xfcf31c'
     return findColorsUntil(0xfcf31c, offset, 90, 912, 151, 1134, 463, {orient = 2}, 500, 2)
 end

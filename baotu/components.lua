@@ -7,7 +7,15 @@ function getTask()
 end
 
 -- 领取任务后,右侧的任务
-function rightTask()
+-- function rightTask()
+--     local offset =
+--         "7|4|0xf6ed1c,19|14|0xf8ef1c,34|-1|0xfcf31c,28|9|0xfcf31c,205|44|0xc31b09,196|46|0xd02310"
+--     return findColorsUntil(0xfcf31c, offset, 90, 913, 144, 1134, 456,
+--                            {orient = 2}, 500, 1)
+-- end
+
+-- 领取任务后,右侧的任务
+function baotu_rightTask()
     local offset =
         "7|4|0xf6ed1c,19|14|0xf8ef1c,34|-1|0xfcf31c,28|9|0xfcf31c,205|44|0xc31b09,196|46|0xd02310"
     return findColorsUntil(0xfcf31c, offset, 90, 913, 144, 1134, 456,
