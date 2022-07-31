@@ -71,6 +71,12 @@ local function shifutuijian()
     return findColorsUntil(0x62e2bd, offset, 90, 172, 405, 424, 575, {orient = 2}, 500, 2)
 end
 
+-- 见面礼
+function jianmianli()
+    local offset = '-253|22|0xe2535d,-294|212|0x2b1e20,-258|428|0x29b47a,-227|235|0x58d8cf'
+    return findColorsUntil(0xffe03f, offset, 90, 292, 26, 895, 516, {orient = 2}, 500, 1)
+end
+
 local function initProp()
     mainStatus.isCrash = -1
 
@@ -265,7 +271,13 @@ local function daemon()
         return
     end
 
-    
+    local j_r, j_t, j_x, j_y = jianmianli()
+    if j_r then -- 关闭见面礼,首冲
+        tap(j_x, j_y)
+        mSleep(1000)
+        return
+    end
+
     if shifutuijian() then -- 推荐师傅
         wLog(log.name, '[DATE] 弹出 推荐师傅')
 
@@ -363,7 +375,7 @@ local function masterMain()
             after = '无'
         end
         wLog(log.name, '[DATE] daemon :' .. tips .. ' | 后续执行 :' .. after)
-        toast(tips,1)
+        toast(tips, 1)
 
         -- 程序出现了异常导致携程出错，但是账号没有执行完的
         if

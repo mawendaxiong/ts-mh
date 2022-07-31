@@ -16,36 +16,36 @@ function page.index()
             ["class"] = lxh,
             ["method"] = "crashCallack"
         },
-        ["1"] = {
+        --[[ ["1"] = {
             ["now"] = "1",
             ["name"] = "创建角色",
             ["class"] = lxh,
             ["method"] = "createRole",
             ["next"] = "2"
-        },
-        ["2"] = {
-            ["now"] = "2",
+        }, ]]
+        ["1"] = {
+            ["now"] = "1",
             ["name"] = "跳动画",
             ["class"] = lxh,
             ["method"] = "skipCartoon",
+            ["next"] = "2"
+        },
+        ["2"] = {
+            ["now"] = "2",
+            ["name"] = "选择角色",
+            ["class"] = lxh,
+            ["method"] = "xuanjuese",
             ["next"] = "3"
         },
         ["3"] = {
             ["now"] = "3",
-            ["name"] = "选择角色",
+            ["name"] = "起名",
             ["class"] = lxh,
-            ["method"] = "xuanjuese",
+            ["method"] = "name",
             ["next"] = "4"
         },
         ["4"] = {
             ["now"] = "4",
-            ["name"] = "起名",
-            ["class"] = lxh,
-            ["method"] = "name",
-            ["next"] = "5"
-        },
-        ["5"] = {
-            ["now"] = "5",
             ["name"] = "执行",
             ["class"] = lxh,
             ["method"] = "execute",

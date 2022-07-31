@@ -409,6 +409,8 @@ local methodContainer = {
                     tap(967, 511)
                     mSleep(2000)
                 else
+                    Common.resetRightTaskBoard() -- 重置右侧任务栏
+
                     if not jingqingqidai() then
                         -- 点击剧情
                         tap(990, 209)
@@ -420,8 +422,12 @@ local methodContainer = {
                         keepScreen(false)
 
                         if r1 then
+                            wLog(log.name, '[DATE] 师傅来信...')
+
                             tap(x1, y1)
                         elseif r2 then
+                            wLog(log.name, '[DATE] 去见师傅...')
+
                             tap(x2, y2)
                             while true do
                                 if Common.userDialog() then
@@ -431,20 +437,19 @@ local methodContainer = {
                                 mSleep(1000)
                             end
                         elseif r3 then
+                            wLog(log.name, '[DATE] 师门任务...')
+
                             -- todo 做师门升级了20,领取装备卡着了
                             tap(x3, y3)
                             mSleep(2000)
-                            local shimenPage = require('shimen.ConstPage')
-                            local step = 1
-                            keepScreen(true)
-                            if shimenTypeChoosePage() then
-                                step = 4
-                            end
-                            if Common.userDialog() then
-                                tap(600, 400) -- 清除对话框
-                            end
-                            keepScreen(false)
+                            local step = 4
 
+                            if not shimenTypeChoosePage() then
+                                Common.go(0)
+                                step = 7
+                            end
+
+                            local shimenPage = require('shimen.ConstPage')
                             Main.excuteLocal(shimenPage.index(), step)
                         else
                             local zhuoguiPage = require('zhuogui.ConstPage')
@@ -551,6 +556,27 @@ local methodContainer = {
         ['remove'] = 0
     },
     {
+        -- 推荐师傅
+        ['func'] = function()
+            return '推荐师傅', shifutuijian()
+        end,
+        ['after'] = function()
+            Common.record('推荐师傅')
+            -- 关闭师傅推荐
+            tap(901, 135)
+
+            Common.blockCheckMainPage('等待关闭师傅推荐')
+            while true do
+                if not shifutuijian() then
+                    break
+                end
+
+                mSleep(1000)
+            end
+        end,
+        ['remove'] = 0
+    },
+    {
         -- 跳过动画
         ['func'] = function()
             return '跳过动画', isColor(538, 55, 0x000000)
@@ -584,27 +610,6 @@ local methodContainer = {
                     tap(x - 20, y - 40)
                     mSleep(1000)
                 end
-            end
-        end,
-        ['remove'] = 0
-    },
-    {
-        -- 推荐师傅
-        ['func'] = function()
-            return '推荐师傅', shifutuijian()
-        end,
-        ['after'] = function()
-            Common.record('推荐师傅')
-            -- 关闭师傅推荐
-            tap(901, 135)
-
-            Common.blockCheckMainPage('等待关闭师傅推荐')
-            while true do
-                if not shifutuijian() then
-                    break
-                end
-
-                mSleep(1000)
             end
         end,
         ['remove'] = 0

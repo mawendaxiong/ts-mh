@@ -234,6 +234,27 @@ function Login.selectServer()
             mSleep(1000)
         end
 
+        r, t, x, y = chuangjianjuese()
+        if not r then -- 说明这个号创建角色满了
+            return -2
+        end
+
+        tap(x, y)
+        wLog(log.name, '[DATE] 等5秒,可能会出现更新资源')
+        mSleep(5000)
+
+        if loginTip() then -- 去了测试服,要更新资源
+            -- 点击确定
+            tap(568, 377)
+            mSleep(8000)
+
+            while true do
+                if miniRedManLogo() then -- 登录界面
+                    return 5 -- 重新选择服务器,在创建角色
+                end
+            end
+        end
+
         return -2
     end
 

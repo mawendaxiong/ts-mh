@@ -88,3 +88,9 @@ function sanjie_redian()
         '-20|1|0xffd57c,-52|1|0xffd57c,-71|1|0xffd57c,-140|-26|0xffffc9,-100|-27|0xffffcd,-51|-27|0xffffcd,-17|-22|0xffffb6'
     return findColorsUntil(0xffd67f, offset, 90, 475, 5, 660, 54, {orient = 2}, 500, 1)
 end
+
+-- 创建角色(绿色加号)
+function chuangjianjuese()
+    local offset = '0|-12|0x67d70f,-13|0|0x53c712,14|1|0x51c612,0|14|0x3cb716,16|18|0xb98f69'
+    return findColorsUntil(0x53c712, offset, 90, 335, 60, 1027, 620, {orient = 2}, 500, 1)
+end
