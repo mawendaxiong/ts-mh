@@ -90,6 +90,8 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction, 
     local firstReset = false
 
     while true do
+        mSleep(1500)
+
         if breakFunction ~= nil then -- 不滑动先找一下
             if breakFunction() then
                 result = 0
@@ -102,10 +104,11 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction, 
         end
 
         if not firstReset then -- 第一次找不到先重置
-            if resetFunction ~= nil then 
+            if resetFunction ~= nil then
                 resetFunction()
             end
             firstReset= true
+            goto continue
         end
         
 
@@ -136,7 +139,7 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction, 
         point3 = p3
         point4 = p4
 
-        mSleep(1000)
+        ::continue::
     end
 
     return result
