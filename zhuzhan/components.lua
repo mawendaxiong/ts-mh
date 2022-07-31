@@ -17,6 +17,6 @@ end
 
 -- 助战page
 function zhuzhanPage()
-    local offset = '81|-12|0x8be5fe,167|1|0xf33a90,256|-8|0xa6c4ff,346|3|0xacd234'
-    return findColorsUntil(0xf88011, offset, 90, 121, 562, 570, 622, {orient = 2}, 500, 1)
+    local offset = '-411|-18|0x764a2c,-453|-13|0x764a2c,-453|-7|0x764a2c,-457|-13|0x764a2c,-447|-7|0x764a2c'
+    return findColorsUntil(0xd10000, offset, 90, 498,13, 1029,59, {orient = 2}, 500, 1)
 end

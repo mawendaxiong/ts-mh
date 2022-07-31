@@ -231,8 +231,8 @@ end
 
 -- 助战page
 function zhuzhanPage()
-    local offset = '81|-12|0x8be5fe,167|1|0xf33a90,256|-8|0xa6c4ff,346|3|0xacd234'
-    return findColorsUntil(0xf88011, offset, 90, 121, 562, 570, 622, {orient = 2}, 500, 1)
+    local offset = '-411|-18|0x764a2c,-453|-13|0x764a2c,-453|-7|0x764a2c,-457|-13|0x764a2c,-447|-7|0x764a2c'
+    return findColorsUntil(0xd10000, offset, 90, 498,13, 1029,59, {orient = 2}, 500, 1)
 end
 
 --  人物属性
@@ -257,4 +257,10 @@ end
 function shimenTypeChoosePage()
     local offset = '6|6|0xef3d47,48|-362|0xffe7b8,59|-365|0xc5311b,7|-18|0xff5362'
     return findColorsUntil(0xa84407, offset, 90, 876, 81, 1015, 538, {orient = 2}, 500, 1)
+end
+
+-- 主页面活动logo
+function huodong_logo()
+    local offset = '-4|21|0x701209,17|16|0xb46e32,29|21|0xa16d4b,7|17|0xd19a58'
+    return findColorsUntil(0x531219, offset, 90, 252, 0, 385, 69, {orient = 2}, 500, 1)
 end
