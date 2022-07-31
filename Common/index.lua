@@ -145,18 +145,7 @@ function Common.move(breakFunction, moveFunction, pointFunction, resetFunction, 
     return result
 end
 
--- 回长安
-function Common.b2a(step)
-    if step == nil then
-        step = 1
-    end
-
-    Common.blockCheckMainPage('回长安页面异常')
-
-    if huodong_logo() then
-        return 0
-    end
-
+function Common.go(step)
     -- 打开地图
     tap(35, 35)
     mSleep(1000)
@@ -175,6 +164,41 @@ function Common.b2a(step)
     Common.blockCheckMainPage('回长安页面异常2')
 
     return step
+    
+end
+
+-- 回长安
+function Common.b2a(step)
+    if step == nil then
+        step = 1
+    end
+
+    Common.blockCheckMainPage('回长安页面异常')
+
+    if huodong_logo() then
+        return 0
+    end
+
+    return Common.go(step)
+
+    -- -- 打开地图
+    -- tap(35, 35)
+    -- mSleep(1000)
+
+    -- local ret, tim, x, y = changanLocation()
+    -- if ret then
+    --     tap(x, y)
+    --     mSleep(1000)
+    --     -- 执行下一步
+    --     return 0
+    -- end
+    -- -- 没在地图找到长安
+    -- tap(1000, 60)
+    -- mSleep(1000)
+
+    -- Common.blockCheckMainPage('回长安页面异常2')
+
+    -- return step
 end
 
 -- 白底红字 记录板
